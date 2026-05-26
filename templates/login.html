@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins', sans-serif;
+        }
+
+        body{
+
+            min-height:100vh;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            background:
+            linear-gradient(135deg,#0f172a,#1e293b,#2563eb);
+
+            overflow:hidden;
+
+            position:relative;
+        }
+
+        /* BOLAS DE FUNDO */
+
+        body::before,
+        body::after{
+
+            content:'';
+
+            position:absolute;
+
+            border-radius:50%;
+
+            filter:blur(80px);
+
+            opacity:0.4;
+        }
+
+        body::before{
+
+            width:300px;
+            height:300px;
+
+            background:#3b82f6;
+
+            top:-80px;
+            left:-80px;
+        }
+
+        body::after{
+
+            width:250px;
+            height:250px;
+
+            background:#60a5fa;
+
+            bottom:-80px;
+            right:-80px;
+        }
+
+        .login-box{
+
+            width:100%;
+            max-width:420px;
+
+            background:rgba(255,255,255,0.12);
+
+            backdrop-filter:blur(15px);
+
+            border:1px solid rgba(255,255,255,0.2);
+
+            padding:45px;
+
+            border-radius:25px;
+
+            box-shadow:
+            0 10px 40px rgba(0,0,0,0.35);
+
+            position:relative;
+
+            z-index:10;
+
+            animation:fadeUp 0.8s ease;
+        }
+
+        @keyframes fadeUp{
+
+            from{
+                opacity:0;
+                transform:translateY(30px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+        }
+
+        .logo{
+
+            width:80px;
+            height:80px;
+
+            margin:0 auto 20px;
+
+            border-radius:20px;
+
+            background:linear-gradient(135deg,#2563eb,#60a5fa);
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            color:white;
+
+            font-size:32px;
+
+            font-weight:700;
+
+            box-shadow:0 8px 25px rgba(37,99,235,0.5);
+        }
+
+        .login-box h1{
+
+            text-align:center;
+
+            color:white;
+
+            font-size:32px;
+
+            margin-bottom:8px;
+        }
+
+        .subtitle{
+
+            text-align:center;
+
+            color:rgba(255,255,255,0.7);
+
+            margin-bottom:35px;
+
+            font-size:14px;
+        }
+
+        .input-group{
+
+            margin-bottom:22px;
+        }
+
+        .input-group label{
+
+            display:block;
+
+            margin-bottom:8px;
+
+            color:white;
+
+            font-size:14px;
+
+            font-weight:500;
+        }
+
+        .input-group input{
+
+            width:100%;
+
+            padding:15px 18px;
+
+            border:none;
+
+            border-radius:14px;
+
+            background:rgba(255,255,255,0.15);
+
+            color:white;
+
+            font-size:15px;
+
+            outline:none;
+
+            transition:0.3s;
+        }
+
+        .input-group input::placeholder{
+
+            color:rgba(255,255,255,0.5);
+        }
+
+        .input-group input:focus{
+
+            background:rgba(255,255,255,0.22);
+
+            box-shadow:0 0 0 3px rgba(96,165,250,0.4);
+        }
+
+        button{
+
+            width:100%;
+
+            padding:15px;
+
+            border:none;
+
+            border-radius:14px;
+
+            background:linear-gradient(135deg,#2563eb,#3b82f6);
+
+            color:white;
+
+            font-size:16px;
+
+            font-weight:600;
+
+            cursor:pointer;
+
+            transition:0.3s;
+
+            margin-top:10px;
+
+            box-shadow:0 10px 20px rgba(37,99,235,0.35);
+        }
+
+        button:hover{
+
+            transform:translateY(-2px);
+
+            background:linear-gradient(135deg,#1d4ed8,#2563eb);
+
+            box-shadow:0 15px 25px rgba(37,99,235,0.45);
+        }
+
+        .flash{
+
+            background:rgba(239,68,68,0.2);
+
+            border:1px solid rgba(239,68,68,0.4);
+
+            color:#fff;
+
+            padding:14px;
+
+            border-radius:14px;
+
+            margin-bottom:20px;
+
+            text-align:center;
+
+            font-size:14px;
+        }
+
+        .footer{
+
+            text-align:center;
+
+            margin-top:25px;
+
+            color:rgba(255,255,255,0.6);
+
+            font-size:13px;
+        }
+
+        @media(max-width:500px){
+
+            .login-box{
+
+                margin:20px;
+
+                padding:35px 25px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="login-box">
+
+        <div class="logo">
+            🔐
+        </div>
+
+        <h1>Bem-vindo</h1>
+
+        <p class="subtitle">
+            Faça login para acessar o sistema
+        </p>
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="flash">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+
+            <div class="input-group">
+
+                <label>Usuário</label>
+
+                <input
+                    type="text"
+                    name="usuario"
+                    placeholder="Digite seu usuário"
+                    required>
+
+            </div>
+
+            <div class="input-group">
+
+                <label>Senha</label>
+
+                <input
+                    type="password"
+                    name="senha"
+                    placeholder="Digite sua senha"
+                    required>
+
+            </div>
+
+            <button type="submit">
+                Entrar no Sistema
+            </button>
+
+        </form>
+
+        <div class="footer">
+            © 2026 • Sistema Corporativo
+        </div>
+
+    </div>
+
+</body>
+</html>

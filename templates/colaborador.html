@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ficha do Colaborador</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+
+    --bg:#020617;
+    --card:#0f172a;
+    --card2:#111827;
+
+    --blue:#3b82f6;
+    --blue2:#2563eb;
+
+    --green:#22c55e;
+    --red:#ef4444;
+    --yellow:#f59e0b;
+
+    --text:#f8fafc;
+    --muted:#94a3b8;
+}
+
+body{
+
+    font-family:'Poppins',sans-serif;
+
+    background:
+    radial-gradient(circle at top left,#1e3a8a 0%,transparent 30%),
+    radial-gradient(circle at bottom right,#0f766e 0%,transparent 30%),
+    linear-gradient(135deg,#020617,#0f172a,#111827);
+
+    min-height:100vh;
+
+    padding:40px 20px;
+
+    color:var(--text);
+
+    overflow-x:hidden;
+}
+
+.card{
+
+    max-width:1300px;
+
+    margin:auto;
+
+    background:rgba(15,23,42,0.75);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    border-radius:30px;
+
+    overflow:hidden;
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,0.5);
+}
+
+.header{
+
+    position:relative;
+
+    padding:50px;
+
+    background:
+    linear-gradient(
+    135deg,
+    rgba(37,99,235,0.95),
+    rgba(29,78,216,0.95));
+
+    overflow:hidden;
+}
+
+.topo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:35px;
+
+    flex-wrap:wrap;
+}
+
+.foto{
+
+    width:200px;
+    height:200px;
+
+    object-fit:cover;
+
+    border-radius:30px;
+
+    border:6px solid rgba(255,255,255,0.95);
+
+    background:white;
+
+    box-shadow:
+    0 10px 35px rgba(0,0,0,0.4);
+}
+
+.dados-principais{
+
+    flex:1;
+}
+
+.nome{
+
+    font-size:42px;
+
+    font-weight:700;
+
+    margin-bottom:20px;
+}
+
+.status{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    padding:14px 22px;
+
+    border-radius:14px;
+
+    font-size:16px;
+
+    font-weight:600;
+}
+
+.status-ok{
+
+    background:rgba(34,197,94,0.15);
+
+    color:#86efac;
+
+    border:1px solid rgba(34,197,94,0.3);
+}
+
+.status-bloq{
+
+    background:rgba(239,68,68,0.15);
+
+    color:#fca5a5;
+
+    border:1px solid rgba(239,68,68,0.3);
+}
+
+.status-admissao{
+
+    background:rgba(245,158,11,0.15);
+
+    color:#fcd34d;
+
+    border:1px solid rgba(245,158,11,0.3);
+}
+
+.conteudo{
+
+    padding:40px;
+}
+
+.titulo-secao{
+
+    font-size:30px;
+
+    font-weight:700;
+
+    margin-bottom:30px;
+}
+
+.info{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(260px,1fr));
+
+    gap:22px;
+}
+
+.box{
+
+    background:rgba(30,41,59,0.65);
+
+    border:1px solid rgba(255,255,255,0.06);
+
+    border-radius:22px;
+
+    padding:25px;
+
+    transition:0.35s;
+}
+
+.box:hover{
+
+    transform:translateY(-6px);
+
+    border-color:rgba(59,130,246,0.4);
+
+    box-shadow:
+    0 15px 35px rgba(37,99,235,0.15);
+}
+
+.titulo{
+
+    color:var(--muted);
+
+    font-size:12px;
+
+    text-transform:uppercase;
+
+    letter-spacing:2px;
+
+    margin-bottom:12px;
+
+    font-weight:600;
+}
+
+.valor{
+
+    font-size:19px;
+
+    font-weight:600;
+
+    line-height:1.5;
+
+    word-break:break-word;
+}
+
+.motivo{
+
+    color:#fca5a5;
+}
+
+.whatsapp{
+
+    margin-top:10px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    text-decoration:none;
+
+    color:#86efac;
+
+    font-size:14px;
+
+    font-weight:600;
+}
+
+.acoes{
+
+    margin-top:45px;
+
+    display:flex;
+
+    gap:18px;
+
+    flex-wrap:wrap;
+}
+
+.btn{
+
+    padding:16px 28px;
+
+    border:none;
+
+    border-radius:16px;
+
+    cursor:pointer;
+
+    text-decoration:none;
+
+    color:white;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    transition:0.35s;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+}
+
+.btn:hover{
+
+    transform:translateY(-3px);
+}
+
+.btn-voltar{
+
+    background:
+    linear-gradient(
+    135deg,
+    #2563eb,
+    #1d4ed8);
+}
+
+.btn-imprimir{
+
+    background:
+    linear-gradient(
+    135deg,
+    #16a34a,
+    #15803d);
+}
+
+.btn-restringir{
+
+    background:
+    linear-gradient(
+    135deg,
+    #dc2626,
+    #991b1b);
+}
+
+.btn-liberar{
+
+    background:
+    linear-gradient(
+    135deg,
+    #f59e0b,
+    #d97706);
+}
+
+.footer{
+
+    margin-top:50px;
+
+    text-align:center;
+
+    color:var(--muted);
+
+    font-size:14px;
+}
+
+@media(max-width:768px){
+
+    .header{
+        padding:35px 25px;
+    }
+
+    .conteudo{
+        padding:25px;
+    }
+
+    .topo{
+        justify-content:center;
+        text-align:center;
+    }
+
+    .foto{
+        width:150px;
+        height:150px;
+    }
+
+    .nome{
+        font-size:30px;
+    }
+
+    .acoes{
+        justify-content:center;
+    }
+}
+
+@media print{
+
+    body{
+        background:white;
+        padding:0;
+    }
+
+    .acoes{
+        display:none;
+    }
+
+    .card{
+        box-shadow:none;
+        border:none;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+    <div class="header">
+
+        <div class="topo">
+
+            {% if c.foto %}
+
+            <img
+            class="foto"
+            src="{{ c.foto }}">
+
+            {% else %}
+
+            <img
+            class="foto"
+            src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+
+            {% endif %}
+
+            <div class="dados-principais">
+
+                <div class="nome">
+                    {{ c.nome }}
+                </div>
+
+                {% if c.restrito %}
+
+                <div class="status status-bloq">
+                    🚫 COLABORADOR RESTRITO
+                </div>
+
+                {% elif c.pre_admissao == 'Em análise' %}
+
+                <div class="status status-admissao">
+                     SEM RESTRIÇÃO
+                </div>
+
+                {% else %}
+
+                <div class="status status-ok">
+                    ✅ COLABORADOR LIBERADO
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="conteudo">
+
+        <div class="titulo-secao">
+            📋 Informações do Colaborador
+        </div>
+
+        <div class="info">
+
+            <div class="box">
+                <div class="titulo">CPF</div>
+                <div class="valor">{{ c.cpf or '-' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Telefone</div>
+
+                <div class="valor">
+
+                    {{ c.telefone or '-' }}
+
+                    {% if c.telefone %}
+
+                    <br>
+
+                    <a
+                    class="whatsapp"
+                    href="https://wa.me/55{{ c.telefone }}"
+                    target="_blank">
+
+                        💬 Chamar no WhatsApp
+
+                    </a>
+
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Nascimento</div>
+                <div class="valor">{{ c.data_nascimento or '-' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Naturalidade</div>
+                <div class="valor">{{ c.naturalidade or '-' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">CEP</div>
+                <div class="valor">{{ c.cep or '-' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Endereço</div>
+                <div class="valor">{{ c.endereco or '-' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Cidade</div>
+                <div class="valor">{{ c.cidade or '-' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Estado</div>
+                <div class="valor">{{ c.estado or '-' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Função</div>
+                <div class="valor">{{ c.funcao or '-' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Obra</div>
+                <div class="valor">{{ c.obra or '-' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Data Admissão</div>
+                <div class="valor">{{ c.data_admissao or '-' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Status</div>
+                <div class="valor">{{ c.status or 'Liberado' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Data Cadastro</div>
+                <div class="valor">{{ c.data_cadastro or '-' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Motivo da Restrição</div>
+
+                <div class="valor motivo">
+
+                    {{ c.motivo or 'Nenhum motivo informado' }}
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="acoes">
+
+            <a href="/" class="btn btn-voltar">
+                ← Voltar
+            </a>
+
+            <button
+            onclick="window.print()"
+            class="btn btn-imprimir">
+
+                🖨️ Imprimir
+
+            </button>
+
+            {% if c.restrito %}
+
+            <a
+            href="/liberar/{{ c.id }}"
+            class="btn btn-liberar">
+
+                ✅ Liberar
+
+            </a>
+
+            {% else %}
+
+            <a
+            href="/restringir/{{ c.id }}"
+            class="btn btn-restringir">
+
+                🚫 Restringir
+
+            </a>
+
+            {% endif %}
+
+        </div>
+
+        <div class="footer">
+            ORCA FACE SYSTEM © 2026
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

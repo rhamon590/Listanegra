@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>FICHARIO COLABORADORES</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+
+    --bg:#020617;
+    --card:#0f172a;
+    --card2:#111827;
+
+    --blue:#3b82f6;
+    --blue2:#2563eb;
+
+    --green:#22c55e;
+    --red:#ef4444;
+    --yellow:#f59e0b;
+    --cyan:#06b6d4;
+
+    --text:#f8fafc;
+    --muted:#94a3b8;
+
+    --border:#1e293b;
+}
+
+body{
+
+    font-family:'Poppins',sans-serif;
+
+    background:
+    radial-gradient(circle at top left,#1e3a8a 0%,transparent 30%),
+    radial-gradient(circle at bottom right,#0f766e 0%,transparent 30%),
+    linear-gradient(135deg,#020617,#0f172a,#111827);
+
+    color:white;
+
+    min-height:100vh;
+
+    padding:30px;
+}
+
+body::-webkit-scrollbar{
+    width:10px;
+}
+
+body::-webkit-scrollbar-thumb{
+    background:var(--blue);
+    border-radius:20px;
+}
+
+.topbar{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:20px;
+
+    margin-bottom:30px;
+}
+
+.logo{
+
+    font-size:38px;
+
+    font-weight:700;
+
+    background:linear-gradient(90deg,#60a5fa,#06b6d4);
+
+    -webkit-background-clip:text;
+
+    -webkit-text-fill-color:transparent;
+}
+
+.menu{
+
+    display:flex;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+}
+
+.menu a{
+    text-decoration:none;
+}
+
+.menu button{
+
+    border:none;
+
+    padding:14px 22px;
+
+    border-radius:16px;
+
+    cursor:pointer;
+
+    color:white;
+
+    font-weight:600;
+
+    transition:0.3s;
+
+    background:rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(10px);
+}
+
+.menu button:hover{
+
+    transform:translateY(-3px);
+
+    background:var(--blue);
+}
+
+.btn-negra{
+    background:linear-gradient(135deg,#dc2626,#991b1b) !important;
+}
+
+.btn-admissao{
+
+    background:
+    linear-gradient(135deg,#16a34a,#15803d) !important;
+
+    box-shadow:
+    0 0 20px rgba(34,197,94,0.35);
+}
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:350px 1fr;
+
+    gap:25px;
+}
+
+.card{
+
+    background:rgba(15,23,42,0.75);
+
+    border:1px solid rgba(255,255,255,0.06);
+
+    backdrop-filter:blur(18px);
+
+    border-radius:28px;
+
+    padding:28px;
+
+    box-shadow:
+    0 15px 40px rgba(0,0,0,0.35);
+}
+
+.titulo-card{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    margin-bottom:25px;
+}
+
+form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+}
+
+input{
+
+    width:100%;
+
+    border:none;
+
+    outline:none;
+
+    padding:15px 18px;
+
+    border-radius:16px;
+
+    background:#1e293b;
+
+    color:white;
+
+    font-size:15px;
+
+    transition:0.3s;
+
+    border:1px solid transparent;
+}
+
+input:focus{
+
+    border-color:var(--blue);
+
+    box-shadow:
+    0 0 0 4px rgba(59,130,246,0.15);
+}
+
+input::placeholder{
+    color:#94a3b8;
+}
+
+button{
+
+    border:none;
+
+    cursor:pointer;
+
+    transition:0.3s;
+
+    color:white;
+
+    font-weight:600;
+}
+
+.btn{
+
+    padding:15px;
+
+    border-radius:16px;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+}
+
+.btn-cadastrar{
+
+    background:
+    linear-gradient(135deg,#2563eb,#1d4ed8);
+}
+
+.btn-importar{
+
+    background:
+    linear-gradient(135deg,#0891b2,#155e75);
+}
+
+.linha{
+
+    border:none;
+
+    height:1px;
+
+    background:#334155;
+
+    margin:25px 0;
+}
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
+    gap:20px;
+
+    margin-bottom:25px;
+}
+
+.stat{
+
+    background:rgba(255,255,255,0.04);
+
+    padding:22px;
+
+    border-radius:20px;
+
+    border:1px solid rgba(255,255,255,0.05);
+}
+
+.stat h3{
+
+    color:#94a3b8;
+
+    font-size:14px;
+
+    margin-bottom:10px;
+}
+
+.stat span{
+
+    font-size:30px;
+
+    font-weight:700;
+}
+
+.tabela-box{
+
+    overflow:auto;
+}
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    min-width:900px;
+}
+
+th{
+
+    text-align:left;
+
+    padding:18px;
+
+    background:#2563eb;
+
+    font-size:14px;
+}
+
+td{
+
+    padding:18px;
+
+    border-bottom:1px solid #334155;
+}
+
+tr{
+
+    transition:0.3s;
+}
+
+tr:hover{
+
+    background:rgba(255,255,255,0.03);
+}
+
+.foto{
+
+    width:65px;
+    height:65px;
+
+    border-radius:18px;
+
+    object-fit:cover;
+
+    border:3px solid #2563eb;
+}
+
+.status{
+
+    font-weight:600;
+
+    padding:10px 14px;
+
+    border-radius:12px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+}
+
+.status-ok{
+
+    background:rgba(34,197,94,0.15);
+
+    color:#86efac;
+}
+
+.status-bloq{
+
+    background:rgba(239,68,68,0.15);
+
+    color:#fca5a5;
+}
+
+.acoes{
+
+    display:flex;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+}
+
+.btn-mini{
+
+    padding:10px 14px;
+
+    border-radius:12px;
+
+    font-size:13px;
+}
+
+.btn-ver{
+    background:#7c3aed;
+}
+
+.btn-pdf{
+    background:#16a34a;
+}
+
+.btn-restricao{
+    background:#dc2626;
+}
+
+.btn-liberar{
+    background:#f59e0b;
+}
+
+.busca{
+
+    margin-bottom:25px;
+}
+
+.footer{
+
+    text-align:center;
+
+    margin-top:40px;
+
+    color:#94a3b8;
+}
+
+@media(max-width:1100px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+
+    body{
+        padding:15px;
+    }
+
+    .logo{
+        font-size:28px;
+    }
+
+    .card{
+        padding:20px;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="topbar">
+
+    <div class="logo">
+        FICHARIO COLABORADORES
+    </div>
+
+    <div class="menu">
+
+        <a href="/">
+            <button>
+                👥 Colaboradores
+            </button>
+        </a>
+
+        <!-- BOTÃO NOVO -->
+
+        <a href="/admissao">
+
+            <button class="btn-admissao">
+
+                ✅ Admissão
+
+            </button>
+
+        </a>
+
+        <a href="/lista_negra">
+
+            <button class="btn-negra">
+
+                🚫 Lista Negra
+
+            </button>
+
+        </a>
+
+    </div>
+
+</div>
+
+<div class="grid">
+
+    <!-- LADO ESQUERDO -->
+
+    <div class="card">
+
+        <div class="titulo-card">
+            ➕ Cadastrar Colaborador
+        </div>
+
+        <form action="/novo" method="POST">
+
+            <input type="text" name="nome" placeholder="Nome completo" required>
+
+            <input type="text" name="cpf" placeholder="CPF" required>
+
+            <input type="text" name="data_nascimento" placeholder="Data nascimento">
+
+            <input type="text" name="naturalidade" placeholder="Naturalidade">
+
+            <input type="text" name="cep" placeholder="CEP">
+
+            <input type="text" name="endereco" placeholder="Endereço">
+
+            <input type="text" name="cidade" placeholder="Cidade">
+
+            <input type="text" name="funcao" placeholder="Função">
+
+            <input type="text" name="obra" placeholder="Obra">
+
+            <button type="submit" class="btn btn-cadastrar">
+                Cadastrar
+            </button>
+
+        </form>
+
+        <hr class="linha">
+
+        <form
+        action="/importar"
+        method="POST"
+        enctype="multipart/form-data">
+
+            <input
+            type="file"
+            name="arquivo"
+            required>
+
+            <button
+            type="submit"
+            class="btn btn-importar">
+
+                📊 Importar Excel
+
+            </button>
+
+        </form>
+
+        <hr class="linha">
+
+        <form
+        action="/importar_fotos"
+        method="POST"
+        enctype="multipart/form-data">
+
+            <input
+            type="file"
+            name="fotos"
+            multiple
+            required>
+
+            <button
+            type="submit"
+            class="btn btn-importar">
+
+                🖼️ Importar Fotos
+
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- LADO DIREITO -->
+
+    <div>
+
+        <div class="stats">
+
+            <div class="stat">
+
+                <h3>Total</h3>
+
+                <span>
+                    {{ colaboradores|length }}
+                </span>
+
+            </div>
+
+            <div class="stat">
+
+                <h3>Liberados</h3>
+
+                <span>
+
+                    {{ colaboradores
+                    | selectattr('restrito','equalto',False)
+                    | list
+                    | length }}
+
+                </span>
+
+            </div>
+
+            <div class="stat">
+
+                <h3>Restritos</h3>
+
+                <span>
+
+                    {{ colaboradores
+                    | selectattr('restrito')
+                    | list
+                    | length }}
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <div class="titulo-card">
+                📋 Colaboradores
+            </div>
+
+            <div class="busca">
+
+                <input
+                type="text"
+                id="pesquisa"
+                placeholder="Pesquisar colaborador...">
+
+            </div>
+
+            <div class="tabela-box">
+
+                <table id="tabela">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Foto</th>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Cidade</th>
+                            <th>Função</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for c in colaboradores %}
+
+                        <tr>
+
+                            <td>
+
+                                {% if c.foto %}
+
+                                <img
+                                class="foto"
+                                src="{{ c.foto }}">
+
+                                {% else %}
+
+                                <img
+                                class="foto"
+                                src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>{{ c.nome }}</td>
+
+                            <td>{{ c.cpf }}</td>
+
+                            <td>{{ c.cidade }}</td>
+
+                            <td>{{ c.funcao }}</td>
+
+                            <td>
+
+                                {% if c.restrito %}
+
+                                <span class="status status-bloq">
+                                    🚫 Restrito
+                                </span>
+
+                                {% else %}
+
+                                <span class="status status-ok">
+                                    ✅ Liberado
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                <div class="acoes">
+
+                                    <a href="/colaborador/{{ c.id }}">
+
+                                        <button
+                                        type="button"
+                                        class="btn-mini btn-ver">
+
+                                            Ver
+
+                                        </button>
+
+                                    </a>
+
+                                    <button
+                                    class="btn-mini btn-pdf">
+
+                                        PDF
+
+                                    </button>
+
+                                    {% if c.restrito %}
+
+                                    <a href="/liberar/{{ c.id }}">
+
+                                        <button
+                                        type="button"
+                                        class="btn-mini btn-liberar">
+
+                                            Liberar
+
+                                        </button>
+
+                                    </a>
+
+                                    {% else %}
+
+                                    <a href="/restringir/{{ c.id }}">
+
+                                        <button
+                                        type="button"
+                                        class="btn-mini btn-restricao">
+
+                                            Restringir
+
+                                        </button>
+
+                                    </a>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="footer">
+    ORCA FACE SYSTEM © 2026
+</div>
+
+<script>
+
+const pesquisa =
+document.getElementById('pesquisa');
+
+pesquisa.addEventListener('keyup',()=>{
+
+    let filtro =
+    pesquisa.value.toLowerCase();
+
+    let linhas =
+    document.querySelectorAll('#tabela tbody tr');
+
+    linhas.forEach(linha=>{
+
+        let texto =
+        linha.innerText.toLowerCase();
+
+        linha.style.display =
+        texto.includes(filtro)
+        ? ''
+        : 'none';
+    });
+});
+
+</script>
+
+</body>
+</html>
