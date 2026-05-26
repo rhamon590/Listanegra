@@ -552,6 +552,28 @@ def importar():
     )
 
     return redirect('/')
+
+from flask import request, jsonify
+
+@app.route('/excluir_varios', methods=['POST'])
+def excluir_varios():
+
+    dados = request.get_json()
+
+    ids = dados.get('ids', [])
+
+    for id_colab in ids:
+
+        colaborador = Colaborador.query.get(id_colab)
+
+        if colaborador:
+            db.session.delete(colaborador)
+
+    db.session.commit()
+
+    return jsonify({
+        'mensagem':'Colaboradores excluídos com sucesso'
+    })
 # =========================================
 # IMPORTAR FOTOS
 # =========================================

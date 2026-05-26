@@ -263,6 +263,14 @@ button{
     linear-gradient(135deg,#0891b2,#155e75);
 }
 
+.btn-excluir{
+
+    background:
+    linear-gradient(135deg,#dc2626,#991b1b);
+
+    margin-bottom:20px;
+}
+
 .linha{
 
     border:none;
@@ -323,7 +331,7 @@ table{
 
     border-collapse:collapse;
 
-    min-width:900px;
+    min-width:1000px;
 }
 
 th{
@@ -443,6 +451,14 @@ tr:hover{
     color:#94a3b8;
 }
 
+.check{
+
+    width:20px;
+    height:20px;
+
+    cursor:pointer;
+}
+
 @media(max-width:1100px){
 
     .grid{
@@ -485,8 +501,6 @@ tr:hover{
             </button>
         </a>
 
-        <!-- BOTÃO NOVO -->
-
         <a href="/admissao">
 
             <button class="btn-admissao">
@@ -512,8 +526,6 @@ tr:hover{
 </div>
 
 <div class="grid">
-
-    <!-- LADO ESQUERDO -->
 
     <div class="card">
 
@@ -594,8 +606,6 @@ tr:hover{
 
     </div>
 
-    <!-- LADO DIREITO -->
-
     <div>
 
         <div class="stats">
@@ -657,6 +667,14 @@ tr:hover{
 
             </div>
 
+            <button
+            id="btnExcluirSelecionados"
+            class="btn btn-excluir">
+
+                🗑️ Excluir Selecionados
+
+            </button>
+
             <div class="tabela-box">
 
                 <table id="tabela">
@@ -664,6 +682,15 @@ tr:hover{
                     <thead>
 
                         <tr>
+
+                            <th>
+
+                                <input
+                                type="checkbox"
+                                id="selecionarTodos"
+                                class="check">
+
+                            </th>
 
                             <th>Foto</th>
                             <th>Nome</th>
@@ -682,6 +709,15 @@ tr:hover{
                         {% for c in colaboradores %}
 
                         <tr>
+
+                            <td>
+
+                                <input
+                                type="checkbox"
+                                class="check-colaborador check"
+                                value="{{ c.id }}">
+
+                            </td>
 
                             <td>
 
@@ -827,6 +863,67 @@ pesquisa.addEventListener('keyup',()=>{
         ? ''
         : 'none';
     });
+});
+
+const selecionarTodos =
+document.getElementById('selecionarTodos');
+
+selecionarTodos.addEventListener('change',()=>{
+
+    document
+    .querySelectorAll('.check-colaborador')
+    .forEach(check=>{
+
+        check.checked =
+        selecionarTodos.checked;
+    });
+});
+
+document
+.getElementById('btnExcluirSelecionados')
+.addEventListener('click',()=>{
+
+    let selecionados = [];
+
+    document
+    .querySelectorAll('.check-colaborador:checked')
+    .forEach(check=>{
+
+        selecionados.push(check.value);
+    });
+
+    if(selecionados.length === 0){
+
+        alert('Selecione colaboradores');
+        return;
+    }
+
+    if(!confirm('Deseja excluir os colaboradores selecionados?')){
+        return;
+    }
+
+    fetch('/excluir_varios',{
+
+        method:'POST',
+
+        headers:{
+            'Content-Type':'application/json'
+        },
+
+        body:JSON.stringify({
+            ids:selecionados
+        })
+    })
+
+    .then(res=>res.json())
+
+    .then(data=>{
+
+        alert(data.mensagem);
+
+        location.reload();
+    });
+
 });
 
 </script>
