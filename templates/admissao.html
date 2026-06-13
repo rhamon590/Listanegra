@@ -2,22 +2,16 @@
 <html lang="pt-br">
 
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>PRÉ-ADMISSÃO</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-
 *{
     margin:0;
     padding:0;
@@ -25,340 +19,250 @@ content="width=device-width, initial-scale=1.0">
 }
 
 :root{
-
     --bg:#020617;
     --card:#0f172a;
-
     --blue:#2563eb;
     --green:#22c55e;
     --red:#ef4444;
     --yellow:#f59e0b;
-
     --text:#f8fafc;
     --muted:#94a3b8;
 }
 
 body{
-
     font-family:'Poppins',sans-serif;
-
     background:
     radial-gradient(circle at top left,#1e3a8a 0%,transparent 30%),
     radial-gradient(circle at bottom right,#0f766e 0%,transparent 30%),
     linear-gradient(135deg,#020617,#0f172a,#111827);
-
     min-height:100vh;
-
     color:white;
-
     padding:30px;
 }
 
 .container-box{
-
     max-width:1400px;
-
     margin:auto;
 }
 
 .topo{
-
     margin-bottom:30px;
 }
 
 .logo{
-
     font-size:38px;
-
     font-weight:700;
-
-    background:
-    linear-gradient(90deg,#60a5fa,#06b6d4);
-
+    background:linear-gradient(90deg,#60a5fa,#06b6d4);
     -webkit-background-clip:text;
-
     -webkit-text-fill-color:transparent;
 }
 
 .subtitulo{
-
     color:#94a3b8;
-
     margin-top:5px;
 }
 
 .card-admissao{
-
     background:rgba(15,23,42,0.75);
-
     backdrop-filter:blur(18px);
-
     border:1px solid rgba(255,255,255,0.08);
-
     border-radius:30px;
-
     padding:35px;
-
-    box-shadow:
-    0 15px 50px rgba(0,0,0,0.4);
-
+    box-shadow:0 15px 50px rgba(0,0,0,0.4);
     margin-bottom:25px;
 }
 
 .titulo{
-
     font-size:32px;
-
     font-weight:700;
-
     margin-bottom:10px;
 }
 
 .desc{
-
     color:#94a3b8;
-
     margin-bottom:35px;
 }
 
 .form-label{
-
     color:#cbd5e1;
-
     font-weight:500;
-
     margin-bottom:8px;
 }
 
 .form-control,
 .form-select{
-
     background:#1e293b !important;
-
     border:1px solid transparent !important;
-
     border-radius:16px !important;
-
     padding:14px 18px !important;
-
     color:white !important;
-
     transition:0.3s;
 }
 
 .form-control:focus,
 .form-select:focus{
-
     border-color:#2563eb !important;
-
-    box-shadow:
-    0 0 0 4px rgba(37,99,235,0.15) !important;
+    box-shadow:0 0 0 4px rgba(37,99,235,0.15) !important;
 }
 
 .form-control::placeholder{
-
     color:#94a3b8;
 }
 
 .form-select option{
-
     background:#1e293b;
 }
 
 .btn-admitir{
-
     width:100%;
-
     border:none;
-
     padding:16px;
-
     border-radius:18px;
-
-    background:
-    linear-gradient(
-    135deg,
-    #16a34a,
-    #15803d);
-
+    background:linear-gradient(135deg,#16a34a,#15803d);
     color:white;
-
     font-weight:600;
-
     font-size:17px;
-
     transition:0.35s;
-
     margin-top:20px;
 }
 
 .btn-admitir:hover{
-
     transform:translateY(-3px);
 }
 
 .alert{
-
     border:none !important;
-
     border-radius:16px !important;
-
     padding:15px 18px !important;
-
     font-weight:500;
 }
 
 .alert-success{
-
     background:rgba(34,197,94,0.15) !important;
-
     color:#86efac !important;
 }
 
 .alert-danger{
-
     background:rgba(239,68,68,0.15) !important;
-
     color:#fca5a5 !important;
 }
 
 .table{
-
     color:white;
 }
 
 .table thead{
-
     background:#1e293b;
 }
 
 .table tbody tr{
-
     border-color:rgba(255,255,255,0.05);
 }
 
 .badge-status{
-
     padding:8px 14px;
-
     border-radius:12px;
-
     font-size:13px;
-
     font-weight:600;
 }
 
 .status-analise{
-
     background:var(--yellow);
     color:white;
 }
 
 .status-liberado{
-
     background:var(--green);
     color:white;
 }
 
 .status-reprovado{
-
     background:var(--red);
     color:white;
 }
 
 .badge-isolado{
-
     background:#dc2626;
-
     color:white;
-
     padding:8px 14px;
-
     border-radius:12px;
-
     font-size:12px;
-
     font-weight:700;
 }
 
 .btn-aprovar{
-
     background:#16a34a;
-
     color:white;
-
     border:none;
-
     border-radius:10px;
-
     padding:8px 12px;
-
     text-decoration:none;
-
     font-size:13px;
-
     font-weight:600;
-
     margin-right:5px;
 }
 
 .btn-reprovar{
-
     background:#dc2626;
-
     color:white;
-
     border:none;
-
     border-radius:10px;
-
     padding:8px 12px;
-
     text-decoration:none;
-
     font-size:13px;
-
     font-weight:600;
 }
 
 .telefone-link{
-
     color:#22c55e;
-
     text-decoration:none;
-
     font-weight:600;
 }
 
 .telefone-link:hover{
-
     color:#4ade80;
 }
 
 .checkbox-box{
-
     display:flex;
-
     align-items:center;
-
     gap:12px;
-
     margin-top:10px;
 }
 
 .footer{
-
     text-align:center;
-
     margin-top:30px;
-
     color:#94a3b8;
-
     font-size:14px;
 }
 
-@media(max-width:768px){
+.modal-content-custom{
+    background:#0f172a;
+    color:white;
+    border-radius:25px;
+    border:1px solid rgba(255,255,255,.1);
+}
 
+.modal-foto{
+    width:170px;
+    height:170px;
+    object-fit:cover;
+    border-radius:25px;
+    border:5px solid white;
+    background:white;
+}
+
+.restricao-box{
+    display:none;
+    background:rgba(239,68,68,.15);
+    color:#fca5a5;
+    padding:12px;
+    border-radius:14px;
+    margin-top:10px;
+}
+
+@media(max-width:768px){
     body{
         padding:15px;
     }
@@ -375,9 +279,7 @@ body{
         font-size:26px;
     }
 }
-
 </style>
-
 </head>
 
 <body>
@@ -385,39 +287,27 @@ body{
 <div class="container-box">
 
     <div class="topo">
-
-        <div class="logo">
-            ORCA FACE SYSTEM
-        </div>
-
-        <div class="subtitulo">
-            Sistema de Pré-Admissão Industrial
-        </div>
-
+        <div class="logo">ORCA FACE SYSTEM</div>
+        <div class="subtitulo">Sistema de Pré-Admissão Industrial</div>
     </div>
 
     <div class="card-admissao">
 
-        <div class="titulo">
-            📋 Pré-Admissão
-        </div>
+        <div class="titulo">📋 Pré-Admissão</div>
 
         <div class="desc">
             Controle de campo isolado, bloqueio automático e validação de colaboradores.
         </div>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-
-                {% for category, message in messages %}
-
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
-                    </div>
-
-                {% endfor %}
-
-            {% endif %}
+       {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+           
         {% endwith %}
 
         <form method="POST">
@@ -425,297 +315,181 @@ body{
             <div class="row">
 
                 <div class="col-md-4 mb-4">
-
-                    <label class="form-label">
-                        Nome
-                    </label>
-
+                    <label class="form-label">Nome</label>
                     <input
                     type="text"
                     name="nome"
+                    id="nome"
                     class="form-control"
                     placeholder="Digite o nome"
+                    onblur="buscarColaborador()"
                     required>
-
                 </div>
 
                 <div class="col-md-4 mb-4">
-
-                    <label class="form-label">
-                        CPF
-                    </label>
-
+                    <label class="form-label">CPF</label>
                     <input
                     type="text"
                     name="cpf"
+                    id="cpf"
                     class="form-control"
                     placeholder="000.000.000-00"
+                    onblur="buscarColaboradorCpf()"
                     required>
-
                 </div>
 
                 <div class="col-md-4 mb-4">
-
-                    <label class="form-label">
-                        Telefone
-                    </label>
-
+                    <label class="form-label">Telefone</label>
                     <input
                     type="text"
                     name="telefone"
+                    id="telefone"
                     class="form-control"
                     placeholder="62999999999">
-
                 </div>
 
                 <div class="col-md-4 mb-4">
-
-                    <label class="form-label">
-                        Função
-                    </label>
-
+                    <label class="form-label">Função</label>
                     <input
                     type="text"
                     name="funcao"
+                    id="funcao"
                     class="form-control"
                     placeholder="Função do colaborador">
-
                 </div>
 
                 <div class="col-md-4 mb-4">
-
-                    <label class="form-label">
-                        Campo / Empresa
-                    </label>
-
+                    <label class="form-label">Campo / Empresa</label>
                     <input
                     type="text"
                     name="campo"
+                    id="campo"
                     class="form-control"
                     placeholder="Nome do campo">
-
                 </div>
 
                 <div class="col-md-4 mb-4">
-
-                    <label class="form-label">
-                        Obra
-                    </label>
-
+                    <label class="form-label">Obra</label>
                     <input
                     type="text"
                     name="obra"
+                    id="obra"
                     class="form-control"
                     placeholder="Nome da obra">
-
                 </div>
 
                 <div class="col-md-4 mb-4">
-
-                    <label class="form-label">
-                        Data da Admissão
-                    </label>
-
+                    <label class="form-label">Data da Admissão</label>
                     <input
                     type="date"
                     name="data_admissao"
                     class="form-control">
-
                 </div>
 
                 <div class="col-md-4 mb-4">
-
-                    <label class="form-label">
-                        Status
-                    </label>
-
-                    <select
-                    name="pre_admissao"
-                    class="form-select">
-
-                        <option value="Em análise">
-                            Em análise
-                        </option>
-
-                        <option value="Liberado">
-                            Liberado
-                        </option>
-
-                        <option value="Reprovado">
-                            Reprovado
-                        </option>
-
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="Em análise">Em análise</option>
+                        <option value="Liberado">Liberado</option>
+                        <option value="Reprovado">Reprovado</option>
                     </select>
-
                 </div>
 
                 <div class="col-md-4 mb-4">
-
-                    <label class="form-label">
-                        Campo Isolado
-                    </label>
-
+                    <label class="form-label">Campo Isolado</label>
                     <div class="checkbox-box">
-
-                        <input
-                        type="checkbox"
-                        name="campo_isolado"
-                        value="1">
-
-                        <span>
-                            🚫 Campo isolado
-                        </span>
-
+                        <input type="checkbox" name="campo_isolado" value="1">
+                        <span>🚫 Campo isolado</span>
                     </div>
-
                 </div>
 
             </div>
 
             <button class="btn-admitir">
-
                 ✅ Salvar Pré-Admissão
-
             </button>
 
         </form>
 
     </div>
 
-    {% if colaboradores %}
 
-    <div class="card-admissao">
+<div class="card-admissao mt-4">
 
-        <div class="titulo">
-            👷 Pré-Admissões
-        </div>
 
-        <div class="table-responsive mt-4">
+    <div class="titulo">
+        👷 Pré-Admissões Salvas
+    </div>
 
-            <table class="table align-middle">
+    {% if pre_admissoes %}
 
-                <thead>
+    <div class="table-responsive mt-4">
 
-                    <tr>
+        <a href="{{ url_for('exportar_pre_admissoes_excel') }}"
+   class="btn btn-success mb-3">
+    📊 Exportar Excel
+</a>
 
-                        <th>Nome</th>
-                        <th>CPF</th>
-                        <th>Telefone</th>
-                        <th>Função</th>
-                        <th>Campo</th>
-                        <th>Obra</th>
-                        <th>Status</th>
-                        <th>Isolado</th>
-                        <th>Ações</th>
+        <table class="table table-dark table-hover align-middle">
 
-                    </tr>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Telefone</th>
+                    <th>Função</th>
+                    <th>Campo</th>
+                    <th>Obra</th>
+                    <th>Status</th>
+                    <th>Isolado</th>
+                </tr>
+            </thead>
 
-                </thead>
+            <tbody>
+                {% for c in pre_admissoes %}
+                <tr>
+                    <td>{{ c.nome }}</td>
+                    <td>{{ c.cpf }}</td>
+                    <td>{{ c.telefone or '-' }}</td>
+                    <td>{{ c.funcao or '-' }}</td>
+                    <td>{{ c.campo or '-' }}</td>
+                    <td>{{ c.obra or '-' }}</td>
 
-                <tbody>
+                    <td>
+                        {% if c.status == 'Liberado' %}
+                            <span class="badge bg-success">Liberado</span>
+                        {% elif c.status == 'Reprovado' %}
+                            <span class="badge bg-danger">Reprovado</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Em análise</span>
+                        {% endif %}
+                    </td>
 
-                    {% for c in colaboradores %}
-
-                    <tr>
-
-                        <td>{{ c.nome }}</td>
-
-                        <td>{{ c.cpf }}</td>
-
-                        <td>
-
-                            {% if c.telefone %}
-
-                            <a
-                            href="https://wa.me/55{{ c.telefone }}"
-                            target="_blank"
-                            class="telefone-link">
-
-                                📞 {{ c.telefone }}
-
-                            </a>
-
-                            {% else %}
-
+                    <td>
+                        {% if c.isolado %}
+                            <span class="badge bg-danger">ISOLADO</span>
+                        {% else %}
                             -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
 
-                            {% endif %}
-
-                        </td>
-
-                        <td>{{ c.funcao }}</td>
-
-                        <td>{{ c.campo or '-' }}</td>
-
-                        <td>{{ c.obra or '-' }}</td>
-
-                        <td>
-
-                            <span class="badge-status
-                            {% if c.pre_admissao == 'Liberado' %}
-                                status-liberado
-                            {% elif c.pre_admissao == 'Reprovado' %}
-                                status-reprovado
-                            {% else %}
-                                status-analise
-                            {% endif %}
-                            ">
-
-                                {{ c.pre_admissao }}
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            {% if c.campo_isolado %}
-
-                                <span class="badge-isolado">
-                                    ISOLADO
-                                </span>
-
-                            {% else %}
-
-                                -
-
-                            {% endif %}
-
-                        </td>
-
-                        <td>
-
-                            <a
-                            href="/aprovar_admissao/{{ c.id }}"
-                            class="btn-aprovar">
-
-                                ✅ Aprovar
-
-                            </a>
-
-                            <a
-                            href="/reprovar_admissao/{{ c.id }}"
-                            class="btn-reprovar">
-
-                                ❌ Reprovar
-
-                            </a>
-
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
+        </table>
 
     </div>
 
+    {% else %}
+
+    <p style="color:#94a3b8;margin-top:20px;">
+        Nenhuma pré-admissão salva ainda.
+    </p>
+
     {% endif %}
+
+
+</div>
 
     <div class="footer">
         ORCA FACE SYSTEM © 2026
@@ -723,6 +497,153 @@ body{
 
 </div>
 
-</body>
+<div class="modal fade" id="modalColaborador" tabindex="-1">
 
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+
+        <div class="modal-content modal-content-custom">
+
+            <div class="modal-header border-0">
+                <h4 class="modal-title">👷 Colaborador já trabalhou aqui</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div style="display:flex;gap:25px;align-items:center;flex-wrap:wrap;">
+
+                    <img id="modalFoto"
+                         src=""
+                         class="modal-foto">
+
+                    <div style="flex:1;">
+
+                        <h2 id="modalNome"></h2>
+
+                        <p><b>CPF:</b> <span id="modalCpf"></span></p>
+                        <p><b>Telefone:</b> <span id="modalTelefone"></span></p>
+                        <p><b>Função:</b> <span id="modalFuncao"></span></p>
+                        <p><b>Obra:</b> <span id="modalObra"></span></p>
+                        <p><b>Campo:</b> <span id="modalCampo"></span></p>
+                        <p><b>Status:</b> <span id="modalStatus"></span></p>
+                        <p><b>Pré-admissão:</b> <span id="modalPreAdmissao"></span></p>
+
+                        <div id="modalRestricao" class="restricao-box">
+                            🚫 <b>RESTRITO:</b> <span id="modalMotivo"></span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer border-0">
+
+                <a id="btnVerFicha"
+                   href="#"
+                   target="_blank"
+                   class="btn btn-primary">
+                    Ver ficha completa
+                </a>
+
+                <button type="button"
+                        class="btn btn-success"
+                        data-bs-dismiss="modal">
+                    Continuar pré-admissão
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function buscarColaborador(){
+
+    let nome = document.getElementById("nome").value.trim();
+
+    if(nome.length < 3){
+        return;
+    }
+
+    consultarColaborador(nome);
+}
+
+function buscarColaboradorCpf(){
+
+    let cpf = document.getElementById("cpf").value.trim();
+
+    if(cpf.length < 5){
+        return;
+    }
+
+    consultarColaborador(cpf);
+}
+
+function consultarColaborador(termo){
+
+    fetch("/buscar_colaborador_pre_admissao?termo=" + encodeURIComponent(termo))
+    .then(response => response.json())
+    .then(data => {
+
+        if(!data.encontrado){
+            return;
+        }
+
+        document.getElementById("modalFoto").src = data.foto;
+        document.getElementById("modalNome").innerText = data.nome;
+        document.getElementById("modalCpf").innerText = data.cpf || "-";
+        document.getElementById("modalTelefone").innerText = data.telefone || "-";
+        document.getElementById("modalFuncao").innerText = data.funcao || "-";
+        document.getElementById("modalObra").innerText = data.obra || "-";
+        document.getElementById("modalCampo").innerText = data.campo || "-";
+        document.getElementById("modalStatus").innerText = data.status || "-";
+        document.getElementById("modalPreAdmissao").innerText = data.pre_admissao || "-";
+
+        document.getElementById("btnVerFicha").href = "/colaborador/" + data.id;
+
+        if(data.restrito){
+            document.getElementById("modalRestricao").style.display = "block";
+            document.getElementById("modalMotivo").innerText = data.motivo || "Sem motivo informado";
+        }else{
+            document.getElementById("modalRestricao").style.display = "none";
+        }
+
+        if(!document.getElementById("cpf").value){
+            document.getElementById("cpf").value = data.cpf || "";
+        }
+
+        if(!document.getElementById("telefone").value){
+            document.getElementById("telefone").value = data.telefone || "";
+        }
+
+        if(!document.getElementById("funcao").value){
+            document.getElementById("funcao").value = data.funcao || "";
+        }
+
+        if(!document.getElementById("obra").value){
+            document.getElementById("obra").value = data.obra || "";
+        }
+
+        if(!document.getElementById("campo").value){
+            document.getElementById("campo").value = data.campo || "";
+        }
+
+        let modal = new bootstrap.Modal(document.getElementById("modalColaborador"));
+        modal.show();
+
+    })
+    .catch(error => {
+        console.log("Erro ao buscar colaborador:", error);
+    });
+}
+</script>
+
+</body>
 </html>

@@ -13,6 +13,10 @@ from werkzeug.utils import secure_filename
 
 from models import db, Colaborador, ListaNegra
 
+import pandas as pd
+from flask import send_file
+from io import BytesIO
+
 app = Flask(__name__)
 app.secret_key = '123456'
 
@@ -553,6 +557,96 @@ def importar():
 
     return redirect('/')
 
+from flask import jsonify
+from sqlalchemy import or_
+
+@app.route("/buscar_colaborador_pre_admissao")
+@login_required
+def buscar_colaborador_pre_admissao():
+
+    termo = request.args.get("termo", "").strip()
+
+    if not termo:
+        return jsonify({"encontrado": False})
+
+    cpf_limpo = (
+        termo.replace(".", "")
+        .replace("-", "")
+        .replace("/", "")
+        .replace(" ", "")
+        .lstrip("0")
+    )
+
+    colaborador = Colaborador.query.filter(
+        or_(
+            Colaborador.nome.ilike(f"%{termo}%"),
+            Colaborador.cpf == cpf_limpo
+        )
+    ).first()
+
+    if not colaborador:
+        return jsonify({"encontrado": False})
+
+    return jsonify({
+        "encontrado": True,
+        "id": colaborador.id,
+        "nome": colaborador.nome,
+        "cpf": colaborador.cpf,
+        "telefone": colaborador.telefone or "",
+        "funcao": colaborador.funcao or "",
+        "obra": colaborador.obra or "",
+        "campo": colaborador.campo or "",
+        "foto": colaborador.foto or "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+        "restrito": colaborador.restrito,
+        "motivo": colaborador.motivo or "",
+        "status": colaborador.status or "Liberado",
+        "pre_admissao": colaborador.pre_admissao or "Em análise"
+    })
+
+
+@app.route("/exportar_pre_admissoes_excel")
+@login_required
+def exportar_pre_admissoes_excel():
+
+    pre_admissoes = PreAdmissao.query.all()
+
+    dados = []
+
+    for p in pre_admissoes:
+        dados.append({
+            "Nome": p.nome,
+            "CPF": p.cpf,
+            "Telefone": p.telefone,
+            "Função": p.funcao,
+            "Campo": p.campo,
+            "Obra": p.obra,
+            "Status": p.status,
+            "Isolado": "SIM" if p.isolado else "NÃO"
+        })
+
+    df = pd.DataFrame(dados)
+
+    arquivo = BytesIO()
+
+    with pd.ExcelWriter(
+        arquivo,
+        engine="openpyxl"
+    ) as writer:
+        df.to_excel(
+            writer,
+            index=False,
+            sheet_name="Pré-Admissões"
+        )
+
+    arquivo.seek(0)
+
+    return send_file(
+        arquivo,
+        as_attachment=True,
+        download_name="pre_admissoes.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    
 from flask import request, jsonify
 
 @app.route('/excluir_varios', methods=['POST'])
