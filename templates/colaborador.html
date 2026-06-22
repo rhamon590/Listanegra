@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Ficha do Colaborador</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-
 *{
     margin:0;
     padding:0;
@@ -21,349 +16,385 @@
 }
 
 :root{
-
     --bg:#020617;
     --card:#0f172a;
     --card2:#111827;
-
     --blue:#3b82f6;
     --blue2:#2563eb;
-
     --green:#22c55e;
     --red:#ef4444;
     --yellow:#f59e0b;
-
     --text:#f8fafc;
     --muted:#94a3b8;
+    --border:rgba(255,255,255,.09);
 }
 
 body{
-
     font-family:'Poppins',sans-serif;
-
     background:
-    radial-gradient(circle at top left,#1e3a8a 0%,transparent 30%),
-    radial-gradient(circle at bottom right,#0f766e 0%,transparent 30%),
+    radial-gradient(circle at 10% 10%,rgba(37,99,235,.45),transparent 30%),
+    radial-gradient(circle at 90% 90%,rgba(15,118,110,.45),transparent 30%),
     linear-gradient(135deg,#020617,#0f172a,#111827);
-
     min-height:100vh;
-
     padding:40px 20px;
-
     color:var(--text);
-
     overflow-x:hidden;
 }
 
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px, transparent 1px);
+    background-size:45px 45px;
+    mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),transparent);
+    pointer-events:none;
+}
+
 .card{
-
     max-width:1300px;
-
     margin:auto;
-
-    background:rgba(15,23,42,0.75);
-
-    backdrop-filter:blur(18px);
-
-    border:1px solid rgba(255,255,255,0.08);
-
-    border-radius:30px;
-
+    background:rgba(15,23,42,0.78);
+    backdrop-filter:blur(22px);
+    border:1px solid var(--border);
+    border-radius:32px;
     overflow:hidden;
-
-    box-shadow:
-    0 20px 60px rgba(0,0,0,0.5);
+    box-shadow:0 25px 80px rgba(0,0,0,.55);
+    animation:entradaCard .8s ease both;
 }
 
 .header{
-
     position:relative;
-
-    padding:50px;
-
-    background:
-    linear-gradient(
-    135deg,
-    rgba(37,99,235,0.95),
-    rgba(29,78,216,0.95));
-
+    padding:55px;
+    background:linear-gradient(135deg,rgba(37,99,235,.95),rgba(29,78,216,.9));
     overflow:hidden;
 }
 
+.header::before{
+    content:"";
+    position:absolute;
+    width:450px;
+    height:450px;
+    background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%);
+    right:-150px;
+    top:-180px;
+    animation:flutuar 7s ease-in-out infinite;
+}
+
+.header::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(120deg,transparent,rgba(255,255,255,.13),transparent);
+    transform:translateX(-100%);
+    animation:brilhoHeader 4s infinite;
+}
+
 .topo{
-
+    position:relative;
+    z-index:2;
     display:flex;
-
     align-items:center;
-
     gap:35px;
-
     flex-wrap:wrap;
 }
 
 .foto{
-
     width:200px;
     height:200px;
-
     object-fit:cover;
-
-    border-radius:30px;
-
-    border:6px solid rgba(255,255,255,0.95);
-
+    border-radius:32px;
+    border:6px solid rgba(255,255,255,.95);
     background:white;
-
-    box-shadow:
-    0 10px 35px rgba(0,0,0,0.4);
+    box-shadow:0 15px 45px rgba(0,0,0,.45);
+    animation:fotoPulse 2.4s infinite;
 }
 
 .dados-principais{
-
     flex:1;
 }
 
 .nome{
-
     font-size:42px;
-
-    font-weight:700;
-
+    font-weight:800;
     margin-bottom:20px;
+    letter-spacing:-1px;
+    animation:subir .7s ease both;
 }
 
 .status{
-
     display:inline-flex;
-
     align-items:center;
-
     gap:10px;
-
     padding:14px 22px;
-
-    border-radius:14px;
-
+    border-radius:16px;
     font-size:16px;
-
-    font-weight:600;
+    font-weight:700;
+    animation:subir .9s ease both;
 }
 
 .status-ok{
-
-    background:rgba(34,197,94,0.15);
-
+    background:rgba(34,197,94,.18);
     color:#86efac;
-
-    border:1px solid rgba(34,197,94,0.3);
+    border:1px solid rgba(34,197,94,.35);
+    box-shadow:0 0 25px rgba(34,197,94,.15);
 }
 
 .status-bloq{
-
-    background:rgba(239,68,68,0.15);
-
-    color:#fca5a5;
-
-    border:1px solid rgba(239,68,68,0.3);
+    background:rgba(239,68,68,.18);
+    color:#fecaca;
+    border:1px solid rgba(239,68,68,.4);
+    box-shadow:0 0 30px rgba(239,68,68,.25);
+    animation:pulseBloq 1.6s infinite;
 }
 
 .status-admissao{
-
-    background:rgba(245,158,11,0.15);
-
+    background:rgba(245,158,11,.18);
     color:#fcd34d;
-
-    border:1px solid rgba(245,158,11,0.3);
+    border:1px solid rgba(245,158,11,.35);
+    box-shadow:0 0 25px rgba(245,158,11,.14);
 }
 
 .conteudo{
-
-    padding:40px;
+    padding:42px;
 }
 
 .titulo-secao{
-
     font-size:30px;
-
-    font-weight:700;
-
+    font-weight:800;
     margin-bottom:30px;
+    display:flex;
+    align-items:center;
+    gap:12px;
 }
 
 .info{
-
     display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(260px,1fr));
-
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
     gap:22px;
 }
 
 .box{
-
-    background:rgba(30,41,59,0.65);
-
-    border:1px solid rgba(255,255,255,0.06);
-
-    border-radius:22px;
-
+    background:linear-gradient(180deg,rgba(30,41,59,.76),rgba(15,23,42,.75));
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:24px;
     padding:25px;
+    transition:.35s;
+    position:relative;
+    overflow:hidden;
+    animation:aparecer .7s ease both;
+}
 
-    transition:0.35s;
+.box:nth-child(1){animation-delay:.05s;}
+.box:nth-child(2){animation-delay:.10s;}
+.box:nth-child(3){animation-delay:.15s;}
+.box:nth-child(4){animation-delay:.20s;}
+.box:nth-child(5){animation-delay:.25s;}
+.box:nth-child(6){animation-delay:.30s;}
+.box:nth-child(7){animation-delay:.35s;}
+.box:nth-child(8){animation-delay:.40s;}
+.box:nth-child(9){animation-delay:.45s;}
+.box:nth-child(10){animation-delay:.50s;}
+.box:nth-child(11){animation-delay:.55s;}
+.box:nth-child(12){animation-delay:.60s;}
+.box:nth-child(13){animation-delay:.65s;}
+.box:nth-child(14){animation-delay:.70s;}
+
+.box::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);
+    transform:translateX(-120%);
+    transition:.6s;
+}
+
+.box:hover::before{
+    transform:translateX(120%);
 }
 
 .box:hover{
-
-    transform:translateY(-6px);
-
-    border-color:rgba(59,130,246,0.4);
-
-    box-shadow:
-    0 15px 35px rgba(37,99,235,0.15);
+    transform:translateY(-7px) scale(1.01);
+    border-color:rgba(59,130,246,.45);
+    box-shadow:0 18px 40px rgba(37,99,235,.17);
 }
 
 .titulo{
-
     color:var(--muted);
-
     font-size:12px;
-
     text-transform:uppercase;
-
     letter-spacing:2px;
-
     margin-bottom:12px;
-
-    font-weight:600;
+    font-weight:700;
 }
 
 .valor{
-
     font-size:19px;
-
     font-weight:600;
-
     line-height:1.5;
-
     word-break:break-word;
 }
 
 .motivo{
-
     color:#fca5a5;
 }
 
 .whatsapp{
-
     margin-top:10px;
-
     display:inline-flex;
-
     align-items:center;
-
     gap:8px;
-
     text-decoration:none;
-
     color:#86efac;
-
     font-size:14px;
+    font-weight:700;
+    transition:.25s;
+}
 
-    font-weight:600;
+.whatsapp:hover{
+    color:#bbf7d0;
+    transform:translateX(4px);
 }
 
 .acoes{
-
     margin-top:45px;
-
     display:flex;
-
     gap:18px;
-
     flex-wrap:wrap;
 }
 
 .btn{
-
     padding:16px 28px;
-
     border:none;
-
-    border-radius:16px;
-
+    border-radius:18px;
     cursor:pointer;
-
     text-decoration:none;
-
     color:white;
-
     font-size:15px;
-
-    font-weight:600;
-
-    transition:0.35s;
-
+    font-weight:800;
+    transition:.35s;
     display:flex;
-
     align-items:center;
-
     gap:10px;
+    position:relative;
+    overflow:hidden;
+}
+
+.btn::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(120deg,transparent,rgba(255,255,255,.22),transparent);
+    transform:translateX(-120%);
+    transition:.6s;
+}
+
+.btn:hover::before{
+    transform:translateX(120%);
 }
 
 .btn:hover{
-
-    transform:translateY(-3px);
+    transform:translateY(-4px);
 }
 
 .btn-voltar{
-
-    background:
-    linear-gradient(
-    135deg,
-    #2563eb,
-    #1d4ed8);
+    background:linear-gradient(135deg,#2563eb,#1d4ed8);
 }
 
 .btn-imprimir{
-
-    background:
-    linear-gradient(
-    135deg,
-    #16a34a,
-    #15803d);
+    background:linear-gradient(135deg,#16a34a,#15803d);
 }
 
 .btn-restringir{
-
-    background:
-    linear-gradient(
-    135deg,
-    #dc2626,
-    #991b1b);
+    background:linear-gradient(135deg,#dc2626,#991b1b);
+    box-shadow:0 12px 30px rgba(220,38,38,.22);
 }
 
 .btn-liberar{
-
-    background:
-    linear-gradient(
-    135deg,
-    #f59e0b,
-    #d97706);
+    background:linear-gradient(135deg,#f59e0b,#d97706);
 }
 
 .footer{
-
     margin-top:50px;
-
     text-align:center;
-
     color:var(--muted);
-
     font-size:14px;
 }
 
+@keyframes entradaCard{
+    from{
+        opacity:0;
+        transform:translateY(35px) scale(.98);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0) scale(1);
+    }
+}
+
+@keyframes aparecer{
+    from{
+        opacity:0;
+        transform:translateY(25px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes subir{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes fotoPulse{
+    0%,100%{
+        box-shadow:0 15px 45px rgba(0,0,0,.45),0 0 0 rgba(255,255,255,0);
+    }
+    50%{
+        box-shadow:0 15px 45px rgba(0,0,0,.45),0 0 35px rgba(255,255,255,.35);
+    }
+}
+
+@keyframes brilhoHeader{
+    100%{
+        transform:translateX(100%);
+    }
+}
+
+@keyframes flutuar{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(25px);
+    }
+}
+
+@keyframes pulseBloq{
+    0%,100%{
+        transform:scale(1);
+        box-shadow:0 0 20px rgba(239,68,68,.2);
+    }
+    50%{
+        transform:scale(1.03);
+        box-shadow:0 0 45px rgba(239,68,68,.45);
+    }
+}
+
 @media(max-width:768px){
+    body{
+        padding:18px;
+    }
 
     .header{
         padding:35px 25px;
@@ -379,24 +410,37 @@ body{
     }
 
     .foto{
-        width:150px;
-        height:150px;
+        width:155px;
+        height:155px;
     }
 
     .nome{
         font-size:30px;
     }
 
+    .titulo-secao{
+        font-size:24px;
+    }
+
     .acoes{
+        justify-content:center;
+    }
+
+    .btn{
+        width:100%;
         justify-content:center;
     }
 }
 
 @media print{
-
     body{
         background:white;
         padding:0;
+        color:#000;
+    }
+
+    body::before{
+        display:none;
     }
 
     .acoes{
@@ -406,11 +450,29 @@ body{
     .card{
         box-shadow:none;
         border:none;
+        background:white;
+    }
+
+    .header{
+        background:#1d4ed8;
+    }
+
+    .box{
+        background:white;
+        border:1px solid #ddd;
+        color:#000;
+        box-shadow:none;
+    }
+
+    .titulo{
+        color:#444;
+    }
+
+    .footer{
+        color:#444;
     }
 }
-
 </style>
-
 </head>
 
 <body>
@@ -418,53 +480,21 @@ body{
 <div class="card">
 
     <div class="header">
-
         <div class="topo">
 
-            {% if c.foto %}
-
-            <img
-            class="foto"
-            src="{{ c.foto }}">
-
-            {% else %}
-
-            <img
-            class="foto"
-            src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
-
-            {% endif %}
+            <img class="foto" src="/static/fotos/10081004630.jpg">
 
             <div class="dados-principais">
-
                 <div class="nome">
-                    {{ c.nome }}
+                    ABEL NUNES BARROSO
                 </div>
-
-                {% if c.restrito %}
-
-                <div class="status status-bloq">
-                    🚫 COLABORADOR RESTRITO
-                </div>
-
-                {% elif c.pre_admissao == 'Em análise' %}
 
                 <div class="status status-admissao">
-                     SEM RESTRIÇÃO
+                    ✅ SEM RESTRIÇÃO
                 </div>
-
-                {% else %}
-
-                <div class="status status-ok">
-                    ✅ COLABORADOR LIBERADO
-                </div>
-
-                {% endif %}
-
             </div>
 
         </div>
-
     </div>
 
     <div class="conteudo">
@@ -477,96 +507,79 @@ body{
 
             <div class="box">
                 <div class="titulo">CPF</div>
-                <div class="valor">{{ c.cpf or '-' }}</div>
+                <div class="valor">10081004630</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Telefone</div>
-
                 <div class="valor">
-
-                    {{ c.telefone or '-' }}
-
-                    {% if c.telefone %}
-
+                    38991908782
                     <br>
-
-                    <a
-                    class="whatsapp"
-                    href="https://wa.me/55{{ c.telefone }}"
-                    target="_blank">
-
+                    <a class="whatsapp" href="https://wa.me/5538991908782" target="_blank">
                         💬 Chamar no WhatsApp
-
                     </a>
-
-                    {% endif %}
-
                 </div>
             </div>
 
             <div class="box">
                 <div class="titulo">Nascimento</div>
-                <div class="valor">{{ c.data_nascimento or '-' }}</div>
+                <div class="valor">02/08/1993</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Naturalidade</div>
-                <div class="valor">{{ c.naturalidade or '-' }}</div>
+                <div class="valor">LEME DO PRADO</div>
             </div>
 
             <div class="box">
                 <div class="titulo">CEP</div>
-                <div class="valor">{{ c.cep or '-' }}</div>
+                <div class="valor">39655-000</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Endereço</div>
-                <div class="valor">{{ c.endereco or '-' }}</div>
+                <div class="valor">SIT BOMBUZAL SN</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Cidade</div>
-                <div class="valor">{{ c.cidade or '-' }}</div>
+                <div class="valor">LEME DO PRADO</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Estado</div>
-                <div class="valor">{{ c.estado or '-' }}</div>
+                <div class="valor">-</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Função</div>
-                <div class="valor">{{ c.funcao or '-' }}</div>
+                <div class="valor">CALDEIREIRO I</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Obra</div>
-                <div class="valor">{{ c.obra or '-' }}</div>
+                <div class="valor">EBER BIO ENERGIA E AGRICULTURA LTDA</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Data Admissão</div>
-                <div class="valor">{{ c.data_admissao or '-' }}</div>
+                <div class="valor">-</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Status</div>
-                <div class="valor">{{ c.status or 'Liberado' }}</div>
+                <div class="valor">Liberado</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Data Cadastro</div>
-                <div class="valor">{{ c.data_cadastro or '-' }}</div>
+                <div class="valor">2026-06-16 14:10:05</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Motivo da Restrição</div>
-
                 <div class="valor motivo">
-
-                    {{ c.motivo or 'Nenhum motivo informado' }}
-
+                    Nenhum motivo informado
                 </div>
             </div>
 
@@ -578,35 +591,13 @@ body{
                 ← Voltar
             </a>
 
-            <button
-            onclick="window.print()"
-            class="btn btn-imprimir">
-
+            <button onclick="window.print()" class="btn btn-imprimir">
                 🖨️ Imprimir
-
             </button>
 
-            {% if c.restrito %}
-
-            <a
-            href="/liberar/{{ c.id }}"
-            class="btn btn-liberar">
-
-                ✅ Liberar
-
-            </a>
-
-            {% else %}
-
-            <a
-            href="/restringir/{{ c.id }}"
-            class="btn btn-restringir">
-
+            <a href="/restringir/1" class="btn btn-restringir">
                 🚫 Restringir
-
             </a>
-
-            {% endif %}
 
         </div>
 
