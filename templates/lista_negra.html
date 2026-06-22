@@ -382,6 +382,34 @@ tr:hover{
     flex-wrap:wrap;
 }
 
+.alerta-busca{
+    display:none;
+    margin-top:14px;
+    padding:16px 18px;
+    border-radius:16px;
+    font-weight:600;
+    border:1px solid rgba(255,255,255,.08);
+}
+.alerta-busca.ok{
+    display:block;
+    background:rgba(34,197,94,.14);
+    color:#86efac;
+}
+.alerta-busca.perigo{
+    display:block;
+    background:rgba(239,68,68,.16);
+    color:#fca5a5;
+}
+.alerta-busca.neutro{
+    display:block;
+    background:rgba(59,130,246,.14);
+    color:#bfdbfe;
+}
+.alerta-busca a{
+    color:white;
+    text-decoration:underline;
+}
+
 .footer{
 
     text-align:center;
@@ -564,7 +592,9 @@ tr:hover{
                 <input
                 type="text"
                 id="pesquisa"
-                placeholder="Pesquisar bloqueado...">
+                placeholder="Pesquisar bloqueado pelo nome ou CPF...">
+
+                <div id="resultadoBuscaStatus" class="alerta-busca"></div>
 
             </div>
 
@@ -654,6 +684,8 @@ tr:hover{
 const pesquisa =
 document.getElementById('pesquisa');
 
+let timerBusca = null;
+
 pesquisa.addEventListener('keyup',()=>{
 
     let filtro =
@@ -672,7 +704,55 @@ pesquisa.addEventListener('keyup',()=>{
         ? ''
         : 'none';
     });
+
+    clearTimeout(timerBusca);
+
+    timerBusca = setTimeout(()=>{
+        consultarStatusColaborador(pesquisa.value.trim());
+    }, 350);
 });
+
+function consultarStatusColaborador(termo){
+
+    const box = document.getElementById('resultadoBuscaStatus');
+
+    if(!box){
+        return;
+    }
+
+    if(termo.length < 3){
+        box.style.display = 'none';
+        box.className = 'alerta-busca';
+        box.innerHTML = '';
+        return;
+    }
+
+    fetch('/buscar_status_colaborador?termo=' + encodeURIComponent(termo))
+    .then(res => res.json())
+    .then(data => {
+
+        box.className = 'alerta-busca';
+
+        if(!data.encontrado){
+            box.classList.add('neutro');
+            box.innerHTML = 'ℹ️ Não encontrado na lista normal nem na Lista Negra.';
+            return;
+        }
+
+        if(data.na_lista_negra || data.restrito){
+            box.classList.add('perigo');
+            box.innerHTML = `🚫 <b>${data.nome}</b> está na Lista Negra / Restrito.<br>Motivo: ${data.motivo || 'Sem motivo informado'}`;
+        }else{
+            box.classList.add('ok');
+            box.innerHTML = `✅ <b>${data.nome}</b> está na lista normal e não consta na Lista Negra.`;
+        }
+
+        if(data.url_ficha){
+            box.innerHTML += `<br><a href="${data.url_ficha}">Abrir ficha do colaborador</a>`;
+        }
+    })
+    .catch(()=>{});
+}
 
 </script>
 
