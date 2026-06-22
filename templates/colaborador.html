@@ -9,18 +9,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 :root{
     --bg:#020617;
     --card:#0f172a;
-    --card2:#111827;
     --blue:#3b82f6;
-    --blue2:#2563eb;
     --green:#22c55e;
     --red:#ef4444;
     --yellow:#f59e0b;
@@ -56,7 +50,7 @@ body::before{
 .card{
     max-width:1300px;
     margin:auto;
-    background:rgba(15,23,42,0.78);
+    background:rgba(15,23,42,.78);
     backdrop-filter:blur(22px);
     border:1px solid var(--border);
     border-radius:32px;
@@ -112,9 +106,7 @@ body::before{
     animation:fotoPulse 2.4s infinite;
 }
 
-.dados-principais{
-    flex:1;
-}
+.dados-principais{flex:1}
 
 .nome{
     font-size:42px;
@@ -157,9 +149,7 @@ body::before{
     box-shadow:0 0 25px rgba(245,158,11,.14);
 }
 
-.conteudo{
-    padding:42px;
-}
+.conteudo{padding:42px}
 
 .titulo-secao{
     font-size:30px;
@@ -187,21 +177,6 @@ body::before{
     animation:aparecer .7s ease both;
 }
 
-.box:nth-child(1){animation-delay:.05s;}
-.box:nth-child(2){animation-delay:.10s;}
-.box:nth-child(3){animation-delay:.15s;}
-.box:nth-child(4){animation-delay:.20s;}
-.box:nth-child(5){animation-delay:.25s;}
-.box:nth-child(6){animation-delay:.30s;}
-.box:nth-child(7){animation-delay:.35s;}
-.box:nth-child(8){animation-delay:.40s;}
-.box:nth-child(9){animation-delay:.45s;}
-.box:nth-child(10){animation-delay:.50s;}
-.box:nth-child(11){animation-delay:.55s;}
-.box:nth-child(12){animation-delay:.60s;}
-.box:nth-child(13){animation-delay:.65s;}
-.box:nth-child(14){animation-delay:.70s;}
-
 .box::before{
     content:"";
     position:absolute;
@@ -211,9 +186,7 @@ body::before{
     transition:.6s;
 }
 
-.box:hover::before{
-    transform:translateX(120%);
-}
+.box:hover::before{transform:translateX(120%)}
 
 .box:hover{
     transform:translateY(-7px) scale(1.01);
@@ -237,9 +210,7 @@ body::before{
     word-break:break-word;
 }
 
-.motivo{
-    color:#fca5a5;
-}
+.motivo{color:#fca5a5}
 
 .whatsapp{
     margin-top:10px;
@@ -291,30 +262,13 @@ body::before{
     transition:.6s;
 }
 
-.btn:hover::before{
-    transform:translateX(120%);
-}
+.btn:hover::before{transform:translateX(120%)}
+.btn:hover{transform:translateY(-4px)}
 
-.btn:hover{
-    transform:translateY(-4px);
-}
-
-.btn-voltar{
-    background:linear-gradient(135deg,#2563eb,#1d4ed8);
-}
-
-.btn-imprimir{
-    background:linear-gradient(135deg,#16a34a,#15803d);
-}
-
-.btn-restringir{
-    background:linear-gradient(135deg,#dc2626,#991b1b);
-    box-shadow:0 12px 30px rgba(220,38,38,.22);
-}
-
-.btn-liberar{
-    background:linear-gradient(135deg,#f59e0b,#d97706);
-}
+.btn-voltar{background:linear-gradient(135deg,#2563eb,#1d4ed8)}
+.btn-imprimir{background:linear-gradient(135deg,#16a34a,#15803d)}
+.btn-restringir{background:linear-gradient(135deg,#dc2626,#991b1b)}
+.btn-liberar{background:linear-gradient(135deg,#f59e0b,#d97706)}
 
 .footer{
     margin-top:50px;
@@ -324,153 +278,60 @@ body::before{
 }
 
 @keyframes entradaCard{
-    from{
-        opacity:0;
-        transform:translateY(35px) scale(.98);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0) scale(1);
-    }
+    from{opacity:0;transform:translateY(35px) scale(.98)}
+    to{opacity:1;transform:translateY(0) scale(1)}
 }
 
 @keyframes aparecer{
-    from{
-        opacity:0;
-        transform:translateY(25px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+    from{opacity:0;transform:translateY(25px)}
+    to{opacity:1;transform:translateY(0)}
 }
 
 @keyframes subir{
-    from{
-        opacity:0;
-        transform:translateY(20px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+    from{opacity:0;transform:translateY(20px)}
+    to{opacity:1;transform:translateY(0)}
 }
 
 @keyframes fotoPulse{
-    0%,100%{
-        box-shadow:0 15px 45px rgba(0,0,0,.45),0 0 0 rgba(255,255,255,0);
-    }
-    50%{
-        box-shadow:0 15px 45px rgba(0,0,0,.45),0 0 35px rgba(255,255,255,.35);
-    }
+    0%,100%{box-shadow:0 15px 45px rgba(0,0,0,.45),0 0 0 rgba(255,255,255,0)}
+    50%{box-shadow:0 15px 45px rgba(0,0,0,.45),0 0 35px rgba(255,255,255,.35)}
 }
 
 @keyframes brilhoHeader{
-    100%{
-        transform:translateX(100%);
-    }
+    100%{transform:translateX(100%)}
 }
 
 @keyframes flutuar{
-    0%,100%{
-        transform:translateY(0);
-    }
-    50%{
-        transform:translateY(25px);
-    }
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(25px)}
 }
 
 @keyframes pulseBloq{
-    0%,100%{
-        transform:scale(1);
-        box-shadow:0 0 20px rgba(239,68,68,.2);
-    }
-    50%{
-        transform:scale(1.03);
-        box-shadow:0 0 45px rgba(239,68,68,.45);
-    }
+    0%,100%{transform:scale(1);box-shadow:0 0 20px rgba(239,68,68,.2)}
+    50%{transform:scale(1.03);box-shadow:0 0 45px rgba(239,68,68,.45)}
 }
 
 @media(max-width:768px){
-    body{
-        padding:18px;
-    }
-
-    .header{
-        padding:35px 25px;
-    }
-
-    .conteudo{
-        padding:25px;
-    }
-
-    .topo{
-        justify-content:center;
-        text-align:center;
-    }
-
-    .foto{
-        width:155px;
-        height:155px;
-    }
-
-    .nome{
-        font-size:30px;
-    }
-
-    .titulo-secao{
-        font-size:24px;
-    }
-
-    .acoes{
-        justify-content:center;
-    }
-
-    .btn{
-        width:100%;
-        justify-content:center;
-    }
+    body{padding:18px}
+    .header{padding:35px 25px}
+    .conteudo{padding:25px}
+    .topo{justify-content:center;text-align:center}
+    .foto{width:155px;height:155px}
+    .nome{font-size:30px}
+    .titulo-secao{font-size:24px}
+    .acoes{justify-content:center}
+    .btn{width:100%;justify-content:center}
 }
 
 @media print{
-    body{
-        background:white;
-        padding:0;
-        color:#000;
-    }
-
-    body::before{
-        display:none;
-    }
-
-    .acoes{
-        display:none;
-    }
-
-    .card{
-        box-shadow:none;
-        border:none;
-        background:white;
-    }
-
-    .header{
-        background:#1d4ed8;
-    }
-
-    .box{
-        background:white;
-        border:1px solid #ddd;
-        color:#000;
-        box-shadow:none;
-    }
-
-    .titulo{
-        color:#444;
-    }
-
-    .footer{
-        color:#444;
-    }
+    body{background:white;padding:0;color:#000}
+    body::before{display:none}
+    .acoes{display:none}
+    .card{box-shadow:none;border:none;background:white}
+    .header{background:#1d4ed8}
+    .box{background:white;border:1px solid #ddd;color:#000;box-shadow:none}
+    .titulo{color:#444}
+    .footer{color:#444}
 }
 </style>
 </head>
@@ -482,16 +343,30 @@ body::before{
     <div class="header">
         <div class="topo">
 
-            <img class="foto" src="/static/fotos/10081004630.jpg">
+            {% if c.foto %}
+                <img class="foto" src="{{ c.foto }}">
+            {% else %}
+                <img class="foto" src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+            {% endif %}
 
             <div class="dados-principais">
                 <div class="nome">
-                    ABEL NUNES BARROSO
+                    {{ c.nome or '-' }}
                 </div>
 
-                <div class="status status-admissao">
-                    ✅ SEM RESTRIÇÃO
-                </div>
+                {% if c.restrito %}
+                    <div class="status status-bloq">
+                        🚫 COLABORADOR RESTRITO
+                    </div>
+                {% elif c.status %}
+                    <div class="status status-admissao">
+                        ✅ {{ c.status }}
+                    </div>
+                {% else %}
+                    <div class="status status-ok">
+                        ✅ SEM RESTRIÇÃO
+                    </div>
+                {% endif %}
             </div>
 
         </div>
@@ -507,79 +382,98 @@ body::before{
 
             <div class="box">
                 <div class="titulo">CPF</div>
-                <div class="valor">10081004630</div>
+                <div class="valor">{{ c.cpf or '-' }}</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Telefone</div>
                 <div class="valor">
-                    38991908782
-                    <br>
-                    <a class="whatsapp" href="https://wa.me/5538991908782" target="_blank">
-                        💬 Chamar no WhatsApp
-                    </a>
+                    {{ c.telefone or '-' }}
+
+                    {% if c.telefone %}
+                        <br>
+                        <a class="whatsapp" href="https://wa.me/55{{ c.telefone|replace(' ', '')|replace('-', '')|replace('(', '')|replace(')', '') }}" target="_blank">
+                            💬 Chamar no WhatsApp
+                        </a>
+                    {% endif %}
                 </div>
             </div>
 
             <div class="box">
                 <div class="titulo">Nascimento</div>
-                <div class="valor">02/08/1993</div>
+                <div class="valor">{{ c.data_nascimento or '-' }}</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Naturalidade</div>
-                <div class="valor">LEME DO PRADO</div>
+                <div class="valor">{{ c.naturalidade or '-' }}</div>
             </div>
 
             <div class="box">
                 <div class="titulo">CEP</div>
-                <div class="valor">39655-000</div>
+                <div class="valor">{{ c.cep or '-' }}</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Endereço</div>
-                <div class="valor">SIT BOMBUZAL SN</div>
+                <div class="valor">{{ c.endereco or '-' }}</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Cidade</div>
-                <div class="valor">LEME DO PRADO</div>
+                <div class="valor">{{ c.cidade or '-' }}</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Estado</div>
-                <div class="valor">-</div>
+                <div class="valor">{{ c.estado or '-' }}</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Função</div>
-                <div class="valor">CALDEIREIRO I</div>
+                <div class="valor">{{ c.funcao or '-' }}</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Obra</div>
-                <div class="valor">EBER BIO ENERGIA E AGRICULTURA LTDA</div>
+                <div class="valor">{{ c.obra or '-' }}</div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Campo</div>
+                <div class="valor">{{ c.campo or '-' }}</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Data Admissão</div>
-                <div class="valor">-</div>
+                <div class="valor">{{ c.data_admissao or '-' }}</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Status</div>
-                <div class="valor">Liberado</div>
+                <div class="valor">
+                    {% if c.restrito %}
+                        Restrito
+                    {% else %}
+                        {{ c.status or 'Liberado' }}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="box">
+                <div class="titulo">Pré-Admissão</div>
+                <div class="valor">{{ c.pre_admissao or '-' }}</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Data Cadastro</div>
-                <div class="valor">2026-06-16 14:10:05</div>
+                <div class="valor">{{ c.data_cadastro or '-' }}</div>
             </div>
 
             <div class="box">
                 <div class="titulo">Motivo da Restrição</div>
                 <div class="valor motivo">
-                    Nenhum motivo informado
+                    {{ c.motivo or 'Nenhum motivo informado' }}
                 </div>
             </div>
 
@@ -587,7 +481,7 @@ body::before{
 
         <div class="acoes">
 
-            <a href="/" class="btn btn-voltar">
+            <a href="{{ url_for('index') }}" class="btn btn-voltar">
                 ← Voltar
             </a>
 
@@ -595,9 +489,15 @@ body::before{
                 🖨️ Imprimir
             </button>
 
-            <a href="/restringir/1" class="btn btn-restringir">
-                🚫 Restringir
-            </a>
+            {% if c.restrito %}
+                <a href="{{ url_for('liberar', id=c.id) }}" class="btn btn-liberar">
+                    ✅ Liberar
+                </a>
+            {% else %}
+                <a href="{{ url_for('restringir', id=c.id) }}" class="btn btn-restringir">
+                    🚫 Restringir
+                </a>
+            {% endif %}
 
         </div>
 
