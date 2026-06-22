@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from models import db, Colaborador
 from models import db, Colaborador, ListaNegra, PreAdmissao, Usuario
 from functools import wraps
+import sqlite3
 
 import pandas as pd
 import os
@@ -560,6 +561,67 @@ def importar():
 from flask import jsonify
 from sqlalchemy import or_
 
+
+def limpar_documento(valor):
+    """Remove máscara de CPF/telefone e tira zeros à esquerda."""
+    if valor is None:
+        return ""
+    valor = str(valor).strip()
+    for ch in [".", "-", "/", " ", "(", ")"]:
+        valor = valor.replace(ch, "")
+    return valor.lstrip("0")
+
+
+def buscar_na_lista_negra(nome="", cpf=""):
+    nome = (nome or "").strip()
+    cpf = limpar_documento(cpf)
+
+    filtros = []
+
+    if cpf:
+        filtros.append(ListaNegra.cpf == cpf)
+
+    if nome:
+        filtros.append(ListaNegra.nome.ilike(f"%{nome}%"))
+
+    if not filtros:
+        return None
+
+    return ListaNegra.query.filter(or_(*filtros)).first()
+
+
+def sincronizar_lista_negra(colaborador, motivo="Restrição manual"):
+    """Quando restringe na ficha normal, cria/atualiza também na Lista Negra."""
+    if not colaborador:
+        return None
+
+    cpf = limpar_documento(colaborador.cpf)
+
+    item = buscar_na_lista_negra(colaborador.nome, cpf)
+
+    if not item:
+        item = ListaNegra(
+            nome=colaborador.nome,
+            cpf=cpf,
+            telefone=colaborador.telefone or "",
+            obra=colaborador.obra or "",
+            campo=colaborador.campo or "",
+            motivo=motivo or colaborador.motivo or "Restrição manual",
+            status="Restrito"
+        )
+        db.session.add(item)
+    else:
+        item.nome = colaborador.nome or item.nome
+        item.cpf = cpf or item.cpf
+        item.telefone = colaborador.telefone or item.telefone
+        item.obra = colaborador.obra or item.obra
+        item.campo = colaborador.campo or item.campo
+        item.motivo = motivo or colaborador.motivo or item.motivo or "Restrição manual"
+        item.status = "Restrito"
+
+    return item
+
+
 @app.route("/buscar_colaborador_pre_admissao")
 @login_required
 def buscar_colaborador_pre_admissao():
@@ -569,13 +631,7 @@ def buscar_colaborador_pre_admissao():
     if not termo:
         return jsonify({"encontrado": False})
 
-    cpf_limpo = (
-        termo.replace(".", "")
-        .replace("-", "")
-        .replace("/", "")
-        .replace(" ", "")
-        .lstrip("0")
-    )
+    cpf_limpo = limpar_documento(termo)
 
     colaborador = Colaborador.query.filter(
         or_(
@@ -584,23 +640,74 @@ def buscar_colaborador_pre_admissao():
         )
     ).first()
 
-    if not colaborador:
+    item_lista = buscar_na_lista_negra(termo, cpf_limpo)
+
+    if not colaborador and not item_lista:
         return jsonify({"encontrado": False})
+
+    nome = colaborador.nome if colaborador else item_lista.nome
+    cpf = colaborador.cpf if colaborador else item_lista.cpf
+    telefone = colaborador.telefone if colaborador else item_lista.telefone
+    funcao = colaborador.funcao if colaborador else ""
+    obra = colaborador.obra if colaborador else item_lista.obra
+    campo = colaborador.campo if colaborador else item_lista.campo
+    motivo = item_lista.motivo if item_lista else colaborador.motivo
 
     return jsonify({
         "encontrado": True,
-        "id": colaborador.id,
-        "nome": colaborador.nome,
-        "cpf": colaborador.cpf,
-        "telefone": colaborador.telefone or "",
-        "funcao": colaborador.funcao or "",
-        "obra": colaborador.obra or "",
-        "campo": colaborador.campo or "",
-        "foto": colaborador.foto or "https://cdn-icons-png.flaticon.com/512/149/149071.png",
-        "restrito": colaborador.restrito,
-        "motivo": colaborador.motivo or "",
-        "status": colaborador.status or "Liberado",
-        "pre_admissao": colaborador.pre_admissao or "Em análise"
+        "id": colaborador.id if colaborador else None,
+        "nome": nome or "",
+        "cpf": cpf or "",
+        "telefone": telefone or "",
+        "funcao": funcao or "",
+        "obra": obra or "",
+        "campo": campo or "",
+        "foto": (colaborador.foto if colaborador and colaborador.foto else "https://cdn-icons-png.flaticon.com/512/149/149071.png"),
+        "restrito": True if item_lista else bool(colaborador.restrito if colaborador else False),
+        "na_lista_negra": True if item_lista else False,
+        "motivo": motivo or "",
+        "status": "Restrito" if item_lista else (colaborador.status or "Liberado"),
+        "pre_admissao": colaborador.pre_admissao if colaborador else "Não cadastrado na lista normal",
+        "origem": "lista_negra" if item_lista and not colaborador else "normal_e_lista_negra" if item_lista and colaborador else "normal"
+    })
+
+
+@app.route("/buscar_status_colaborador")
+@login_required
+def buscar_status_colaborador():
+
+    termo = request.args.get("termo", "").strip()
+
+    if not termo:
+        return jsonify({"encontrado": False})
+
+    cpf_limpo = limpar_documento(termo)
+
+    colaborador = Colaborador.query.filter(
+        or_(
+            Colaborador.nome.ilike(f"%{termo}%"),
+            Colaborador.cpf == cpf_limpo
+        )
+    ).first()
+
+    item_lista = buscar_na_lista_negra(termo, cpf_limpo)
+
+    if not colaborador and not item_lista:
+        return jsonify({
+            "encontrado": False,
+            "mensagem": "Nenhum cadastro encontrado na lista normal nem na lista negra."
+        })
+
+    return jsonify({
+        "encontrado": True,
+        "nome": (colaborador.nome if colaborador else item_lista.nome) or "",
+        "cpf": (colaborador.cpf if colaborador else item_lista.cpf) or "",
+        "na_lista_normal": True if colaborador else False,
+        "na_lista_negra": True if item_lista else False,
+        "restrito": True if item_lista else bool(colaborador.restrito if colaborador else False),
+        "motivo": (item_lista.motivo if item_lista else colaborador.motivo) or "",
+        "url_ficha": url_for("ver_colaborador", id=colaborador.id) if colaborador else "",
+        "url_lista_negra": url_for("lista_negra")
     })
 
 
@@ -745,10 +852,16 @@ def restringir(id):
     if colaborador:
 
         colaborador.restrito = True
-
         colaborador.motivo = 'Restrição manual'
 
+        sincronizar_lista_negra(
+            colaborador,
+            colaborador.motivo
+        )
+
         db.session.commit()
+
+        flash('Colaborador restrito e enviado para a Lista Negra!', 'success')
 
     return redirect('/')
 
@@ -797,57 +910,76 @@ def nova_restricao():
 
     if request.method == 'POST':
 
-        cpf = request.form.get('cpf')
-        nome = request.form.get('nome')
-        motivo = request.form.get('motivo')
+        cpf = limpar_documento(request.form.get('cpf'))
+        nome = request.form.get('nome', '').strip()
+        obra = request.form.get('obra', '').strip()
+        motivo = request.form.get('motivo', '').strip() or 'Restrição manual'
 
-        colaborador = Colaborador.query.filter_by(cpf=cpf).first()
+        colaborador = None
 
-        # ==========================================
-        # SE JÁ EXISTIR
-        # ==========================================
+        if cpf:
+            colaborador = Colaborador.query.filter_by(cpf=cpf).first()
+
+        if not colaborador and nome:
+            colaborador = Colaborador.query.filter(
+                Colaborador.nome.ilike(f"%{nome}%")
+            ).first()
 
         if colaborador:
-
             colaborador.restrito = True
             colaborador.motivo = motivo
-
-        # ==========================================
-        # SE NÃO EXISTIR
-        # ==========================================
-
+            if obra:
+                colaborador.obra = obra
         else:
-
             colaborador = Colaborador(
                 nome=nome,
-                cpf=cpf,
+                cpf=cpf or f"SEMCPF{ListaNegra.query.count() + 1}",
+                obra=obra,
                 restrito=True,
                 motivo=motivo
             )
-
             db.session.add(colaborador)
+            db.session.flush()
+
+        item = sincronizar_lista_negra(colaborador, motivo)
+        if item and obra:
+            item.obra = obra
 
         db.session.commit()
 
-        flash('Restrição salva com sucesso!', 'success')
+        flash('Restrição salva e sincronizada com a Lista Negra!', 'success')
 
-        return redirect(url_for('index'))
+        return redirect(url_for('lista_negra'))
 
     return render_template('nova_restricao.html')
+
 
 @app.route("/liberar_lista/<int:id>")
 @login_required
 def liberar_lista(id):
 
-    colaborador = Colaborador.query.get(id)
+    item = ListaNegra.query.get(id)
 
-    if colaborador:
+    if item:
 
-        colaborador.restrito = False
+        if item.cpf:
+            colaborador = Colaborador.query.filter_by(cpf=item.cpf).first()
+        else:
+            colaborador = Colaborador.query.filter(
+                Colaborador.nome.ilike(f"%{item.nome}%")
+            ).first()
 
+        if colaborador:
+            colaborador.restrito = False
+            colaborador.motivo = ""
+
+        db.session.delete(item)
         db.session.commit()
 
+        flash('Colaborador liberado e removido da Lista Negra!', 'success')
+
     return redirect("/lista_negra")
+
 
 @app.route('/lista_negra')
 @login_required
@@ -868,30 +1000,55 @@ def importar_lista_negra():
 
     if arquivo:
 
-        import pandas as pd
-
         df = pd.read_excel(arquivo)
-
-        # remove espaços escondidos
         df.columns = df.columns.str.strip()
 
         for _, row in df.iterrows():
 
-            novo = ListaNegra(
+            nome = str(row.get('Nome', '')).strip()
+            obra = str(row.get('Obra', '')).strip()
+            cpf = limpar_documento(row.get('CPF', ''))
+            motivo = str(row.get('Motivo', '')).strip() or 'Restrição importada'
 
-                nome=str(row.get('Nome', '')),
-                obra=str(row.get('Obra', '')),
-                cpf='',
-                motivo=str(row.get('Motivo', '')),
-                status='Restrito'
+            if not nome:
+                continue
 
-            )
+            item = buscar_na_lista_negra(nome, cpf)
 
-            db.session.add(novo)
+            if not item:
+                item = ListaNegra(
+                    nome=nome,
+                    obra=obra,
+                    cpf=cpf,
+                    motivo=motivo,
+                    status='Restrito'
+                )
+                db.session.add(item)
+            else:
+                item.nome = nome
+                item.obra = obra or item.obra
+                item.cpf = cpf or item.cpf
+                item.motivo = motivo
+                item.status = 'Restrito'
+
+            colaborador = None
+            if cpf:
+                colaborador = Colaborador.query.filter_by(cpf=cpf).first()
+            if not colaborador:
+                colaborador = Colaborador.query.filter(
+                    Colaborador.nome.ilike(f"%{nome}%")
+                ).first()
+
+            if colaborador:
+                colaborador.restrito = True
+                colaborador.motivo = motivo
 
         db.session.commit()
 
+        flash('Lista negra importada e sincronizada com colaboradores!', 'success')
+
     return redirect('/lista_negra')
+
 
 @app.route("/admissao", methods=["GET", "POST"])
 @login_required
@@ -911,7 +1068,7 @@ def admissao():
 
         obra = request.form.get("obra")
 
-        status = request.form.get("status")
+        status = request.form.get("status") or "Aguardando"
 
         data_admissao = request.form.get(
             "data_admissao"
@@ -935,9 +1092,7 @@ def admissao():
         # CONSULTAR LISTA NEGRA
         # =====================================
 
-        lista_negra = ListaNegra.query.filter(
-            ListaNegra.nome.ilike(nome)
-        ).first()
+        lista_negra = buscar_na_lista_negra(nome, cpf)
 
         if lista_negra:
 
@@ -988,16 +1143,25 @@ def admissao():
             url_for("admissao")
         )
 
-    pre_admissoes = PreAdmissao.query.order_by(
+    filtro_status = request.args.get("status", "Todos").strip()
+
+    consulta = PreAdmissao.query
+
+    if filtro_status and filtro_status != "Todos":
+        consulta = consulta.filter(
+            PreAdmissao.status == filtro_status
+        )
+
+    pre_admissoes = consulta.order_by(
         PreAdmissao.id.desc()
     ).all()
 
     return render_template(
         "admissao.html",
-        pre_admissoes=pre_admissoes
+        pre_admissoes=pre_admissoes,
+        filtro_status=filtro_status
     )
 
-from models import db, PreAdmissao
 
 @app.route('/zerar_pre_admissao')
 @login_required
@@ -1073,6 +1237,33 @@ def reprovar_admissao(id):
             "danger"
         )
 
+    return redirect(url_for("admissao"))
+
+@app.route("/alterar_status_pre_admissao/<int:id>/<novo_status>")
+@login_required
+def alterar_status_pre_admissao(id, novo_status):
+
+    status_map = {
+        "aguardando": "Aguardando",
+        "admitido": "Admitido",
+        "recusado": "Recusado"
+    }
+
+    if novo_status not in status_map:
+        flash("Status inválido.", "danger")
+        return redirect(url_for("admissao"))
+
+    pre = PreAdmissao.query.get(id)
+
+    if not pre:
+        flash("Pré-admissão não encontrada.", "danger")
+        return redirect(url_for("admissao"))
+
+    pre.status = status_map[novo_status]
+
+    db.session.commit()
+
+    flash("Status atualizado com sucesso!", "success")
     return redirect(url_for("admissao"))
 # =========================================
 # START
