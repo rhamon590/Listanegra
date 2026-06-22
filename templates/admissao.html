@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>PRÉ-ADMISSÃO</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 :root{
     --bg:#020617;
@@ -24,9 +18,8 @@
     --blue:#2563eb;
     --green:#22c55e;
     --red:#ef4444;
-    --yellow:#f59e0b;
-    --text:#f8fafc;
     --muted:#94a3b8;
+    --border:rgba(255,255,255,.08);
 }
 
 body{
@@ -40,53 +33,77 @@ body{
     padding:30px;
 }
 
-.container-box{
-    max-width:1400px;
-    margin:auto;
-}
+body::-webkit-scrollbar{width:10px;}
+body::-webkit-scrollbar-thumb{background:#2563eb;border-radius:30px;}
+
+.container-box{max-width:1450px;margin:auto;}
 
 .topo{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
     margin-bottom:30px;
 }
 
 .logo{
     font-size:38px;
-    font-weight:700;
+    font-weight:800;
+    letter-spacing:-1px;
     background:linear-gradient(90deg,#60a5fa,#06b6d4);
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 }
 
-.subtitulo{
-    color:#94a3b8;
-    margin-top:5px;
+.subtitulo{color:#94a3b8;margin-top:5px;font-size:14px;}
+
+.top-actions{display:flex;gap:12px;flex-wrap:wrap;}
+
+.top-link{
+    text-decoration:none;
+    color:white;
+    padding:13px 18px;
+    border-radius:15px;
+    font-weight:700;
+    background:rgba(255,255,255,.08);
+    border:1px solid var(--border);
+    transition:.25s;
+}
+
+.top-link:hover{
+    transform:translateY(-2px);
+    background:#2563eb;
+    color:white;
 }
 
 .card-admissao{
-    background:rgba(15,23,42,0.75);
+    background:rgba(15,23,42,0.78);
     backdrop-filter:blur(18px);
-    border:1px solid rgba(255,255,255,0.08);
+    border:1px solid var(--border);
     border-radius:30px;
     padding:35px;
     box-shadow:0 15px 50px rgba(0,0,0,0.4);
     margin-bottom:25px;
 }
 
-.titulo{
-    font-size:32px;
-    font-weight:700;
-    margin-bottom:10px;
+.card-head{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    margin-bottom:28px;
 }
 
-.desc{
-    color:#94a3b8;
-    margin-bottom:35px;
-}
+.titulo{font-size:32px;font-weight:800;margin-bottom:8px;}
+.desc{color:#94a3b8;margin-bottom:0;}
 
 .form-label{
     color:#cbd5e1;
-    font-weight:500;
+    font-weight:600;
     margin-bottom:8px;
+    font-size:13px;
 }
 
 .form-control,
@@ -97,138 +114,250 @@ body{
     padding:14px 18px !important;
     color:white !important;
     transition:0.3s;
+    min-height:52px;
 }
 
 .form-control:focus,
 .form-select:focus{
-    border-color:#2563eb !important;
-    box-shadow:0 0 0 4px rgba(37,99,235,0.15) !important;
+    border-color:#38bdf8 !important;
+    box-shadow:0 0 0 4px rgba(56,189,248,0.15) !important;
 }
 
-.form-control::placeholder{
-    color:#94a3b8;
-}
-
-.form-select option{
-    background:#1e293b;
-}
+.form-control::placeholder{color:#94a3b8;}
+.form-select option{background:#1e293b;}
 
 .btn-admitir{
     width:100%;
     border:none;
-    padding:16px;
+    padding:17px;
     border-radius:18px;
     background:linear-gradient(135deg,#16a34a,#15803d);
     color:white;
-    font-weight:600;
-    font-size:17px;
+    font-weight:800;
+    font-size:16px;
     transition:0.35s;
-    margin-top:20px;
+    margin-top:10px;
+    box-shadow:0 12px 30px rgba(34,197,94,.18);
 }
 
 .btn-admitir:hover{
     transform:translateY(-3px);
+    box-shadow:0 16px 35px rgba(34,197,94,.28);
 }
 
 .alert{
     border:none !important;
     border-radius:16px !important;
     padding:15px 18px !important;
-    font-weight:500;
-}
-
-.alert-success{
-    background:rgba(34,197,94,0.15) !important;
-    color:#86efac !important;
-}
-
-.alert-danger{
-    background:rgba(239,68,68,0.15) !important;
-    color:#fca5a5 !important;
-}
-
-.table{
-    color:white;
-}
-
-.table thead{
-    background:#1e293b;
-}
-
-.table tbody tr{
-    border-color:rgba(255,255,255,0.05);
-}
-
-.badge-status{
-    padding:8px 14px;
-    border-radius:12px;
-    font-size:13px;
     font-weight:600;
 }
 
-.status-analise{
-    background:var(--yellow);
-    color:white;
-}
-
-.status-liberado{
-    background:var(--green);
-    color:white;
-}
-
-.status-reprovado{
-    background:var(--red);
-    color:white;
-}
-
-.badge-isolado{
-    background:#dc2626;
-    color:white;
-    padding:8px 14px;
-    border-radius:12px;
-    font-size:12px;
-    font-weight:700;
-}
-
-.btn-aprovar{
-    background:#16a34a;
-    color:white;
-    border:none;
-    border-radius:10px;
-    padding:8px 12px;
-    text-decoration:none;
-    font-size:13px;
-    font-weight:600;
-    margin-right:5px;
-}
-
-.btn-reprovar{
-    background:#dc2626;
-    color:white;
-    border:none;
-    border-radius:10px;
-    padding:8px 12px;
-    text-decoration:none;
-    font-size:13px;
-    font-weight:600;
-}
-
-.telefone-link{
-    color:#22c55e;
-    text-decoration:none;
-    font-weight:600;
-}
-
-.telefone-link:hover{
-    color:#4ade80;
-}
+.alert-success{background:rgba(34,197,94,0.15) !important;color:#86efac !important;}
+.alert-danger{background:rgba(239,68,68,0.15) !important;color:#fca5a5 !important;}
+.alert-warning{background:rgba(245,158,11,0.15) !important;color:#fde68a !important;}
+.alert-info{background:rgba(14,165,233,0.15) !important;color:#7dd3fc !important;}
 
 .checkbox-box{
     display:flex;
     align-items:center;
     gap:12px;
-    margin-top:10px;
+    margin-top:14px;
+    background:#1e293b;
+    padding:13px 16px;
+    border-radius:16px;
 }
+
+.checkbox-box input{
+    width:18px;
+    height:18px;
+    accent-color:#ef4444;
+}
+
+.status-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:15px;
+    margin-bottom:25px;
+}
+
+.status-card{
+    background:rgba(255,255,255,.045);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+}
+
+.status-card small{
+    color:#94a3b8;
+    display:block;
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.status-card strong{font-size:26px;line-height:1;}
+
+.status-icon{
+    width:44px;
+    height:44px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+    background:rgba(255,255,255,.08);
+}
+
+.filtros-box{
+    background:rgba(2,6,23,.38);
+    border:1px solid var(--border);
+    border-radius:24px;
+    padding:20px;
+    margin-bottom:25px;
+}
+
+.filter-actions{display:flex;gap:10px;flex-wrap:wrap;}
+
+.btn-filter{
+    border:none;
+    border-radius:14px;
+    padding:13px 18px;
+    color:white;
+    text-decoration:none;
+    font-weight:800;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:52px;
+    transition:.25s;
+}
+
+.btn-filter:hover{transform:translateY(-2px);color:white;}
+.btn-primary-soft{background:linear-gradient(135deg,#2563eb,#1d4ed8);}
+.btn-secondary-soft{background:#475569;}
+.btn-success-soft{background:linear-gradient(135deg,#16a34a,#15803d);}
+
+.table-card{
+    border-radius:24px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    background:rgba(2,6,23,.35);
+}
+
+.table{
+    color:white;
+    margin-bottom:0;
+    min-width:1100px;
+}
+
+.table thead th{
+    background:#1e293b;
+    color:#cbd5e1;
+    border:none;
+    padding:17px 14px;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+    white-space:nowrap;
+}
+
+.table tbody td{
+    background:rgba(15,23,42,.40);
+    color:#e2e8f0;
+    border-color:rgba(255,255,255,0.06);
+    padding:16px 14px;
+    vertical-align:middle;
+    font-size:13px;
+}
+
+.table tbody tr:hover td{background:rgba(37,99,235,.10);}
+
+.nome-colab{
+    font-weight:800;
+    color:white;
+    min-width:190px;
+}
+
+.text-muted-custom{color:#94a3b8;}
+
+.badge-status{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    border-radius:999px;
+    padding:9px 12px;
+    font-size:12px;
+    font-weight:800;
+    white-space:nowrap;
+}
+
+.status-admitido{
+    background:rgba(34,197,94,.16);
+    color:#86efac;
+    border:1px solid rgba(34,197,94,.28);
+}
+
+.status-recusado{
+    background:rgba(239,68,68,.16);
+    color:#fca5a5;
+    border:1px solid rgba(239,68,68,.28);
+}
+
+.status-aguardando{
+    background:rgba(14,165,233,.16);
+    color:#7dd3fc;
+    border:1px solid rgba(14,165,233,.28);
+}
+
+.status-sem{
+    background:rgba(148,163,184,.18);
+    color:#cbd5e1;
+    border:1px solid rgba(148,163,184,.25);
+}
+
+.badge-isolado{
+    background:rgba(239,68,68,.16);
+    color:#fca5a5;
+    border:1px solid rgba(239,68,68,.28);
+    padding:8px 12px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:800;
+}
+
+.acoes-status{
+    display:flex;
+    gap:7px;
+    flex-wrap:wrap;
+}
+
+.btn-status{
+    width:34px;
+    height:34px;
+    border-radius:11px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    color:white;
+    font-size:14px;
+    font-weight:800;
+    transition:.22s;
+    border:1px solid rgba(255,255,255,.12);
+}
+
+.btn-status:hover{
+    color:white;
+    transform:translateY(-2px);
+    filter:brightness(1.1);
+}
+
+.btn-ag{background:#0ea5e9;}
+.btn-ad{background:#16a34a;}
+.btn-re{background:#dc2626;}
 
 .footer{
     text-align:center;
@@ -255,29 +384,103 @@ body{
 
 .restricao-box{
     display:none;
-    background:rgba(239,68,68,.15);
-    color:#fca5a5;
-    padding:12px;
-    border-radius:14px;
-    margin-top:10px;
+    background:linear-gradient(135deg,rgba(239,68,68,.22),rgba(127,29,29,.35));
+    color:#fecaca;
+    padding:18px 60px 18px 18px;
+    border-radius:20px;
+    margin-top:15px;
+    border:2px solid rgba(239,68,68,.55);
+    position:relative;
+    overflow:hidden;
+    font-weight:700;
+    animation:pulseRestricao 1.8s infinite, shakeRestricao 4s infinite;
+}
+
+.restricao-box b{
+    color:#fff;
+    font-size:15px;
+    letter-spacing:.4px;
+}
+
+.restricao-box span{
+    color:#fee2e2;
+    font-weight:600;
+}
+
+.restricao-box::before{
+    content:"🚫";
+    position:absolute;
+    right:16px;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:35px;
+    animation:giraRestricao 3s linear infinite;
+    z-index:2;
+}
+
+.restricao-box::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+    transform:translateX(-100%);
+    animation:brilhoRestricao 2.4s infinite;
+}
+
+@keyframes pulseRestricao{
+    0%{
+        box-shadow:0 0 0 rgba(239,68,68,0);
+    }
+    50%{
+        box-shadow:
+        0 0 30px rgba(239,68,68,.55),
+        0 0 70px rgba(239,68,68,.25);
+    }
+    100%{
+        box-shadow:0 0 0 rgba(239,68,68,0);
+    }
+}
+
+@keyframes brilhoRestricao{
+    100%{
+        transform:translateX(120%);
+    }
+}
+
+@keyframes giraRestricao{
+    from{
+        transform:translateY(-50%) rotate(0deg);
+    }
+    to{
+        transform:translateY(-50%) rotate(360deg);
+    }
+}
+
+@keyframes shakeRestricao{
+    0%,90%,100%{transform:translateX(0);}
+    92%{transform:translateX(-3px);}
+    94%{transform:translateX(3px);}
+    96%{transform:translateX(-3px);}
+    98%{transform:translateX(3px);}
+}
+
+.empty-state{
+    background:rgba(255,255,255,.04);
+    border:1px dashed rgba(255,255,255,.15);
+    border-radius:22px;
+    padding:35px;
+    text-align:center;
+    color:#94a3b8;
 }
 
 @media(max-width:768px){
-    body{
-        padding:15px;
-    }
-
-    .card-admissao{
-        padding:25px;
-    }
-
-    .logo{
-        font-size:28px;
-    }
-
-    .titulo{
-        font-size:26px;
-    }
+    body{padding:15px;}
+    .card-admissao{padding:22px;border-radius:24px;}
+    .logo{font-size:28px;}
+    .titulo{font-size:25px;}
+    .filter-actions{width:100%;}
+    .btn-filter{width:100%;}
+    .restricao-box{padding:16px 55px 16px 16px;}
 }
 </style>
 </head>
@@ -287,239 +490,241 @@ body{
 <div class="container-box">
 
     <div class="topo">
-        <div class="logo">ORCA FACE SYSTEM</div>
-        <div class="subtitulo">Sistema de Pré-Admissão Industrial</div>
+        <div>
+            <div class="logo">ORCA FACE SYSTEM</div>
+            <div class="subtitulo">Sistema de Pré-Admissão Industrial</div>
+        </div>
+
+        <div class="top-actions">
+            <a href="/" class="top-link">👥 Colaboradores</a>
+            <a href="/lista_negra" class="top-link">🚫 Lista Negra</a>
+        </div>
     </div>
 
     <div class="card-admissao">
 
-        <div class="titulo">📋 Pré-Admissão</div>
-
-        <div class="desc">
-            Controle de campo isolado, bloqueio automático e validação de colaboradores.
+        <div class="card-head">
+            <div>
+                <div class="titulo">📋 Pré-Admissão</div>
+                <div class="desc">Controle de campo isolado, bloqueio automático e validação de colaboradores.</div>
+            </div>
         </div>
 
-       {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            <div class="alert alert-{{ category }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-           
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
         {% endwith %}
 
         <form method="POST">
-
             <div class="row">
 
                 <div class="col-md-4 mb-4">
                     <label class="form-label">Nome</label>
-                    <input
-                    type="text"
-                    name="nome"
-                    id="nome"
-                    class="form-control"
-                    placeholder="Digite o nome"
-                    onblur="buscarColaborador()"
-                    required>
+                    <input type="text" name="nome" id="nome" class="form-control" placeholder="Digite o nome" onblur="buscarColaborador()" required>
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <label class="form-label">CPF</label>
-                    <input
-                    type="text"
-                    name="cpf"
-                    id="cpf"
-                    class="form-control"
-                    placeholder="000.000.000-00"
-                    onblur="buscarColaboradorCpf()"
-                    required>
+                    <input type="text" name="cpf" id="cpf" class="form-control" placeholder="000.000.000-00" onblur="buscarColaboradorCpf()" required>
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <label class="form-label">Telefone</label>
-                    <input
-                    type="text"
-                    name="telefone"
-                    id="telefone"
-                    class="form-control"
-                    placeholder="62999999999">
+                    <input type="text" name="telefone" id="telefone" class="form-control" placeholder="62999999999">
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <label class="form-label">Função</label>
-                    <input
-                    type="text"
-                    name="funcao"
-                    id="funcao"
-                    class="form-control"
-                    placeholder="Função do colaborador">
+                    <input type="text" name="funcao" id="funcao" class="form-control" placeholder="Função do colaborador">
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <label class="form-label">Campo / Empresa</label>
-                    <input
-                    type="text"
-                    name="campo"
-                    id="campo"
-                    class="form-control"
-                    placeholder="Nome do campo">
+                    <input type="text" name="campo" id="campo" class="form-control" placeholder="Nome do campo">
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <label class="form-label">Obra</label>
-                    <input
-                    type="text"
-                    name="obra"
-                    id="obra"
-                    class="form-control"
-                    placeholder="Nome da obra">
+                    <input type="text" name="obra" id="obra" class="form-control" placeholder="Nome da obra">
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <label class="form-label">Data da Admissão</label>
-                    <input
-                    type="date"
-                    name="data_admissao"
-                    class="form-control">
+                    <input type="date" name="data_admissao" class="form-control">
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <label class="form-label">Status</label>
                     <select name="status" class="form-select">
-                        <option value="Em análise">Em análise</option>
-                        <option value="Liberado">Liberado</option>
-                        <option value="Reprovado">Reprovado</option>
+                        <option value="Aguardando" selected>Aguardando</option>
+                        <option value="Admitido">Admitido</option>
+                        <option value="Recusado">Recusado</option>
                     </select>
                 </div>
 
                 <div class="col-md-4 mb-4">
                     <label class="form-label">Campo Isolado</label>
-                    <div class="checkbox-box">
+                    <label class="checkbox-box">
                         <input type="checkbox" name="campo_isolado" value="1">
                         <span>🚫 Campo isolado</span>
-                    </div>
+                    </label>
                 </div>
 
             </div>
 
-            <button class="btn-admitir">
-                ✅ Salvar Pré-Admissão
-            </button>
+            <button class="btn-admitir">✅ Salvar Pré-Admissão</button>
+        </form>
+    </div>
 
+    <div class="card-admissao mt-4">
+
+        <div class="card-head">
+            <div>
+                <div class="titulo">👷 Pré-Admissões Salvas</div>
+                <div class="desc">Acompanhe os candidatos cadastrados no sistema.</div>
+            </div>
+        </div>
+
+        <div class="status-grid">
+            <div class="status-card">
+                <div><small>Total</small><strong>{{ pre_admissoes|length }}</strong></div>
+                <div class="status-icon">📋</div>
+            </div>
+
+            <div class="status-card">
+                <div><small>Aguardando</small><strong>{{ pre_admissoes|selectattr('status','equalto','Aguardando')|list|length }}</strong></div>
+                <div class="status-icon">⏳</div>
+            </div>
+
+            <div class="status-card">
+                <div><small>Admitidos</small><strong>{{ pre_admissoes|selectattr('status','equalto','Admitido')|list|length }}</strong></div>
+                <div class="status-icon">✅</div>
+            </div>
+
+            <div class="status-card">
+                <div><small>Recusados</small><strong>{{ pre_admissoes|selectattr('status','equalto','Recusado')|list|length }}</strong></div>
+                <div class="status-icon">❌</div>
+            </div>
+        </div>
+
+        <form method="GET" action="{{ url_for('admissao') }}" class="filtros-box">
+            <div class="row align-items-end">
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Pesquisar na tabela</label>
+                    <input type="text" id="pesquisaTabela" class="form-control" placeholder="Nome, CPF, função ou obra...">
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Filtrar por status</label>
+                    <select name="status" class="form-select" onchange="this.form.submit()">
+                        <option value="Todos" {% if filtro_status == 'Todos' %}selected{% endif %}>Todos</option>
+                        <option value="Aguardando" {% if filtro_status == 'Aguardando' %}selected{% endif %}>Aguardando</option>
+                        <option value="Admitido" {% if filtro_status == 'Admitido' %}selected{% endif %}>Admitido</option>
+                        <option value="Recusado" {% if filtro_status == 'Recusado' %}selected{% endif %}>Recusado</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Ações</label>
+                    <div class="filter-actions">
+                        <button type="submit" class="btn-filter btn-primary-soft">🔎 Filtrar</button>
+                        <a href="{{ url_for('admissao') }}" class="btn-filter btn-secondary-soft">Limpar</a>
+                        <a href="{{ url_for('exportar_pre_admissoes_excel') }}" class="btn-filter btn-success-soft">📊 Excel</a>
+                    </div>
+                </div>
+
+            </div>
         </form>
 
+        {% if pre_admissoes %}
+
+        <div class="table-responsive table-card">
+            <table class="table table-hover align-middle" id="tabelaPreAdmissao">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>Telefone</th>
+                        <th>Função</th>
+                        <th>Campo</th>
+                        <th>Obra</th>
+                        <th>Status</th>
+                        <th>Isolado</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for c in pre_admissoes %}
+                    <tr>
+                        <td class="nome-colab">{{ c.nome }}</td>
+                        <td>{{ c.cpf or '-' }}</td>
+                        <td>{{ c.telefone or '-' }}</td>
+                        <td>{{ c.funcao or '-' }}</td>
+                        <td>{{ c.campo or '-' }}</td>
+                        <td>{{ c.obra or '-' }}</td>
+
+                        <td>
+                            {% if c.status == 'Admitido' %}
+                                <span class="badge-status status-admitido">✅ Admitido</span>
+                            {% elif c.status == 'Recusado' %}
+                                <span class="badge-status status-recusado">❌ Recusado</span>
+                            {% elif c.status == 'Aguardando' %}
+                                <span class="badge-status status-aguardando">⏳ Aguardando</span>
+                            {% else %}
+                                <span class="badge-status status-sem">{{ c.status or 'Sem status' }}</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if c.isolado %}
+                                <span class="badge-isolado">ISOLADO</span>
+                            {% else %}
+                                <span class="text-muted-custom">-</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <div class="acoes-status">
+                                <a title="Aguardando" href="{{ url_for('alterar_status_pre_admissao', id=c.id, novo_status='aguardando') }}" class="btn-status btn-ag">⏳</a>
+                                <a title="Admitido" href="{{ url_for('alterar_status_pre_admissao', id=c.id, novo_status='admitido') }}" class="btn-status btn-ad">✅</a>
+                                <a title="Recusado" href="{{ url_for('alterar_status_pre_admissao', id=c.id, novo_status='recusado') }}" class="btn-status btn-re">❌</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+            <div class="empty-state">
+                Nenhuma pré-admissão encontrada para esse filtro.
+            </div>
+        {% endif %}
     </div>
 
-
-<div class="card-admissao mt-4">
-
-
-    <div class="titulo">
-        👷 Pré-Admissões Salvas
-    </div>
-
-    {% if pre_admissoes %}
-
-    <div class="table-responsive mt-4">
-
-        <a href="{{ url_for('exportar_pre_admissoes_excel') }}"
-   class="btn btn-success mb-3">
-    📊 Exportar Excel
-</a>
-
-        <table class="table table-dark table-hover align-middle">
-
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>CPF</th>
-                    <th>Telefone</th>
-                    <th>Função</th>
-                    <th>Campo</th>
-                    <th>Obra</th>
-                    <th>Status</th>
-                    <th>Isolado</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for c in pre_admissoes %}
-                <tr>
-                    <td>{{ c.nome }}</td>
-                    <td>{{ c.cpf }}</td>
-                    <td>{{ c.telefone or '-' }}</td>
-                    <td>{{ c.funcao or '-' }}</td>
-                    <td>{{ c.campo or '-' }}</td>
-                    <td>{{ c.obra or '-' }}</td>
-
-                    <td>
-                        {% if c.status == 'Liberado' %}
-                            <span class="badge bg-success">Liberado</span>
-                        {% elif c.status == 'Reprovado' %}
-                            <span class="badge bg-danger">Reprovado</span>
-                        {% else %}
-                            <span class="badge bg-warning text-dark">Em análise</span>
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        {% if c.isolado %}
-                            <span class="badge bg-danger">ISOLADO</span>
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-
-        </table>
-
-    </div>
-
-    {% else %}
-
-    <p style="color:#94a3b8;margin-top:20px;">
-        Nenhuma pré-admissão salva ainda.
-    </p>
-
-    {% endif %}
-
-
-</div>
-
-    <div class="footer">
-        ORCA FACE SYSTEM © 2026
-    </div>
-
+    <div class="footer">ORCA FACE SYSTEM © 2026</div>
 </div>
 
 <div class="modal fade" id="modalColaborador" tabindex="-1">
-
     <div class="modal-dialog modal-dialog-centered modal-lg">
-
         <div class="modal-content modal-content-custom">
-
             <div class="modal-header border-0">
                 <h4 class="modal-title">👷 Colaborador já trabalhou aqui</h4>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
-
                 <div style="display:flex;gap:25px;align-items:center;flex-wrap:wrap;">
-
-                    <img id="modalFoto"
-                         src=""
-                         class="modal-foto">
+                    <img id="modalFoto" src="" class="modal-foto">
 
                     <div style="flex:1;">
-
                         <h2 id="modalNome"></h2>
-
                         <p><b>CPF:</b> <span id="modalCpf"></span></p>
                         <p><b>Telefone:</b> <span id="modalTelefone"></span></p>
                         <p><b>Função:</b> <span id="modalFuncao"></span></p>
@@ -527,77 +732,47 @@ body{
                         <p><b>Campo:</b> <span id="modalCampo"></span></p>
                         <p><b>Status:</b> <span id="modalStatus"></span></p>
                         <p><b>Pré-admissão:</b> <span id="modalPreAdmissao"></span></p>
+                        <p><b>Origem:</b> <span id="modalOrigem"></span></p>
 
                         <div id="modalRestricao" class="restricao-box">
-                            🚫 <b>RESTRITO:</b> <span id="modalMotivo"></span>
+                            <b>COLABORADOR RESTRITO NO SISTEMA</b><br>
+                            Motivo: <span id="modalMotivo"></span>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
 
             <div class="modal-footer border-0">
-
-                <a id="btnVerFicha"
-                   href="#"
-                   target="_blank"
-                   class="btn btn-primary">
-                    Ver ficha completa
-                </a>
-
-                <button type="button"
-                        class="btn btn-success"
-                        data-bs-dismiss="modal">
-                    Continuar pré-admissão
-                </button>
-
+                <a id="btnVerFicha" href="#" target="_blank" class="btn btn-primary">Ver ficha completa</a>
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Continuar pré-admissão</button>
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 function buscarColaborador(){
-
     let nome = document.getElementById("nome").value.trim();
-
-    if(nome.length < 3){
-        return;
-    }
-
+    if(nome.length < 3){return;}
     consultarColaborador(nome);
 }
 
 function buscarColaboradorCpf(){
-
     let cpf = document.getElementById("cpf").value.trim();
-
-    if(cpf.length < 5){
-        return;
-    }
-
+    if(cpf.length < 5){return;}
     consultarColaborador(cpf);
 }
 
 function consultarColaborador(termo){
-
     fetch("/buscar_colaborador_pre_admissao?termo=" + encodeURIComponent(termo))
     .then(response => response.json())
     .then(data => {
+        if(!data.encontrado){return;}
 
-        if(!data.encontrado){
-            return;
-        }
-
-        document.getElementById("modalFoto").src = data.foto;
-        document.getElementById("modalNome").innerText = data.nome;
+        document.getElementById("modalFoto").src = data.foto || "";
+        document.getElementById("modalNome").innerText = data.nome || "-";
         document.getElementById("modalCpf").innerText = data.cpf || "-";
         document.getElementById("modalTelefone").innerText = data.telefone || "-";
         document.getElementById("modalFuncao").innerText = data.funcao || "-";
@@ -605,42 +780,48 @@ function consultarColaborador(termo){
         document.getElementById("modalCampo").innerText = data.campo || "-";
         document.getElementById("modalStatus").innerText = data.status || "-";
         document.getElementById("modalPreAdmissao").innerText = data.pre_admissao || "-";
+        document.getElementById("modalOrigem").innerText = data.origem || "-";
 
-        document.getElementById("btnVerFicha").href = "/colaborador/" + data.id;
+        if(data.id){
+            document.getElementById("btnVerFicha").style.display = "inline-block";
+            document.getElementById("btnVerFicha").href = "/colaborador/" + data.id;
+        }else{
+            document.getElementById("btnVerFicha").style.display = "none";
+            document.getElementById("btnVerFicha").href = "#";
+        }
 
-        if(data.restrito){
+        if(data.restrito || data.na_lista_negra){
             document.getElementById("modalRestricao").style.display = "block";
             document.getElementById("modalMotivo").innerText = data.motivo || "Sem motivo informado";
         }else{
             document.getElementById("modalRestricao").style.display = "none";
         }
 
-        if(!document.getElementById("cpf").value){
-            document.getElementById("cpf").value = data.cpf || "";
-        }
-
-        if(!document.getElementById("telefone").value){
-            document.getElementById("telefone").value = data.telefone || "";
-        }
-
-        if(!document.getElementById("funcao").value){
-            document.getElementById("funcao").value = data.funcao || "";
-        }
-
-        if(!document.getElementById("obra").value){
-            document.getElementById("obra").value = data.obra || "";
-        }
-
-        if(!document.getElementById("campo").value){
-            document.getElementById("campo").value = data.campo || "";
-        }
+        if(!document.getElementById("cpf").value){document.getElementById("cpf").value = data.cpf || "";}
+        if(!document.getElementById("telefone").value){document.getElementById("telefone").value = data.telefone || "";}
+        if(!document.getElementById("funcao").value){document.getElementById("funcao").value = data.funcao || "";}
+        if(!document.getElementById("obra").value){document.getElementById("obra").value = data.obra || "";}
+        if(!document.getElementById("campo").value){document.getElementById("campo").value = data.campo || "";}
 
         let modal = new bootstrap.Modal(document.getElementById("modalColaborador"));
         modal.show();
-
     })
     .catch(error => {
         console.log("Erro ao buscar colaborador:", error);
+    });
+}
+
+const pesquisaTabela = document.getElementById('pesquisaTabela');
+
+if(pesquisaTabela){
+    pesquisaTabela.addEventListener('keyup', function(){
+        let termo = this.value.toLowerCase().trim();
+        let linhas = document.querySelectorAll('#tabelaPreAdmissao tbody tr');
+
+        linhas.forEach(function(linha){
+            let texto = linha.innerText.toLowerCase();
+            linha.style.display = texto.includes(termo) ? '' : 'none';
+        });
     });
 }
 </script>
