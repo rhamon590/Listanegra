@@ -1,575 +1,140 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-from models import db, Colaborador
-from models import db, Colaborador, ListaNegra, PreAdmissao, Usuario
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    session,
+    jsonify,
+    send_file,
+)
 from functools import wraps
-import sqlite3
-
-import pandas as pd
+from io import BytesIO
+from datetime import datetime
 import os
+import re
 
 import pandas as pd
-from flask import request, redirect, flash
-
+from sqlalchemy import or_
 from werkzeug.utils import secure_filename
 
-from models import db, Colaborador, ListaNegra
+from models import db, Colaborador, ListaNegra, PreAdmissao, Usuario
 
-import pandas as pd
-from flask import send_file
-from io import BytesIO
 
-app = Flask(__name__)
-app.secret_key = '123456'
+# =========================================================
+# CONFIGURAÇÃO BASE
+# =========================================================
 
-# =========================================
-# CONFIG
-# =========================================
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///colaboradores.db'
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# =========================================
-# CAMINHO BASE
-# =========================================
-
-BASE_DIR = os.path.abspath(
-    os.path.dirname(__file__)
-)
-
-# =========================================
-# FLASK
-# =========================================
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(
     __name__,
-    template_folder=os.path.join(BASE_DIR, 'templates'),
-    static_folder=os.path.join(BASE_DIR, 'static')
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static"),
 )
 
-app.secret_key = '123456'
-
-# =========================================
-# CONFIG
-# =========================================
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///colaboradores.db'
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# =========================================
-# PASTAS
-# =========================================
-
-UPLOAD_FOLDER = os.path.join(
-    BASE_DIR,
-    'uploads'
+app.secret_key = os.environ.get("SECRET_KEY", "123456")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+    "DATABASE_URL",
+    "sqlite:///colaboradores.db",
 )
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-STATIC_FOLDER = os.path.join(
-    BASE_DIR,
-    'static'
-)
+UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
+STATIC_FOLDER = os.path.join(BASE_DIR, "static")
+FOTOS_FOLDER = os.path.join(STATIC_FOLDER, "fotos")
 
-FOTOS_FOLDER = os.path.join(
-    STATIC_FOLDER,
-    'fotos'
-)
-
-# =========================================
-# CRIAR PASTAS
-# =========================================
-
-if not os.path.exists(UPLOAD_FOLDER):
-
-    os.makedirs(UPLOAD_FOLDER)
-
-if not os.path.exists(STATIC_FOLDER):
-
-    os.makedirs(STATIC_FOLDER)
-
-if not os.path.exists(FOTOS_FOLDER):
-
-    os.makedirs(FOTOS_FOLDER)
-
-print('UPLOAD_FOLDER:', UPLOAD_FOLDER)
-
-print('FOTOS_FOLDER:', FOTOS_FOLDER)
-
-# =========================================
-# DATABASE
-# =========================================
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(STATIC_FOLDER, exist_ok=True)
+os.makedirs(FOTOS_FOLDER, exist_ok=True)
 
 db.init_app(app)
 
-with app.app_context():
 
-    db.create_all()
-
-    admin = Usuario.query.filter_by(
-        usuario='Rhamon'
-    ).first()
-
-    if not admin:
-
-        novo_admin = Usuario(
-            usuario='Rhamon'
-        )
-
-        novo_admin.set_senha('369125')
-
-        db.session.add(novo_admin)
-
-        db.session.commit()
-
-        print('USUÁRIO CRIADO')
-
-# =========================================
-# LOGIN
-# =========================================
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-
-    if request.method == 'POST':
-
-        usuario = request.form['usuario']
-
-        senha = request.form['senha']
-
-        user = Usuario.query.filter_by(
-            usuario=usuario
-        ).first()
-
-        if user and user.check_senha(senha):
-
-            session['usuario'] = user.usuario
-
-            flash('Login realizado com sucesso!')
-
-            return redirect('/')
-
-        else:
-
-            flash('Usuário ou senha inválidos')
-
-            return redirect('/login')
-
-    return render_template('login.html')
-
-# =========================================
-# PROTEGER ROTAS
-# =========================================
-
-def login_required(f):
-
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-
-        if 'usuario' not in session:
-
-            return redirect('/login')
-
-        return f(*args, **kwargs)
-
-    return decorated_function
-# =========================================
-# LOGOUT
-# =========================================
-
-@app.route('/logout')
-def logout():
-
-    session.pop('usuario', None)
-
-    flash('Logout realizado')
-
-    return redirect('/login')
-# =========================================
-# HOME
-# =========================================
-
-@app.route('/')
-@login_required
-def index():
-
-    # =====================================
-    # VERIFICAR LOGIN
-    # =====================================
-
-    if 'usuario' not in session:
-
-        return redirect('/login')
-
-    colaboradores = Colaborador.query.all()
-
-    return render_template(
-        'index.html',
-        colaboradores=colaboradores
-    )
-
-# =========================================
-# CADASTRAR
-# =========================================
-
-@app.route('/novo', methods=['POST'])
-@login_required
-def novo():
-
-    nome = request.form['nome']
-
-    cpf = request.form['cpf']
-
-    data_nascimento = request.form.get(
-        'data_nascimento',
-        ''
-    )
-
-    naturalidade = request.form.get(
-        'naturalidade',
-        ''
-    )
-
-    cep = request.form.get(
-        'cep',
-        ''
-    )
-
-    endereco = request.form.get(
-        'endereco',
-        ''
-    )
-
-    cidade = request.form.get(
-        'cidade',
-        ''
-    )
-
-    funcao = request.form['funcao']
-
-    # LIMPAR CPF
-    cpf = cpf.replace('.', '')
-    cpf = cpf.replace('-', '')
-    cpf = cpf.replace(' ', '')
-    cpf = cpf.lstrip('0')
-
-    # DUPLICADO
-    existe = Colaborador.query.filter_by(
-        cpf=cpf
-    ).first()
-
-    if existe:
-
-        print('CPF já cadastrado')
-
-        return redirect('/')
-
-    colaborador = Colaborador(
-
-        nome=nome,
-
-        cpf=cpf,
-
-        data_nascimento=data_nascimento,
-
-        naturalidade=naturalidade,
-
-        cep=cep,
-
-        endereco=endereco,
-
-        cidade=cidade,
-
-        funcao=funcao
-
-    )
-
-    db.session.add(colaborador)
-
-    db.session.commit()
-
-    print('Colaborador cadastrado')
-
-    return redirect('/')
-
-# =========================================
-# IMPORTAR EXCEL
-# =========================================
-
-# =========================================
-# IMPORTAR EXCEL
-# =========================================
-
-# =========================================
-# IMPORTAR EXCEL
-# =========================================
-
-@app.route('/importar', methods=['POST'])
-@login_required
-def importar():
-
-    if 'arquivo' not in request.files:
-
-        flash('Nenhum arquivo enviado', 'error')
-
-        return redirect('/')
-
-    arquivo = request.files['arquivo']
-
-    if arquivo.filename == '':
-
-        flash('Arquivo inválido', 'error')
-
-        return redirect('/')
-
-    nome_arquivo = secure_filename(
-        arquivo.filename
-    )
-
-    caminho = os.path.join(
-        UPLOAD_FOLDER,
-        nome_arquivo
-    )
-
-    # =========================================
-    # SALVAR EXCEL
-    # =========================================
-
-    try:
-
-        arquivo.save(caminho)
-
-    except Exception as erro:
-
-        return f'Erro ao salvar Excel: {erro}'
-
-    # =========================================
-    # LER EXCEL
-    # =========================================
-
-    try:
-
-        df = pd.read_excel(caminho)
-
-    except Exception as erro:
-
-        return f'Erro ao ler Excel: {erro}'
-
-    total_importados = 0
-    total_atualizados = 0
-
-    # =========================================
-    # LOOP
-    # =========================================
-
-    for _, row in df.iterrows():
-
-        try:
-
-            # =====================================
-            # PEGAR DADOS
-            # =====================================
-
-            nome = str(
-                row.get('Nome', '')
-            ).strip()
-
-            cpf = str(
-                row.get('CPF', '')
-            ).strip()
-
-            telefone = str(
-                row.get('Telefone', '')
-            ).strip()
-
-            data_nascimento = str(
-                row.get('Data nascimento', '')
-            ).strip()
-
-            naturalidade = str(
-                row.get('Naturalidade', '')
-            ).strip()
-
-            cep = str(
-                row.get('CEP', '')
-            ).strip()
-
-            endereco = str(
-                row.get('Endereço', '')
-            ).strip()
-
-            cidade = str(
-                row.get('Cidade', '')
-            ).strip()
-
-            funcao = str(
-                row.get('Função', '')
-            ).strip()
-
-            obra = str(
-                row.get('Obra', '')
-            ).strip()
-
-            # =====================================
-            # LIMPAR NAN
-            # =====================================
-
-            campos = [
-                nome,
-                cpf,
-                telefone,
-                data_nascimento,
-                naturalidade,
-                cep,
-                endereco,
-                cidade,
-                funcao,
-                obra
-            ]
-
-            campos = [
-                '' if c == 'nan' else c
-                for c in campos
-            ]
-
-            nome = campos[0]
-            cpf = campos[1]
-            telefone = campos[2]
-            data_nascimento = campos[3]
-            naturalidade = campos[4]
-            cep = campos[5]
-            endereco = campos[6]
-            cidade = campos[7]
-            funcao = campos[8]
-            obra = campos[9]
-
-            # =====================================
-            # LIMPAR CPF
-            # =====================================
-
-            cpf = cpf.replace('.', '')
-            cpf = cpf.replace('-', '')
-            cpf = cpf.replace(' ', '')
-            cpf = cpf.replace('/', '')
-            cpf = cpf.lstrip('0')
-
-            # =====================================
-            # LIMPAR TELEFONE
-            # =====================================
-
-            telefone = telefone.replace('(', '')
-            telefone = telefone.replace(')', '')
-            telefone = telefone.replace('-', '')
-            telefone = telefone.replace(' ', '')
-
-            # =====================================
-            # CPF VAZIO
-            # =====================================
-
-            if cpf == '':
-
-                print('CPF vazio')
-
-                continue
-
-            # =====================================
-            # VERIFICAR EXISTENTE
-            # =====================================
-
-            colaborador = Colaborador.query.filter_by(
-                cpf=cpf
-            ).first()
-
-            # =====================================
-            # ATUALIZAR
-            # =====================================
-
-            if colaborador:
-
-                colaborador.nome = nome
-                colaborador.telefone = telefone
-                colaborador.data_nascimento = data_nascimento
-                colaborador.naturalidade = naturalidade
-                colaborador.cep = cep
-                colaborador.endereco = endereco
-                colaborador.cidade = cidade
-                colaborador.funcao = funcao
-                colaborador.obra = obra
-
-                total_atualizados += 1
-
-                print(f'Atualizado: {cpf}')
-
-            # =====================================
-            # NOVO
-            # =====================================
-
-            else:
-
-                novo_colaborador = Colaborador(
-
-                    nome=nome,
-
-                    cpf=cpf,
-
-                    telefone=telefone,
-
-                    data_nascimento=data_nascimento,
-
-                    naturalidade=naturalidade,
-
-                    cep=cep,
-
-                    endereco=endereco,
-
-                    cidade=cidade,
-
-                    funcao=funcao,
-
-                    obra=obra
-                )
-
-                db.session.add(
-                    novo_colaborador
-                )
-
-                total_importados += 1
-
-                print(f'Importado: {cpf}')
-
-        except Exception as erro:
-
-            print('ERRO LINHA:', erro)
-
-    # =========================================
-    # SALVAR
-    # =========================================
-
-    db.session.commit()
-
-    flash(
-        f'''
-        Importação concluída!
-        Novos: {total_importados}
-        Atualizados: {total_atualizados}
-        ''',
-        'success'
-    )
-
-    return redirect('/')
-
-from flask import jsonify
-from sqlalchemy import or_
-
+# =========================================================
+# FUNÇÕES AUXILIARES
+# =========================================================
 
 def limpar_documento(valor):
     """Remove máscara de CPF/telefone e tira zeros à esquerda."""
     if valor is None:
         return ""
+
     valor = str(valor).strip()
-    for ch in [".", "-", "/", " ", "(", ")"]:
-        valor = valor.replace(ch, "")
+
+    if valor.lower() in ["nan", "none", "nat"]:
+        return ""
+
+    valor = re.sub(r"\D", "", valor)
     return valor.lstrip("0")
+
+
+def limpar_texto(valor):
+    """Trata valores vazios vindos do Excel."""
+    if valor is None:
+        return ""
+
+    valor = str(valor).strip()
+
+    if valor.lower() in ["nan", "none", "nat"]:
+        return ""
+
+    return valor
+
+
+def limpar_data(valor):
+    """Converte datas do Excel para formato dd/mm/aaaa quando possível."""
+    if valor is None:
+        return ""
+
+    if str(valor).lower() in ["nan", "none", "nat", ""]:
+        return ""
+
+    try:
+        data = pd.to_datetime(valor, errors="coerce")
+        if pd.isna(data):
+            return limpar_texto(valor)
+        return data.strftime("%d/%m/%Y")
+    except Exception:
+        return limpar_texto(valor)
+
+
+def set_attr_if_exists(obj, campo, valor):
+    """Só grava o campo se ele existir no model."""
+    if hasattr(obj, campo):
+        setattr(obj, campo, valor)
+
+
+def get_attr(obj, campo, padrao=""):
+    """Lê atributo com segurança."""
+    return getattr(obj, campo, padrao) if obj else padrao
+
+
+def normalizar_colunas(df):
+    """Remove espaços das colunas e aceita variações simples."""
+    df.columns = [str(c).strip() for c in df.columns]
+
+    mapa = {
+        "Data de nascimento": "Data nascimento",
+        "Nascimento": "Data nascimento",
+        "Data Nascimento": "Data nascimento",
+        "Endereco": "Endereço",
+        "Funcao": "Função",
+        "Telefone/WhatsApp": "Telefone",
+        "Whatsapp": "Telefone",
+        "WhatsApp": "Telefone",
+        "Pre admissão": "Pré-admissão",
+        "Pre-admissão": "Pré-admissão",
+        "Pre Admissão": "Pré-admissão",
+        "Pre-Admissão": "Pré-admissão",
+        "Data admissão": "Data Admissão",
+        "Data de admissão": "Data Admissão",
+        "Data Admissao": "Data Admissão",
+    }
+
+    df.rename(columns=mapa, inplace=True)
+    return df
 
 
 def buscar_na_lista_negra(nome="", cpf=""):
@@ -595,176 +160,171 @@ def sincronizar_lista_negra(colaborador, motivo="Restrição manual"):
     if not colaborador:
         return None
 
-    cpf = limpar_documento(colaborador.cpf)
-
-    item = buscar_na_lista_negra(colaborador.nome, cpf)
+    cpf = limpar_documento(get_attr(colaborador, "cpf"))
+    item = buscar_na_lista_negra(get_attr(colaborador, "nome"), cpf)
 
     if not item:
         item = ListaNegra(
-            nome=colaborador.nome,
+            nome=get_attr(colaborador, "nome"),
             cpf=cpf,
-            telefone=colaborador.telefone or "",
-            obra=colaborador.obra or "",
-            campo=colaborador.campo or "",
-            motivo=motivo or colaborador.motivo or "Restrição manual",
-            status="Restrito"
+            motivo=motivo or get_attr(colaborador, "motivo") or "Restrição manual",
+            status="Restrito",
         )
         db.session.add(item)
-    else:
-        item.nome = colaborador.nome or item.nome
-        item.cpf = cpf or item.cpf
-        item.telefone = colaborador.telefone or item.telefone
-        item.obra = colaborador.obra or item.obra
-        item.campo = colaborador.campo or item.campo
-        item.motivo = motivo or colaborador.motivo or item.motivo or "Restrição manual"
-        item.status = "Restrito"
+
+    item.nome = get_attr(colaborador, "nome") or get_attr(item, "nome")
+    item.cpf = cpf or get_attr(item, "cpf")
+    item.motivo = motivo or get_attr(colaborador, "motivo") or get_attr(item, "motivo") or "Restrição manual"
+    item.status = "Restrito"
+
+    set_attr_if_exists(item, "telefone", get_attr(colaborador, "telefone"))
+    set_attr_if_exists(item, "obra", get_attr(colaborador, "obra"))
+    set_attr_if_exists(item, "campo", get_attr(colaborador, "campo"))
 
     return item
 
 
-@app.route("/buscar_colaborador_pre_admissao")
+def criar_admin_padrao():
+    """Cria usuário padrão caso ainda não exista."""
+    usuario_admin = os.environ.get("ADMIN_USER", "Rhamon")
+    senha_admin = os.environ.get("ADMIN_PASSWORD", "369125")
+
+    admin = Usuario.query.filter_by(usuario=usuario_admin).first()
+
+    if not admin:
+        novo_admin = Usuario(usuario=usuario_admin)
+        novo_admin.set_senha(senha_admin)
+
+        db.session.add(novo_admin)
+        db.session.commit()
+
+        print("USUÁRIO PADRÃO CRIADO")
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "usuario" not in session:
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+# =========================================================
+# BANCO DE DADOS
+# =========================================================
+
+with app.app_context():
+    db.create_all()
+    criar_admin_padrao()
+
+
+# =========================================================
+# LOGIN / LOGOUT
+# =========================================================
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        usuario = request.form.get("usuario", "").strip()
+        senha = request.form.get("senha", "").strip()
+
+        user = Usuario.query.filter_by(usuario=usuario).first()
+
+        if user and user.check_senha(senha):
+            session["usuario"] = user.usuario
+            flash("Login realizado com sucesso!", "success")
+            return redirect(url_for("index"))
+
+        flash("Usuário ou senha inválidos.", "danger")
+        return redirect(url_for("login"))
+
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    session.pop("usuario", None)
+    flash("Logout realizado.", "success")
+    return redirect(url_for("login"))
+
+
+# =========================================================
+# HOME / COLABORADORES
+# =========================================================
+
+@app.route("/")
 @login_required
-def buscar_colaborador_pre_admissao():
+def index():
+    colaboradores = Colaborador.query.order_by(Colaborador.nome.asc()).all()
 
-    termo = request.args.get("termo", "").strip()
-
-    if not termo:
-        return jsonify({"encontrado": False})
-
-    cpf_limpo = limpar_documento(termo)
-
-    colaborador = Colaborador.query.filter(
-        or_(
-            Colaborador.nome.ilike(f"%{termo}%"),
-            Colaborador.cpf == cpf_limpo
-        )
-    ).first()
-
-    item_lista = buscar_na_lista_negra(termo, cpf_limpo)
-
-    if not colaborador and not item_lista:
-        return jsonify({"encontrado": False})
-
-    nome = colaborador.nome if colaborador else item_lista.nome
-    cpf = colaborador.cpf if colaborador else item_lista.cpf
-    telefone = colaborador.telefone if colaborador else item_lista.telefone
-    funcao = colaborador.funcao if colaborador else ""
-    obra = colaborador.obra if colaborador else item_lista.obra
-    campo = colaborador.campo if colaborador else item_lista.campo
-    motivo = item_lista.motivo if item_lista else colaborador.motivo
-
-    return jsonify({
-        "encontrado": True,
-        "id": colaborador.id if colaborador else None,
-        "nome": nome or "",
-        "cpf": cpf or "",
-        "telefone": telefone or "",
-        "funcao": funcao or "",
-        "obra": obra or "",
-        "campo": campo or "",
-        "foto": (colaborador.foto if colaborador and colaborador.foto else "https://cdn-icons-png.flaticon.com/512/149/149071.png"),
-        "restrito": True if item_lista else bool(colaborador.restrito if colaborador else False),
-        "na_lista_negra": True if item_lista else False,
-        "motivo": motivo or "",
-        "status": "Restrito" if item_lista else (colaborador.status or "Liberado"),
-        "pre_admissao": colaborador.pre_admissao if colaborador else "Não cadastrado na lista normal",
-        "origem": "lista_negra" if item_lista and not colaborador else "normal_e_lista_negra" if item_lista and colaborador else "normal"
-    })
-
-
-@app.route("/buscar_status_colaborador")
-@login_required
-def buscar_status_colaborador():
-
-    termo = request.args.get("termo", "").strip()
-
-    if not termo:
-        return jsonify({"encontrado": False})
-
-    cpf_limpo = limpar_documento(termo)
-
-    colaborador = Colaborador.query.filter(
-        or_(
-            Colaborador.nome.ilike(f"%{termo}%"),
-            Colaborador.cpf == cpf_limpo
-        )
-    ).first()
-
-    item_lista = buscar_na_lista_negra(termo, cpf_limpo)
-
-    if not colaborador and not item_lista:
-        return jsonify({
-            "encontrado": False,
-            "mensagem": "Nenhum cadastro encontrado na lista normal nem na lista negra."
-        })
-
-    return jsonify({
-        "encontrado": True,
-        "nome": (colaborador.nome if colaborador else item_lista.nome) or "",
-        "cpf": (colaborador.cpf if colaborador else item_lista.cpf) or "",
-        "na_lista_normal": True if colaborador else False,
-        "na_lista_negra": True if item_lista else False,
-        "restrito": True if item_lista else bool(colaborador.restrito if colaborador else False),
-        "motivo": (item_lista.motivo if item_lista else colaborador.motivo) or "",
-        "url_ficha": url_for("ver_colaborador", id=colaborador.id) if colaborador else "",
-        "url_lista_negra": url_for("lista_negra")
-    })
-
-
-@app.route("/exportar_pre_admissoes_excel")
-@login_required
-def exportar_pre_admissoes_excel():
-
-    pre_admissoes = PreAdmissao.query.all()
-
-    dados = []
-
-    for p in pre_admissoes:
-        dados.append({
-            "Nome": p.nome,
-            "CPF": p.cpf,
-            "Telefone": p.telefone,
-            "Função": p.funcao,
-            "Campo": p.campo,
-            "Obra": p.obra,
-            "Status": p.status,
-            "Isolado": "SIM" if p.isolado else "NÃO"
-        })
-
-    df = pd.DataFrame(dados)
-
-    arquivo = BytesIO()
-
-    with pd.ExcelWriter(
-        arquivo,
-        engine="openpyxl"
-    ) as writer:
-        df.to_excel(
-            writer,
-            index=False,
-            sheet_name="Pré-Admissões"
-        )
-
-    arquivo.seek(0)
-
-    return send_file(
-        arquivo,
-        as_attachment=True,
-        download_name="pre_admissoes.xlsx",
-        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    return render_template(
+        "index.html",
+        colaboradores=colaboradores,
     )
-    
-from flask import request, jsonify
 
-@app.route('/excluir_varios', methods=['POST'])
+
+@app.route("/novo", methods=["POST"])
+@login_required
+def novo():
+    nome = request.form.get("nome", "").strip()
+    cpf = limpar_documento(request.form.get("cpf", ""))
+    telefone = limpar_documento(request.form.get("telefone", ""))
+
+    if not nome or not cpf:
+        flash("Nome e CPF são obrigatórios.", "danger")
+        return redirect(url_for("index"))
+
+    existe = Colaborador.query.filter_by(cpf=cpf).first()
+
+    if existe:
+        flash("CPF já cadastrado.", "warning")
+        return redirect(url_for("index"))
+
+    colaborador = Colaborador(
+        nome=nome,
+        cpf=cpf,
+        data_nascimento=request.form.get("data_nascimento", ""),
+        naturalidade=request.form.get("naturalidade", ""),
+        cep=request.form.get("cep", ""),
+        endereco=request.form.get("endereco", ""),
+        cidade=request.form.get("cidade", ""),
+        funcao=request.form.get("funcao", ""),
+    )
+
+    set_attr_if_exists(colaborador, "telefone", telefone)
+    set_attr_if_exists(colaborador, "obra", request.form.get("obra", ""))
+    set_attr_if_exists(colaborador, "estado", request.form.get("estado", ""))
+    set_attr_if_exists(colaborador, "campo", request.form.get("campo", ""))
+    set_attr_if_exists(colaborador, "data_admissao", request.form.get("data_admissao", ""))
+
+    db.session.add(colaborador)
+    db.session.commit()
+
+    flash("Colaborador cadastrado com sucesso!", "success")
+    return redirect(url_for("index"))
+
+
+@app.route("/colaborador/<int:id>")
+@login_required
+def ver_colaborador(id):
+    colaborador = Colaborador.query.get(id)
+
+    if not colaborador:
+        flash("Colaborador não encontrado.", "danger")
+        return redirect(url_for("index"))
+
+    return render_template("colaborador.html", c=colaborador)
+
+
+@app.route("/excluir_varios", methods=["POST"])
+@login_required
 def excluir_varios():
-
-    dados = request.get_json()
-
-    ids = dados.get('ids', [])
+    dados = request.get_json(silent=True) or {}
+    ids = dados.get("ids", [])
 
     for id_colab in ids:
-
         colaborador = Colaborador.query.get(id_colab)
 
         if colaborador:
@@ -772,148 +332,438 @@ def excluir_varios():
 
     db.session.commit()
 
-    return jsonify({
-        'mensagem':'Colaboradores excluídos com sucesso'
-    })
-# =========================================
-# IMPORTAR FOTOS
-# =========================================
+    return jsonify({"mensagem": "Colaboradores excluídos com sucesso."})
 
-@app.route('/importar_fotos', methods=['POST'])
+
+# =========================================================
+# IMPORTAR / EXPORTAR COLABORADORES
+# =========================================================
+
+@app.route("/importar", methods=["POST"])
 @login_required
-def importar_fotos():
+def importar():
+    if "arquivo" not in request.files:
+        flash("Nenhum arquivo enviado.", "danger")
+        return redirect(url_for("index"))
 
-    arquivos = request.files.getlist('fotos')
+    arquivo = request.files["arquivo"]
 
-    for arquivo in arquivos:
+    if arquivo.filename == "":
+        flash("Arquivo inválido.", "danger")
+        return redirect(url_for("index"))
 
-        if arquivo.filename == '':
+    nome_arquivo = secure_filename(arquivo.filename)
+    caminho = os.path.join(UPLOAD_FOLDER, nome_arquivo)
+
+    try:
+        arquivo.save(caminho)
+        df = pd.read_excel(caminho)
+        df = normalizar_colunas(df)
+    except Exception as erro:
+        flash(f"Erro ao ler Excel: {erro}", "danger")
+        return redirect(url_for("index"))
+
+    total_importados = 0
+    total_atualizados = 0
+    total_ignorados = 0
+
+    for _, row in df.iterrows():
+        nome = limpar_texto(row.get("Nome", ""))
+        cpf = limpar_documento(row.get("CPF", ""))
+
+        if not nome or not cpf:
+            total_ignorados += 1
             continue
 
-        nome_arquivo = secure_filename(
-            arquivo.filename
-        )
+        telefone = limpar_documento(row.get("Telefone", ""))
+        data_nascimento = limpar_data(row.get("Data nascimento", ""))
+        naturalidade = limpar_texto(row.get("Naturalidade", ""))
+        cep = limpar_documento(row.get("CEP", ""))
+        endereco = limpar_texto(row.get("Endereço", ""))
+        cidade = limpar_texto(row.get("Cidade", ""))
+        estado = limpar_texto(row.get("Estado", ""))
+        funcao = limpar_texto(row.get("Função", ""))
+        obra = limpar_texto(row.get("Obra", ""))
+        campo = limpar_texto(row.get("Campo", ""))
+        data_admissao = limpar_data(row.get("Data Admissão", ""))
+        status = limpar_texto(row.get("Status", "")) or "Liberado"
+        pre_admissao = limpar_texto(row.get("Pré-admissão", "")) or "Em análise"
+        motivo = limpar_texto(row.get("Motivo da Restrição", ""))
+        foto = limpar_texto(row.get("Foto", ""))
 
-        caminho = os.path.join(
-            FOTOS_FOLDER,
-            nome_arquivo
-        )
-
-        try:
-
-            arquivo.save(caminho)
-
-        except Exception as erro:
-
-            print('Erro salvar foto:', erro)
-
-            continue
-
-        # CPF PELO NOME
-        cpf = nome_arquivo.replace('.jpg', '')
-        cpf = cpf.replace('.png', '')
-        cpf = cpf.replace('.jpeg', '')
-
-        cpf = cpf.replace('.', '')
-        cpf = cpf.replace('-', '')
-        cpf = cpf.replace(' ', '')
-        cpf = cpf.lstrip('0')
-
-        colaborador = Colaborador.query.filter_by(
-            cpf=cpf
-        ).first()
+        colaborador = Colaborador.query.filter_by(cpf=cpf).first()
 
         if colaborador:
-
-            colaborador.foto = (
-                f'/static/fotos/{nome_arquivo}'
-            )
-
-            db.session.commit()
-
-            print(f'Foto vinculada: {cpf}')
-
+            total_atualizados += 1
         else:
+            colaborador = Colaborador(cpf=cpf)
+            db.session.add(colaborador)
+            total_importados += 1
 
-            print(f'CPF não encontrado: {cpf}')
+        colaborador.nome = nome
+        colaborador.data_nascimento = data_nascimento
+        colaborador.naturalidade = naturalidade
+        colaborador.cep = cep
+        colaborador.endereco = endereco
+        colaborador.cidade = cidade
+        colaborador.funcao = funcao
 
-    return redirect('/')
+        set_attr_if_exists(colaborador, "telefone", telefone)
+        set_attr_if_exists(colaborador, "estado", estado)
+        set_attr_if_exists(colaborador, "obra", obra)
+        set_attr_if_exists(colaborador, "campo", campo)
+        set_attr_if_exists(colaborador, "data_admissao", data_admissao)
+        set_attr_if_exists(colaborador, "status", status)
+        set_attr_if_exists(colaborador, "pre_admissao", pre_admissao)
+        set_attr_if_exists(colaborador, "motivo", motivo)
+        set_attr_if_exists(colaborador, "foto", foto)
 
-# =========================================
-# RESTRINGIR
-# =========================================
+        if status.lower() in ["restrito", "bloqueado", "lista negra"]:
+            set_attr_if_exists(colaborador, "restrito", True)
+            sincronizar_lista_negra(colaborador, motivo or "Restrição importada")
 
-@app.route('/restringir/<int:id>')
-@login_required
-def restringir(id):
+    db.session.commit()
 
-    colaborador = Colaborador.query.get(id)
-
-    if colaborador:
-
-        colaborador.restrito = True
-        colaborador.motivo = 'Restrição manual'
-
-        sincronizar_lista_negra(
-            colaborador,
-            colaborador.motivo
-        )
-
-        db.session.commit()
-
-        flash('Colaborador restrito e enviado para a Lista Negra!', 'success')
-
-    return redirect('/')
-
-# =========================================
-# LIBERAR
-# =========================================
-
-@app.route('/liberar/<int:id>')
-@login_required
-def liberar(id):
-
-    colaborador = Colaborador.query.get(id)
-
-    if colaborador:
-
-        colaborador.restrito = False
-
-        colaborador.motivo = ''
-
-        db.session.commit()
-
-    return redirect('/')
-
-# =========================================
-# VER COLABORADOR
-# =========================================
-
-@app.route('/colaborador/<int:id>')
-@login_required
-def ver_colaborador(id):
-
-    colaborador = Colaborador.query.get(id)
-
-    if not colaborador:
-
-        return 'Colaborador não encontrado'
-
-    return render_template(
-        'colaborador.html',
-        c=colaborador
+    flash(
+        f"Importação concluída! Novos: {total_importados} | Atualizados: {total_atualizados} | Ignorados: {total_ignorados}",
+        "success",
     )
 
-@app.route('/nova_restricao', methods=['GET', 'POST'])
+    return redirect(url_for("index"))
+
+
+@app.route("/exportar_colaboradores_excel")
+@login_required
+def exportar_colaboradores_excel():
+    colaboradores = Colaborador.query.order_by(Colaborador.nome.asc()).all()
+
+    dados = []
+
+    for c in colaboradores:
+        dados.append(
+            {
+                "Nome": get_attr(c, "nome"),
+                "CPF": get_attr(c, "cpf"),
+                "Telefone": get_attr(c, "telefone"),
+                "Data nascimento": get_attr(c, "data_nascimento"),
+                "Naturalidade": get_attr(c, "naturalidade"),
+                "CEP": get_attr(c, "cep"),
+                "Endereço": get_attr(c, "endereco"),
+                "Cidade": get_attr(c, "cidade"),
+                "Estado": get_attr(c, "estado"),
+                "Função": get_attr(c, "funcao"),
+                "Obra": get_attr(c, "obra"),
+                "Campo": get_attr(c, "campo"),
+                "Data Admissão": get_attr(c, "data_admissao"),
+                "Status": get_attr(c, "status", "Liberado"),
+                "Pré-admissão": get_attr(c, "pre_admissao", "Em análise"),
+                "Restrito": "SIM" if get_attr(c, "restrito", False) else "NÃO",
+                "Motivo da Restrição": get_attr(c, "motivo"),
+                "Foto": get_attr(c, "foto"),
+                "Data Cadastro": get_attr(c, "data_cadastro"),
+            }
+        )
+
+    df = pd.DataFrame(dados)
+
+    arquivo = BytesIO()
+
+    with pd.ExcelWriter(arquivo, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Colaboradores")
+
+    arquivo.seek(0)
+
+    return send_file(
+        arquivo,
+        as_attachment=True,
+        download_name="colaboradores.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+
+@app.route("/modelo_colaboradores_excel")
+@login_required
+def modelo_colaboradores_excel():
+    colunas = [
+        "Nome",
+        "CPF",
+        "Telefone",
+        "Data nascimento",
+        "Naturalidade",
+        "CEP",
+        "Endereço",
+        "Cidade",
+        "Estado",
+        "Função",
+        "Obra",
+        "Campo",
+        "Data Admissão",
+        "Status",
+        "Pré-admissão",
+        "Motivo da Restrição",
+        "Foto",
+    ]
+
+    exemplo = [
+        {
+            "Nome": "JOÃO SILVA",
+            "CPF": "12345678901",
+            "Telefone": "16999999999",
+            "Data nascimento": "10/05/1995",
+            "Naturalidade": "SERTÃOZINHO/SP",
+            "CEP": "14160000",
+            "Endereço": "RUA A, 100",
+            "Cidade": "SERTÃOZINHO",
+            "Estado": "SP",
+            "Função": "SOLDADOR",
+            "Obra": "CERRADINHO",
+            "Campo": "CAMPO 01",
+            "Data Admissão": "25/06/2026",
+            "Status": "Liberado",
+            "Pré-admissão": "Em análise",
+            "Motivo da Restrição": "",
+            "Foto": "",
+        }
+    ]
+
+    df = pd.DataFrame(exemplo, columns=colunas)
+
+    arquivo = BytesIO()
+
+    with pd.ExcelWriter(arquivo, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Modelo")
+
+    arquivo.seek(0)
+
+    return send_file(
+        arquivo,
+        as_attachment=True,
+        download_name="modelo_importacao_colaboradores.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+
+# =========================================================
+# IMPORTAR FOTOS
+# =========================================================
+
+@app.route("/importar_fotos", methods=["POST"])
+@login_required
+def importar_fotos():
+    arquivos = request.files.getlist("fotos")
+    vinculadas = 0
+    nao_encontradas = 0
+
+    for arquivo in arquivos:
+        if arquivo.filename == "":
+            continue
+
+        nome_arquivo = secure_filename(arquivo.filename)
+        caminho = os.path.join(FOTOS_FOLDER, nome_arquivo)
+
+        try:
+            arquivo.save(caminho)
+        except Exception as erro:
+            print("Erro salvar foto:", erro)
+            continue
+
+        cpf = limpar_documento(os.path.splitext(nome_arquivo)[0])
+
+        colaborador = Colaborador.query.filter_by(cpf=cpf).first()
+
+        if colaborador:
+            set_attr_if_exists(colaborador, "foto", f"/static/fotos/{nome_arquivo}")
+            vinculadas += 1
+        else:
+            nao_encontradas += 1
+            print(f"CPF não encontrado para foto: {cpf}")
+
+    db.session.commit()
+
+    flash(f"Fotos processadas! Vinculadas: {vinculadas} | Não encontradas: {nao_encontradas}", "success")
+    return redirect(url_for("index"))
+
+
+# =========================================================
+# RESTRIÇÃO / LISTA NEGRA
+# =========================================================
+
+@app.route("/restringir/<int:id>")
+@login_required
+def restringir(id):
+    colaborador = Colaborador.query.get(id)
+
+    if colaborador:
+        set_attr_if_exists(colaborador, "restrito", True)
+        set_attr_if_exists(colaborador, "motivo", "Restrição manual")
+
+        sincronizar_lista_negra(colaborador, "Restrição manual")
+        db.session.commit()
+
+        flash("Colaborador restrito e enviado para a Lista Negra!", "success")
+
+    return redirect(url_for("index"))
+
+
+@app.route("/liberar/<int:id>")
+@login_required
+def liberar(id):
+    colaborador = Colaborador.query.get(id)
+
+    if colaborador:
+        set_attr_if_exists(colaborador, "restrito", False)
+        set_attr_if_exists(colaborador, "motivo", "")
+        db.session.commit()
+
+        flash("Colaborador liberado.", "success")
+
+    return redirect(url_for("index"))
+
+
+@app.route("/nova_restricao", methods=["GET", "POST"])
 @login_required
 def nova_restricao():
+    if request.method == "POST":
+        cpf = limpar_documento(request.form.get("cpf"))
+        nome = request.form.get("nome", "").strip()
+        telefone = limpar_documento(request.form.get("telefone"))
+        obra = request.form.get("obra", "").strip()
+        campo = request.form.get("campo", "").strip()
+        motivo = request.form.get("motivo", "").strip() or "Restrição manual"
 
-    if request.method == 'POST':
+        if not nome and not cpf:
+            flash("Informe nome ou CPF.", "danger")
+            return redirect(url_for("nova_restricao"))
 
-        cpf = limpar_documento(request.form.get('cpf'))
-        nome = request.form.get('nome', '').strip()
-        obra = request.form.get('obra', '').strip()
-        motivo = request.form.get('motivo', '').strip() or 'Restrição manual'
+        colaborador = None
+
+        if cpf:
+            colaborador = Colaborador.query.filter_by(cpf=cpf).first()
+
+        if not colaborador and nome:
+            colaborador = Colaborador.query.filter(
+                Colaborador.nome.ilike(f"%{nome}%")
+            ).first()
+
+        if not colaborador:
+            colaborador = Colaborador(
+                nome=nome,
+                cpf=cpf or f"SEMCPF{ListaNegra.query.count() + 1}",
+                obra=obra,
+                restrito=True,
+                motivo=motivo,
+            )
+            db.session.add(colaborador)
+            db.session.flush()
+
+        colaborador.nome = nome or get_attr(colaborador, "nome")
+        set_attr_if_exists(colaborador, "cpf", cpf or get_attr(colaborador, "cpf"))
+        set_attr_if_exists(colaborador, "telefone", telefone)
+        set_attr_if_exists(colaborador, "obra", obra)
+        set_attr_if_exists(colaborador, "campo", campo)
+        set_attr_if_exists(colaborador, "restrito", True)
+        set_attr_if_exists(colaborador, "motivo", motivo)
+
+        item = sincronizar_lista_negra(colaborador, motivo)
+        set_attr_if_exists(item, "telefone", telefone)
+        set_attr_if_exists(item, "obra", obra)
+        set_attr_if_exists(item, "campo", campo)
+
+        db.session.commit()
+
+        flash("Restrição salva e sincronizada com a Lista Negra!", "success")
+        return redirect(url_for("lista_negra"))
+
+    return render_template("nova_restricao.html")
+
+
+@app.route("/lista_negra")
+@login_required
+def lista_negra():
+    lista = ListaNegra.query.order_by(ListaNegra.nome.asc()).all()
+
+    return render_template(
+        "lista_negra.html",
+        lista_negra=lista,
+    )
+
+
+@app.route("/liberar_lista/<int:id>")
+@login_required
+def liberar_lista(id):
+    item = ListaNegra.query.get(id)
+
+    if item:
+        colaborador = None
+
+        if get_attr(item, "cpf"):
+            colaborador = Colaborador.query.filter_by(cpf=item.cpf).first()
+
+        if not colaborador and get_attr(item, "nome"):
+            colaborador = Colaborador.query.filter(
+                Colaborador.nome.ilike(f"%{item.nome}%")
+            ).first()
+
+        if colaborador:
+            set_attr_if_exists(colaborador, "restrito", False)
+            set_attr_if_exists(colaborador, "motivo", "")
+
+        db.session.delete(item)
+        db.session.commit()
+
+        flash("Colaborador liberado e removido da Lista Negra!", "success")
+
+    return redirect(url_for("lista_negra"))
+
+
+@app.route("/importar_lista_negra", methods=["POST"])
+@login_required
+def importar_lista_negra():
+    if "arquivo_excel" not in request.files:
+        flash("Nenhum arquivo enviado.", "danger")
+        return redirect(url_for("lista_negra"))
+
+    arquivo = request.files["arquivo_excel"]
+
+    try:
+        df = pd.read_excel(arquivo)
+        df = normalizar_colunas(df)
+    except Exception as erro:
+        flash(f"Erro ao ler Excel: {erro}", "danger")
+        return redirect(url_for("lista_negra"))
+
+    total = 0
+
+    for _, row in df.iterrows():
+        nome = limpar_texto(row.get("Nome", ""))
+        cpf = limpar_documento(row.get("CPF", ""))
+        telefone = limpar_documento(row.get("Telefone", ""))
+        obra = limpar_texto(row.get("Obra", ""))
+        campo = limpar_texto(row.get("Campo", ""))
+        motivo = limpar_texto(row.get("Motivo", "")) or "Restrição importada"
+
+        if not nome and not cpf:
+            continue
+
+        item = buscar_na_lista_negra(nome, cpf)
+
+        if not item:
+            item = ListaNegra(
+                nome=nome,
+                cpf=cpf,
+                motivo=motivo,
+                status="Restrito",
+            )
+            db.session.add(item)
+
+        item.nome = nome or get_attr(item, "nome")
+        item.cpf = cpf or get_attr(item, "cpf")
+        item.motivo = motivo
+        item.status = "Restrito"
+
+        set_attr_if_exists(item, "telefone", telefone)
+        set_attr_if_exists(item, "obra", obra)
+        set_attr_if_exists(item, "campo", campo)
 
         colaborador = None
 
@@ -926,327 +776,222 @@ def nova_restricao():
             ).first()
 
         if colaborador:
-            colaborador.restrito = True
-            colaborador.motivo = motivo
-            if obra:
-                colaborador.obra = obra
-        else:
-            colaborador = Colaborador(
-                nome=nome,
-                cpf=cpf or f"SEMCPF{ListaNegra.query.count() + 1}",
-                obra=obra,
-                restrito=True,
-                motivo=motivo
-            )
-            db.session.add(colaborador)
-            db.session.flush()
+            set_attr_if_exists(colaborador, "restrito", True)
+            set_attr_if_exists(colaborador, "motivo", motivo)
 
-        item = sincronizar_lista_negra(colaborador, motivo)
-        if item and obra:
-            item.obra = obra
+        total += 1
 
-        db.session.commit()
+    db.session.commit()
 
-        flash('Restrição salva e sincronizada com a Lista Negra!', 'success')
-
-        return redirect(url_for('lista_negra'))
-
-    return render_template('nova_restricao.html')
+    flash(f"Lista negra importada e sincronizada! Registros: {total}", "success")
+    return redirect(url_for("lista_negra"))
 
 
-@app.route("/liberar_lista/<int:id>")
+@app.route("/exportar_lista_negra_excel")
 @login_required
-def liberar_lista(id):
+def exportar_lista_negra_excel():
+    lista = ListaNegra.query.order_by(ListaNegra.nome.asc()).all()
 
-    item = ListaNegra.query.get(id)
+    dados = []
 
-    if item:
+    for item in lista:
+        dados.append(
+            {
+                "Nome": get_attr(item, "nome"),
+                "CPF": get_attr(item, "cpf"),
+                "Telefone": get_attr(item, "telefone"),
+                "Obra": get_attr(item, "obra"),
+                "Campo": get_attr(item, "campo"),
+                "Motivo": get_attr(item, "motivo"),
+                "Status": get_attr(item, "status", "Restrito"),
+            }
+        )
 
-        if item.cpf:
-            colaborador = Colaborador.query.filter_by(cpf=item.cpf).first()
-        else:
-            colaborador = Colaborador.query.filter(
-                Colaborador.nome.ilike(f"%{item.nome}%")
-            ).first()
+    df = pd.DataFrame(dados)
 
-        if colaborador:
-            colaborador.restrito = False
-            colaborador.motivo = ""
+    arquivo = BytesIO()
 
-        db.session.delete(item)
-        db.session.commit()
+    with pd.ExcelWriter(arquivo, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Lista Negra")
 
-        flash('Colaborador liberado e removido da Lista Negra!', 'success')
+    arquivo.seek(0)
 
-    return redirect("/lista_negra")
-
-
-@app.route('/lista_negra')
-@login_required
-def lista_negra():
-
-    lista_negra = ListaNegra.query.all()
-
-    return render_template(
-        'lista_negra.html',
-        lista_negra=lista_negra
+    return send_file(
+        arquivo,
+        as_attachment=True,
+        download_name="lista_negra.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
 
-@app.route('/importar_lista_negra', methods=['POST'])
+
+# =========================================================
+# BUSCAS AJAX
+# =========================================================
+
+@app.route("/buscar_colaborador_pre_admissao")
 @login_required
-def importar_lista_negra():
+def buscar_colaborador_pre_admissao():
+    termo = request.args.get("termo", "").strip()
 
-    arquivo = request.files['arquivo_excel']
+    if not termo:
+        return jsonify({"encontrado": False})
 
-    if arquivo:
+    cpf_limpo = limpar_documento(termo)
 
-        df = pd.read_excel(arquivo)
-        df.columns = df.columns.str.strip()
+    colaborador = Colaborador.query.filter(
+        or_(
+            Colaborador.nome.ilike(f"%{termo}%"),
+            Colaborador.cpf == cpf_limpo,
+        )
+    ).first()
 
-        for _, row in df.iterrows():
+    item_lista = buscar_na_lista_negra(termo, cpf_limpo)
 
-            nome = str(row.get('Nome', '')).strip()
-            obra = str(row.get('Obra', '')).strip()
-            cpf = limpar_documento(row.get('CPF', ''))
-            motivo = str(row.get('Motivo', '')).strip() or 'Restrição importada'
+    if not colaborador and not item_lista:
+        return jsonify({"encontrado": False})
 
-            if not nome:
-                continue
+    nome = get_attr(colaborador, "nome") or get_attr(item_lista, "nome")
+    cpf = get_attr(colaborador, "cpf") or get_attr(item_lista, "cpf")
 
-            item = buscar_na_lista_negra(nome, cpf)
+    return jsonify(
+        {
+            "encontrado": True,
+            "id": get_attr(colaborador, "id", None),
+            "nome": nome or "",
+            "cpf": cpf or "",
+            "telefone": get_attr(colaborador, "telefone") or get_attr(item_lista, "telefone"),
+            "funcao": get_attr(colaborador, "funcao"),
+            "obra": get_attr(colaborador, "obra") or get_attr(item_lista, "obra"),
+            "campo": get_attr(colaborador, "campo") or get_attr(item_lista, "campo"),
+            "foto": get_attr(colaborador, "foto", "https://cdn-icons-png.flaticon.com/512/149/149071.png"),
+            "restrito": True if item_lista else bool(get_attr(colaborador, "restrito", False)),
+            "na_lista_negra": True if item_lista else False,
+            "motivo": get_attr(item_lista, "motivo") or get_attr(colaborador, "motivo"),
+            "status": "Restrito" if item_lista else get_attr(colaborador, "status", "Liberado"),
+            "pre_admissao": get_attr(colaborador, "pre_admissao", "Não cadastrado na lista normal"),
+            "origem": "lista_negra" if item_lista and not colaborador else "normal_e_lista_negra" if item_lista and colaborador else "normal",
+        }
+    )
 
-            if not item:
-                item = ListaNegra(
-                    nome=nome,
-                    obra=obra,
-                    cpf=cpf,
-                    motivo=motivo,
-                    status='Restrito'
-                )
-                db.session.add(item)
-            else:
-                item.nome = nome
-                item.obra = obra or item.obra
-                item.cpf = cpf or item.cpf
-                item.motivo = motivo
-                item.status = 'Restrito'
 
-            colaborador = None
-            if cpf:
-                colaborador = Colaborador.query.filter_by(cpf=cpf).first()
-            if not colaborador:
-                colaborador = Colaborador.query.filter(
-                    Colaborador.nome.ilike(f"%{nome}%")
-                ).first()
+@app.route("/buscar_status_colaborador")
+@login_required
+def buscar_status_colaborador():
+    termo = request.args.get("termo", "").strip()
 
-            if colaborador:
-                colaborador.restrito = True
-                colaborador.motivo = motivo
+    if not termo:
+        return jsonify({"encontrado": False})
 
-        db.session.commit()
+    cpf_limpo = limpar_documento(termo)
 
-        flash('Lista negra importada e sincronizada com colaboradores!', 'success')
+    colaborador = Colaborador.query.filter(
+        or_(
+            Colaborador.nome.ilike(f"%{termo}%"),
+            Colaborador.cpf == cpf_limpo,
+        )
+    ).first()
 
-    return redirect('/lista_negra')
+    item_lista = buscar_na_lista_negra(termo, cpf_limpo)
 
+    if not colaborador and not item_lista:
+        return jsonify(
+            {
+                "encontrado": False,
+                "mensagem": "Nenhum cadastro encontrado na lista normal nem na lista negra.",
+            }
+        )
+
+    return jsonify(
+        {
+            "encontrado": True,
+            "nome": get_attr(colaborador, "nome") or get_attr(item_lista, "nome"),
+            "cpf": get_attr(colaborador, "cpf") or get_attr(item_lista, "cpf"),
+            "na_lista_normal": True if colaborador else False,
+            "na_lista_negra": True if item_lista else False,
+            "restrito": True if item_lista else bool(get_attr(colaborador, "restrito", False)),
+            "motivo": get_attr(item_lista, "motivo") or get_attr(colaborador, "motivo"),
+            "url_ficha": url_for("ver_colaborador", id=colaborador.id) if colaborador else "",
+            "url_lista_negra": url_for("lista_negra"),
+        }
+    )
+
+
+# =========================================================
+# PRÉ-ADMISSÃO / ADMISSÃO
+# =========================================================
 
 @app.route("/admissao", methods=["GET", "POST"])
 @login_required
 def admissao():
-
     if request.method == "POST":
+        nome = request.form.get("nome", "").strip()
+        cpf = limpar_documento(request.form.get("cpf", ""))
+        campo = request.form.get("campo", "").strip()
+        telefone = limpar_documento(request.form.get("telefone", ""))
+        funcao = request.form.get("funcao", "").strip()
+        obra = request.form.get("obra", "").strip()
+        status = request.form.get("status", "Aguardando").strip() or "Aguardando"
+        data_admissao = request.form.get("data_admissao", "").strip()
+        isolado = True if request.form.get("campo_isolado") else False
 
-        nome = request.form.get("nome")
-
-        cpf = request.form.get("cpf")
-
-        campo = request.form.get("campo")
-
-        telefone = request.form.get("telefone")
-
-        funcao = request.form.get("funcao")
-
-        obra = request.form.get("obra")
-
-        status = request.form.get("status") or "Aguardando"
-
-        data_admissao = request.form.get(
-            "data_admissao"
-        )
-
-        isolado = True if request.form.get(
-            "campo_isolado"
-        ) else False
-
-        # =====================================
-        # LIMPAR CPF
-        # =====================================
-
-        cpf = cpf.replace(".", "")
-        cpf = cpf.replace("-", "")
-        cpf = cpf.replace("/", "")
-        cpf = cpf.replace(" ", "")
-        cpf = cpf.lstrip("0")
-
-        # =====================================
-        # CONSULTAR LISTA NEGRA
-        # =====================================
+        if not nome or not cpf:
+            flash("Nome e CPF são obrigatórios.", "danger")
+            return redirect(url_for("admissao"))
 
         lista_negra = buscar_na_lista_negra(nome, cpf)
 
         if lista_negra:
+            flash(f"⚠️ {nome} ESTÁ NA LISTA NEGRA!", "danger")
+            return redirect(url_for("admissao"))
 
-            flash(
-                f"⚠️ {nome} ESTÁ NA LISTA NEGRA!",
-                "danger"
-            )
+        pre_existente = PreAdmissao.query.filter_by(cpf=cpf).first()
 
-            return redirect(
-                url_for("admissao")
-            )
+        if pre_existente:
+            pre = pre_existente
+            flash("Pré-admissão já existia. Os dados foram atualizados.", "warning")
+        else:
+            pre = PreAdmissao(cpf=cpf)
+            db.session.add(pre)
+            flash("Pré-admissão salva!", "success")
 
-        # =====================================
-        # SALVAR PRÉ-ADMISSÃO
-        # =====================================
+        pre.nome = nome
+        pre.telefone = telefone
+        pre.funcao = funcao
+        pre.campo = campo
+        pre.obra = obra
+        pre.status = status
 
-        nova_pre = PreAdmissao(
-
-            nome=nome,
-
-            cpf=cpf,
-
-            telefone=telefone,
-
-            funcao=funcao,
-
-            campo=campo,
-
-            obra=obra,
-
-            data_admissao=data_admissao,
-
-            isolado=isolado,
-
-            status=status
-        )
-
-        db.session.add(nova_pre)
+        set_attr_if_exists(pre, "data_admissao", data_admissao)
+        set_attr_if_exists(pre, "isolado", isolado)
 
         db.session.commit()
 
-        flash(
-            "✅ Pré-admissão salva!",
-            "success"
-        )
-
-        return redirect(
-            url_for("admissao")
-        )
+        return redirect(url_for("admissao"))
 
     filtro_status = request.args.get("status", "Todos").strip()
 
     consulta = PreAdmissao.query
 
     if filtro_status and filtro_status != "Todos":
-        consulta = consulta.filter(
-            PreAdmissao.status == filtro_status
-        )
+        consulta = consulta.filter(PreAdmissao.status == filtro_status)
 
-    pre_admissoes = consulta.order_by(
-        PreAdmissao.id.desc()
-    ).all()
+    pre_admissoes = consulta.order_by(PreAdmissao.id.desc()).all()
 
     return render_template(
         "admissao.html",
         pre_admissoes=pre_admissoes,
-        filtro_status=filtro_status
+        filtro_status=filtro_status,
     )
 
-
-@app.route('/zerar_pre_admissao')
-@login_required
-def zerar_pre_admissao():
-
-    try:
-
-        PreAdmissao.query.delete()
-
-        db.session.commit()
-
-        return 'Tabela de pré-admissão limpa com sucesso'
-
-    except Exception as e:
-
-        db.session.rollback()
-
-        return str(e)
-
-from models import db, PreAdmissao
-
-@app.route('/limpar-pre-admissoes')
-@login_required
-def limpar_pre_admissoes():
-
-    PreAdmissao.query.delete()
-
-    db.session.commit()
-
-    return 'Pré-admissões apagadas com sucesso'
-# =========================================
-# APROVAR ADMISSÃO
-# =========================================
-
-@app.route("/aprovar_admissao/<int:id>")
-@login_required
-def aprovar_admissao(id):
-
-    colaborador = Colaborador.query.get(id)
-
-    if colaborador:
-
-        colaborador.pre_admissao = "Liberado"
-
-        db.session.commit()
-
-        flash(
-            "✅ Pré-admissão aprovada!",
-            "success"
-        )
-
-    return redirect(url_for("admissao"))
-
-
-# =========================================
-# REPROVAR ADMISSÃO
-# =========================================
-
-@app.route("/reprovar_admissao/<int:id>")
-@login_required
-def reprovar_admissao(id):
-
-    colaborador = Colaborador.query.get(id)
-
-    if colaborador:
-
-        colaborador.pre_admissao = "Reprovado"
-
-        db.session.commit()
-
-        flash(
-            "❌ Pré-admissão reprovada!",
-            "danger"
-        )
-
-    return redirect(url_for("admissao"))
 
 @app.route("/alterar_status_pre_admissao/<int:id>/<novo_status>")
 @login_required
 def alterar_status_pre_admissao(id, novo_status):
-
     status_map = {
         "aguardando": "Aguardando",
         "admitido": "Admitido",
-        "recusado": "Recusado"
+        "recusado": "Recusado",
+        "cancelado": "Cancelado",
     }
 
     if novo_status not in status_map:
@@ -1260,19 +1005,123 @@ def alterar_status_pre_admissao(id, novo_status):
         return redirect(url_for("admissao"))
 
     pre.status = status_map[novo_status]
-
     db.session.commit()
 
     flash("Status atualizado com sucesso!", "success")
     return redirect(url_for("admissao"))
-# =========================================
+
+
+@app.route("/exportar_pre_admissoes_excel")
+@login_required
+def exportar_pre_admissoes_excel():
+    pre_admissoes = PreAdmissao.query.order_by(PreAdmissao.nome.asc()).all()
+
+    dados = []
+
+    for p in pre_admissoes:
+        dados.append(
+            {
+                "Nome": get_attr(p, "nome"),
+                "CPF": get_attr(p, "cpf"),
+                "Telefone": get_attr(p, "telefone"),
+                "Função": get_attr(p, "funcao"),
+                "Campo": get_attr(p, "campo"),
+                "Obra": get_attr(p, "obra"),
+                "Data Admissão": get_attr(p, "data_admissao"),
+                "Status": get_attr(p, "status"),
+                "Isolado": "SIM" if get_attr(p, "isolado", False) else "NÃO",
+            }
+        )
+
+    df = pd.DataFrame(dados)
+
+    arquivo = BytesIO()
+
+    with pd.ExcelWriter(arquivo, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Pré-Admissões")
+
+    arquivo.seek(0)
+
+    return send_file(
+        arquivo,
+        as_attachment=True,
+        download_name="pre_admissoes.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+
+@app.route("/zerar_pre_admissao")
+@login_required
+def zerar_pre_admissao():
+    try:
+        PreAdmissao.query.delete()
+        db.session.commit()
+        flash("Tabela de pré-admissão limpa com sucesso.", "success")
+    except Exception as erro:
+        db.session.rollback()
+        flash(f"Erro ao limpar pré-admissões: {erro}", "danger")
+
+    return redirect(url_for("admissao"))
+
+
+@app.route("/limpar-pre-admissoes")
+@login_required
+def limpar_pre_admissoes():
+    return zerar_pre_admissao()
+
+
+@app.route("/aprovar_admissao/<int:id>")
+@login_required
+def aprovar_admissao(id):
+    pre = PreAdmissao.query.get(id)
+
+    if not pre:
+        flash("Pré-admissão não encontrada.", "danger")
+        return redirect(url_for("admissao"))
+
+    pre.status = "Admitido"
+
+    colaborador = Colaborador.query.filter_by(cpf=pre.cpf).first()
+
+    if not colaborador:
+        colaborador = Colaborador(cpf=pre.cpf)
+        db.session.add(colaborador)
+
+    colaborador.nome = pre.nome
+    colaborador.funcao = pre.funcao
+    set_attr_if_exists(colaborador, "telefone", pre.telefone)
+    set_attr_if_exists(colaborador, "obra", pre.obra)
+    set_attr_if_exists(colaborador, "campo", pre.campo)
+    set_attr_if_exists(colaborador, "data_admissao", get_attr(pre, "data_admissao"))
+    set_attr_if_exists(colaborador, "status", "Admitido")
+    set_attr_if_exists(colaborador, "pre_admissao", "Liberado")
+
+    db.session.commit()
+
+    flash("Pré-admissão aprovada e colaborador atualizado!", "success")
+    return redirect(url_for("admissao"))
+
+
+@app.route("/reprovar_admissao/<int:id>")
+@login_required
+def reprovar_admissao(id):
+    pre = PreAdmissao.query.get(id)
+
+    if pre:
+        pre.status = "Recusado"
+        db.session.commit()
+        flash("Pré-admissão reprovada.", "danger")
+
+    return redirect(url_for("admissao"))
+
+
+# =========================================================
 # START
-# =========================================
+# =========================================================
 
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     app.run(
         debug=True,
-        host='0.0.0.0',
-        port=5000
+        host="0.0.0.0",
+        port=5000,
     )
