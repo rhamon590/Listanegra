@@ -258,6 +258,20 @@ button{
     linear-gradient(135deg,#16a34a,#166534);
 }
 
+.btn-excluir-tudo{
+
+    width:100%;
+
+    background:
+    linear-gradient(135deg,#991b1b,#450a0a);
+
+    box-shadow:0 10px 25px rgba(127,29,29,.35);
+}
+
+.btn-excluir-tudo:hover{
+    background:linear-gradient(135deg,#b91c1c,#7f1d1d);
+}
+
 .linha{
 
     border:none;
@@ -503,6 +517,17 @@ tr:hover{
                 </button>
 
             </form>
+
+            <hr class="linha">
+
+            <button
+            type="button"
+            class="btn btn-excluir-tudo"
+            onclick="excluirTudo()">
+
+                🗑️ Excluir Toda a Lista Negra
+
+            </button>
 
         </div>
 
@@ -752,6 +777,40 @@ function consultarStatusColaborador(termo){
         }
     })
     .catch(()=>{});
+}
+
+function excluirTudo(){
+
+    const confirmar = confirm(
+        'Tem certeza que deseja excluir TODA a Lista Negra?\n\n' +
+        'Todos os colaboradores restritos também serão liberados.\n' +
+        'Essa ação não poderá ser desfeita.'
+    );
+
+    if(!confirmar){
+        return;
+    }
+
+    fetch('/excluir_lista_negra_tudo', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(async response => {
+
+        const mensagem = await response.text();
+
+        if(!response.ok){
+            throw new Error(mensagem || 'Erro ao excluir a Lista Negra.');
+        }
+
+        alert('Lista Negra excluída com sucesso!');
+        window.location.reload();
+    })
+    .catch(error => {
+        alert('Não foi possível excluir: ' + error.message);
+    });
 }
 
 </script>
