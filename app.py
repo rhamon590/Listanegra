@@ -1114,6 +1114,32 @@ def reprovar_admissao(id):
 
     return redirect(url_for("admissao"))
 
+@app.route("/excluir_lista_negra_tudo", methods=["POST"])
+@login_required
+def excluir_lista_negra_tudo():
+
+    try:
+
+        colaboradores = Colaborador.query.filter_by(
+            restrito=True
+        ).all()
+
+        for colaborador in colaboradores:
+
+            colaborador.restrito = False
+            colaborador.motivo = ""
+
+        ListaNegra.query.delete()
+
+        db.session.commit()
+
+        return "Lista Negra excluída com sucesso.", 200
+
+    except Exception as erro:
+
+        db.session.rollback()
+
+        return f"Erro ao excluir: {erro}", 500
 
 # =========================================================
 # START
