@@ -377,7 +377,7 @@ input[type="file"]{
 table{
     width:100%;
     border-collapse:collapse;
-    min-width:1050px;
+    min-width:1180px;
 }
 
 th{
@@ -859,6 +859,7 @@ select{
                             <th>CPF</th>
                             <th>Cidade</th>
                             <th>Função</th>
+                            <th>Obra</th>
                             <th>Status</th>
                             <th>Ações</th>
                         </tr>
@@ -884,8 +885,9 @@ select{
 
                             <td class="nome-coluna">{{ c.nome }}</td>
                             <td>{{ c.cpf }}</td>
-                            <td>{{ c.cidade }}</td>
-                            <td>{{ c.funcao }}</td>
+                            <td>{{ c.cidade or '-' }}</td>
+                            <td>{{ c.funcao or '-' }}</td>
+                            <td>{{ c.obra or '-' }}</td>
 
                             <td>
                                 {% if c.restrito %}
