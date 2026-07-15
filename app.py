@@ -16,7 +16,7 @@ import os
 import re
 
 import pandas as pd
-from sqlalchemy import or_
+from sqlalchemy import or_, text
 from werkzeug.utils import secure_filename
 
 from models import db, Colaborador, ListaNegra, PreAdmissao, Usuario
@@ -215,8 +215,31 @@ def login_required(f):
 # BANCO DE DADOS
 # =========================================================
 
+def criar_indices_desempenho():
+    """Cria índices também em bancos que já existiam antes da otimização."""
+    comandos = [
+        "CREATE INDEX IF NOT EXISTS ix_colaborador_nome ON colaborador (nome)",
+        "CREATE INDEX IF NOT EXISTS ix_colaborador_cpf ON colaborador (cpf)",
+        "CREATE INDEX IF NOT EXISTS ix_colaborador_obra ON colaborador (obra)",
+        "CREATE INDEX IF NOT EXISTS ix_colaborador_funcao ON colaborador (funcao)",
+        "CREATE INDEX IF NOT EXISTS ix_colaborador_restrito ON colaborador (restrito)",
+        "CREATE INDEX IF NOT EXISTS ix_lista_negra_nome ON lista_negra (nome)",
+        "CREATE INDEX IF NOT EXISTS ix_lista_negra_cpf ON lista_negra (cpf)",
+        "CREATE INDEX IF NOT EXISTS ix_pre_admissao_cpf ON pre_admissao (cpf)",
+    ]
+
+    try:
+        for comando in comandos:
+            db.session.execute(text(comando))
+        db.session.commit()
+    except Exception as erro:
+        db.session.rollback()
+        print(f"Aviso ao criar índices: {erro}")
+
+
 with app.app_context():
     db.create_all()
+    criar_indices_desempenho()
     criar_admin_padrao()
 
 
@@ -257,11 +280,66 @@ def logout():
 @app.route("/")
 @login_required
 def index():
-    colaboradores = Colaborador.query.order_by(Colaborador.nome.asc()).all()
+    pagina = request.args.get("page", 1, type=int)
+    busca = request.args.get("busca", "").strip()
+    obra = request.args.get("obra", "").strip()
+    funcao = request.args.get("funcao", "").strip()
+    por_pagina = 30
+
+    consulta = Colaborador.query
+
+    if busca:
+        cpf_limpo = limpar_documento(busca)
+        filtros_busca = [Colaborador.nome.ilike(f"%{busca}%")]
+        if cpf_limpo:
+            filtros_busca.append(Colaborador.cpf == cpf_limpo)
+        consulta = consulta.filter(or_(*filtros_busca))
+
+    if obra:
+        consulta = consulta.filter(Colaborador.obra == obra)
+
+    if funcao:
+        consulta = consulta.filter(Colaborador.funcao == funcao)
+
+    colaboradores = (
+        consulta
+        .order_by(Colaborador.nome.asc())
+        .paginate(page=pagina, per_page=por_pagina, error_out=False)
+    )
+
+    total_colaboradores = Colaborador.query.count()
+    total_liberados = Colaborador.query.filter(Colaborador.restrito.is_(False)).count()
+    total_restritos = Colaborador.query.filter(Colaborador.restrito.is_(True)).count()
+
+    obras = [
+        item[0] for item in
+        db.session.query(Colaborador.obra)
+        .filter(Colaborador.obra.isnot(None), Colaborador.obra != "")
+        .distinct()
+        .order_by(Colaborador.obra.asc())
+        .all()
+    ]
+
+    funcoes = [
+        item[0] for item in
+        db.session.query(Colaborador.funcao)
+        .filter(Colaborador.funcao.isnot(None), Colaborador.funcao != "")
+        .distinct()
+        .order_by(Colaborador.funcao.asc())
+        .all()
+    ]
 
     return render_template(
         "index.html",
         colaboradores=colaboradores,
+        total_colaboradores=total_colaboradores,
+        total_liberados=total_liberados,
+        total_restritos=total_restritos,
+        busca=busca,
+        obra_selecionada=obra,
+        funcao_selecionada=funcao,
+        obras=obras,
+        funcoes=funcoes,
     )
 
 
@@ -324,11 +402,17 @@ def excluir_varios():
     dados = request.get_json(silent=True) or {}
     ids = dados.get("ids", [])
 
+    ids_validos = []
     for id_colab in ids:
-        colaborador = Colaborador.query.get(id_colab)
+        try:
+            ids_validos.append(int(id_colab))
+        except (TypeError, ValueError):
+            continue
 
-        if colaborador:
-            db.session.delete(colaborador)
+    if ids_validos:
+        Colaborador.query.filter(Colaborador.id.in_(ids_validos)).delete(
+            synchronize_session=False
+        )
 
     db.session.commit()
 
