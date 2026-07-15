@@ -197,7 +197,8 @@ form{
     gap:15px;
 }
 
-input{
+input,
+select{
     width:100%;
     border:none;
     outline:none;
@@ -211,7 +212,8 @@ input{
     font-family:'Poppins',sans-serif;
 }
 
-input:focus{
+input:focus,
+select:focus{
     border-color:var(--blue);
     box-shadow:0 0 0 4px rgba(59,130,246,.15);
     transform:translateY(-1px);
@@ -580,6 +582,85 @@ tbody tr:hover td{
     }
 }
 
+
+.filtros-busca{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr auto auto;
+    gap:12px;
+    align-items:center;
+}
+
+select{
+    width:100%;
+    border:none;
+    outline:none;
+    padding:15px 18px;
+    border-radius:16px;
+    background:#1e293b;
+    color:white;
+    font-size:14px;
+    border:1px solid transparent;
+    font-family:'Poppins',sans-serif;
+}
+
+.btn-buscar{background:linear-gradient(135deg,#2563eb,#1d4ed8);}
+.btn-limpar{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    background:#334155;
+}
+
+.paginacao{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:24px;
+}
+
+.paginacao a,
+.paginacao span{
+    min-width:42px;
+    height:42px;
+    padding:0 13px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    text-decoration:none;
+    background:rgba(255,255,255,.07);
+    color:white;
+    border:1px solid var(--border);
+    font-weight:700;
+}
+
+.paginacao a:hover,
+.paginacao .ativa{
+    background:var(--blue2);
+}
+
+.paginacao .desativada{
+    opacity:.4;
+    cursor:not-allowed;
+}
+
+.info-resultados{
+    margin:0 0 18px;
+    color:var(--muted);
+    font-size:14px;
+}
+
+@media(max-width:1000px){
+    .filtros-busca{grid-template-columns:1fr 1fr;}
+}
+
+@media(max-width:650px){
+    .filtros-busca{grid-template-columns:1fr;}
+}
+
 @media(max-width:1100px){
     .grid{
         grid-template-columns:1fr;
@@ -701,26 +782,20 @@ tbody tr:hover td{
 
             <div class="stat total">
                 <h3>Total</h3>
-                <span>{{ colaboradores|length }}</span>
+                <span>{{ total_colaboradores }}</span>
             </div>
 
             <div class="stat liberados">
                 <h3>Liberados</h3>
                 <span>
-                    {{ colaboradores
-                    | selectattr('restrito','equalto',False)
-                    | list
-                    | length }}
+                    {{ total_liberados }}
                 </span>
             </div>
 
             <div class="stat restritos">
                 <h3>Restritos</h3>
                 <span>
-                    {{ colaboradores
-                    | selectattr('restrito')
-                    | list
-                    | length }}
+                    {{ total_restritos }}
                 </span>
             </div>
 
@@ -733,14 +808,37 @@ tbody tr:hover td{
             </div>
 
             <div class="busca">
+                <form method="GET" action="/" class="filtros-busca">
+                    <input
+                        type="text"
+                        id="pesquisa"
+                        name="busca"
+                        value="{{ busca }}"
+                        placeholder="Pesquisar pelo nome ou CPF...">
 
-                <input
-                type="text"
-                id="pesquisa"
-                placeholder="Pesquisar colaborador pelo nome ou CPF...">
+                    <select name="obra">
+                        <option value="">Todas as obras</option>
+                        {% for item in obras %}
+                            <option value="{{ item }}" {% if obra_selecionada == item %}selected{% endif %}>{{ item }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <select name="funcao">
+                        <option value="">Todas as funções</option>
+                        {% for item in funcoes %}
+                            <option value="{{ item }}" {% if funcao_selecionada == item %}selected{% endif %}>{{ item }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit" class="btn btn-buscar">🔎 Buscar</button>
+                    <a href="/" class="btn btn-limpar">Limpar</a>
+                </form>
 
                 <div id="resultadoBuscaStatus" class="alerta-busca"></div>
+            </div>
 
+            <div class="info-resultados">
+                Exibindo {{ colaboradores.items|length }} de {{ colaboradores.total }} resultado(s).
             </div>
 
             <button id="btnExcluirSelecionados" class="btn btn-excluir">
@@ -768,7 +866,7 @@ tbody tr:hover td{
 
                     <tbody>
 
-                        {% for c in colaboradores %}
+                        {% for c in colaboradores.items %}
 
                         <tr>
 
@@ -778,9 +876,9 @@ tbody tr:hover td{
 
                             <td>
                                 {% if c.foto %}
-                                    <img class="foto" src="{{ c.foto }}">
+                                    <img class="foto" src="{{ c.foto }}" loading="lazy" decoding="async" alt="Foto de {{ c.nome }}">
                                 {% else %}
-                                    <img class="foto" src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
+                                    <img class="foto" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" loading="lazy" decoding="async" alt="Sem foto">
                                 {% endif %}
                             </td>
 
@@ -841,6 +939,34 @@ tbody tr:hover td{
 
             </div>
 
+            {% if colaboradores.pages > 1 %}
+            <div class="paginacao">
+                {% if colaboradores.has_prev %}
+                    <a href="{{ url_for('index', page=colaboradores.prev_num, busca=busca, obra=obra_selecionada, funcao=funcao_selecionada) }}">← Anterior</a>
+                {% else %}
+                    <span class="desativada">← Anterior</span>
+                {% endif %}
+
+                {% for numero in colaboradores.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                    {% if numero %}
+                        {% if numero == colaboradores.page %}
+                            <span class="ativa">{{ numero }}</span>
+                        {% else %}
+                            <a href="{{ url_for('index', page=numero, busca=busca, obra=obra_selecionada, funcao=funcao_selecionada) }}">{{ numero }}</a>
+                        {% endif %}
+                    {% else %}
+                        <span>…</span>
+                    {% endif %}
+                {% endfor %}
+
+                {% if colaboradores.has_next %}
+                    <a href="{{ url_for('index', page=colaboradores.next_num, busca=busca, obra=obra_selecionada, funcao=funcao_selecionada) }}">Próxima →</a>
+                {% else %}
+                    <span class="desativada">Próxima →</span>
+                {% endif %}
+            </div>
+            {% endif %}
+
         </div>
 
     </div>
@@ -855,21 +981,11 @@ tbody tr:hover td{
 const pesquisa = document.getElementById('pesquisa');
 let timerBusca = null;
 
-pesquisa.addEventListener('keyup',()=>{
-
-    let filtro = pesquisa.value.toLowerCase().trim();
-    let linhas = document.querySelectorAll('#tabela tbody tr');
-
-    linhas.forEach(linha=>{
-        let texto = linha.innerText.toLowerCase();
-        linha.style.display = texto.includes(filtro) ? '' : 'none';
-    });
-
+pesquisa.addEventListener('input',()=>{
     clearTimeout(timerBusca);
-
     timerBusca = setTimeout(()=>{
         consultarStatusColaborador(pesquisa.value.trim());
-    },350);
+    },450);
 });
 
 function consultarStatusColaborador(termo){
@@ -955,7 +1071,7 @@ document.getElementById('btnExcluirSelecionados').addEventListener('click',()=>{
     .then(res=>res.json())
     .then(data=>{
         alert(data.mensagem);
-        location.reload();
+        window.location.href = window.location.href;
     })
     .catch(()=>{
         alert('Erro ao excluir colaboradores selecionados.');
