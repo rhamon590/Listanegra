@@ -1,513 +1,1789 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ficha do Colaborador</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="Ficha completa do colaborador no ORCA Face System">
+    <title>{{ c.nome or 'Colaborador' }} | Face</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
+    <script>
+        try {
+            const temaSalvo = localStorage.getItem('orca-tema');
+            if (temaSalvo === 'light' || temaSalvo === 'dark') {
+                document.documentElement.dataset.theme = temaSalvo;
+            }
+        } catch (erro) {}
+    </script>
 
-:root{
-    --bg:#020617;
-    --card:#0f172a;
-    --blue:#3b82f6;
-    --green:#22c55e;
-    --red:#ef4444;
-    --yellow:#f59e0b;
-    --text:#f8fafc;
-    --muted:#94a3b8;
-    --border:rgba(255,255,255,.09);
-}
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-body{
-    font-family:'Poppins',sans-serif;
-    background:
-    radial-gradient(circle at 10% 10%,rgba(37,99,235,.45),transparent 30%),
-    radial-gradient(circle at 90% 90%,rgba(15,118,110,.45),transparent 30%),
-    linear-gradient(135deg,#020617,#0f172a,#111827);
-    min-height:100vh;
-    padding:40px 20px;
-    color:var(--text);
-    overflow-x:hidden;
-}
+        :root {
+            --bg: #070b14;
+            --bg-secondary: #0b1220;
+            --surface: rgba(15, 23, 42, .88);
+            --surface-solid: #111a2d;
+            --surface-soft: rgba(255, 255, 255, .045);
+            --field: #172238;
+            --text: #f8fafc;
+            --text-soft: #d9e2ef;
+            --muted: #8fa0b8;
+            --border: rgba(148, 163, 184, .16);
+            --border-strong: rgba(96, 165, 250, .38);
+            --primary: #3b82f6;
+            --primary-strong: #2563eb;
+            --primary-soft: rgba(59, 130, 246, .14);
+            --success: #22c55e;
+            --success-soft: rgba(34, 197, 94, .13);
+            --danger: #ef4444;
+            --danger-soft: rgba(239, 68, 68, .13);
+            --warning: #f59e0b;
+            --warning-soft: rgba(245, 158, 11, .13);
+            --purple: #8b5cf6;
+            --shadow: 0 24px 70px rgba(0, 0, 0, .35);
+            --shadow-soft: 0 12px 35px rgba(0, 0, 0, .22);
+            --radius: 24px;
+        }
 
-body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background-image:
-    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.035) 1px, transparent 1px);
-    background-size:45px 45px;
-    mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),transparent);
-    pointer-events:none;
-}
+        html[data-theme="light"] {
+            --bg: #eef3f9;
+            --bg-secondary: #e7eef7;
+            --surface: rgba(255, 255, 255, .92);
+            --surface-solid: #fff;
+            --surface-soft: rgba(15, 23, 42, .045);
+            --field: #f5f8fc;
+            --text: #142033;
+            --text-soft: #263449;
+            --muted: #64748b;
+            --border: rgba(15, 23, 42, .1);
+            --border-strong: rgba(37, 99, 235, .3);
+            --primary-soft: rgba(37, 99, 235, .1);
+            --success-soft: rgba(22, 163, 74, .1);
+            --danger-soft: rgba(220, 38, 38, .09);
+            --warning-soft: rgba(217, 119, 6, .1);
+            --shadow: 0 24px 70px rgba(30, 64, 110, .13);
+            --shadow-soft: 0 12px 35px rgba(30, 64, 110, .1);
+        }
 
-.card{
-    max-width:1300px;
-    margin:auto;
-    background:rgba(15,23,42,.78);
-    backdrop-filter:blur(22px);
-    border:1px solid var(--border);
-    border-radius:32px;
-    overflow:hidden;
-    box-shadow:0 25px 80px rgba(0,0,0,.55);
-    animation:entradaCard .8s ease both;
-}
+        html {
+            scroll-behavior: smooth;
+        }
 
-.header{
-    position:relative;
-    padding:55px;
-    background:linear-gradient(135deg,rgba(37,99,235,.95),rgba(29,78,216,.9));
-    overflow:hidden;
-}
+        body {
+            min-height: 100vh;
+            padding: 30px;
+            overflow-x: hidden;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 6% 2%, rgba(37, 99, 235, .27), transparent 28rem),
+                radial-gradient(circle at 96% 92%, rgba(8, 145, 178, .18), transparent 30rem),
+                linear-gradient(145deg, var(--bg), var(--bg-secondary));
+            font-family: "Inter", "Segoe UI", sans-serif;
+        }
 
-.header::before{
-    content:"";
-    position:absolute;
-    width:450px;
-    height:450px;
-    background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%);
-    right:-150px;
-    top:-180px;
-    animation:flutuar 7s ease-in-out infinite;
-}
+        body::before {
+            position: fixed;
+            z-index: -1;
+            inset: 0;
+            content: "";
+            pointer-events: none;
+            opacity: .4;
+            background-image:
+                linear-gradient(rgba(148, 163, 184, .045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, .045) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, #000 0, transparent 78%);
+        }
 
-.header::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(120deg,transparent,rgba(255,255,255,.13),transparent);
-    transform:translateX(-100%);
-    animation:brilhoHeader 4s infinite;
-}
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
 
-.topo{
-    position:relative;
-    z-index:2;
-    display:flex;
-    align-items:center;
-    gap:35px;
-    flex-wrap:wrap;
-}
+        button {
+            border: 0;
+            font: inherit;
+        }
 
-.foto{
-    width:200px;
-    height:200px;
-    object-fit:cover;
-    border-radius:32px;
-    border:6px solid rgba(255,255,255,.95);
-    background:white;
-    box-shadow:0 15px 45px rgba(0,0,0,.45);
-    animation:fotoPulse 2.4s infinite;
-}
+        a {
+            color: inherit;
+        }
 
-.dados-principais{flex:1}
+        :focus-visible {
+            outline: 3px solid rgba(96, 165, 250, .7);
+            outline-offset: 3px;
+        }
 
-.nome{
-    font-size:42px;
-    font-weight:800;
-    margin-bottom:20px;
-    letter-spacing:-1px;
-    animation:subir .7s ease both;
-}
+        ::selection {
+            color: #fff;
+            background: #2563eb;
+        }
 
-.status{
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    padding:14px 22px;
-    border-radius:16px;
-    font-size:16px;
-    font-weight:700;
-    animation:subir .9s ease both;
-}
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
 
-.status-ok{
-    background:rgba(34,197,94,.18);
-    color:#86efac;
-    border:1px solid rgba(34,197,94,.35);
-    box-shadow:0 0 25px rgba(34,197,94,.15);
-}
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
 
-.status-bloq{
-    background:rgba(239,68,68,.18);
-    color:#fecaca;
-    border:1px solid rgba(239,68,68,.4);
-    box-shadow:0 0 30px rgba(239,68,68,.25);
-    animation:pulseBloq 1.6s infinite;
-}
+        ::-webkit-scrollbar-thumb {
+            border: 3px solid transparent;
+            border-radius: 99px;
+            background: #3c4d67;
+            background-clip: padding-box;
+        }
 
-.status-admissao{
-    background:rgba(245,158,11,.18);
-    color:#fcd34d;
-    border:1px solid rgba(245,158,11,.35);
-    box-shadow:0 0 25px rgba(245,158,11,.14);
-}
+        .app-shell {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+        }
 
-.conteudo{padding:42px}
+        .profile-frame {
+            display: grid;
+            width: min(1820px, 100%);
+            margin: 0 auto;
+            grid-template-columns: minmax(0, 1320px) minmax(360px, 440px);
+            gap: 20px;
+            align-items: start;
+            justify-content: center;
+        }
 
-.titulo-secao{
-    font-size:30px;
-    font-weight:800;
-    margin-bottom:30px;
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
+        .topbar {
+            position: sticky;
+            z-index: 50;
+            top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: min(1820px, 100%);
+            min-height: 76px;
+            margin: 0 auto 16px;
+            padding: 13px 16px;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            background: color-mix(in srgb, var(--surface-solid) 84%, transparent);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(22px);
+        }
 
-.info{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:22px;
-}
+        .brand {
+            min-width: 0;
+            text-decoration: none;
+        }
 
-.box{
-    background:linear-gradient(180deg,rgba(30,41,59,.76),rgba(15,23,42,.75));
-    border:1px solid rgba(255,255,255,.07);
-    border-radius:24px;
-    padding:25px;
-    transition:.35s;
-    position:relative;
-    overflow:hidden;
-    animation:aparecer .7s ease both;
-}
+        .brand strong,
+        .brand span {
+            display: block;
+        }
 
-.box::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(120deg,transparent,rgba(255,255,255,.08),transparent);
-    transform:translateX(-120%);
-    transition:.6s;
-}
+        .brand strong {
+            overflow: hidden;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: transparent;
+            background: linear-gradient(90deg, #60a5fa, #22d3ee, #34d399);
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
 
-.box:hover::before{transform:translateX(120%)}
+        .brand span {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
+        }
 
-.box:hover{
-    transform:translateY(-7px) scale(1.01);
-    border-color:rgba(59,130,246,.45);
-    box-shadow:0 18px 40px rgba(37,99,235,.17);
-}
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-.titulo{
-    color:var(--muted);
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:2px;
-    margin-bottom:12px;
-    font-weight:700;
-}
+        .nav-link,
+        .icon-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 50px;
+            cursor: pointer;
+            color: var(--text-soft);
+            border: 1px solid transparent;
+            border-radius: 13px;
+            background: transparent;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: .2s ease;
+        }
 
-.valor{
-    font-size:19px;
-    font-weight:600;
-    line-height:1.5;
-    word-break:break-word;
-}
+        .nav-link {
+            gap: 8px;
+            padding: 0 18px;
+        }
 
-.motivo{color:#fca5a5}
+        .nav-link:hover,
+        .icon-button:hover {
+            color: var(--text);
+            border-color: var(--border);
+            background: var(--surface-soft);
+            transform: translateY(-1px);
+        }
 
-.whatsapp{
-    margin-top:10px;
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    text-decoration:none;
-    color:#86efac;
-    font-size:14px;
-    font-weight:700;
-    transition:.25s;
-}
+        .nav-link.active {
+            color: #dbeafe;
+            border-color: rgba(96, 165, 250, .22);
+            background: linear-gradient(135deg, rgba(37, 99, 235, .25), rgba(8, 145, 178, .12));
+        }
 
-.whatsapp:hover{
-    color:#bbf7d0;
-    transform:translateX(4px);
-}
+        html[data-theme="light"] .nav-link.active {
+            color: #1d4ed8;
+        }
 
-.acoes{
-    margin-top:45px;
-    display:flex;
-    gap:18px;
-    flex-wrap:wrap;
-}
+        .nav-link.danger:hover {
+            color: #fecaca;
+            border-color: rgba(239, 68, 68, .22);
+            background: var(--danger-soft);
+        }
 
-.btn{
-    padding:16px 28px;
-    border:none;
-    border-radius:18px;
-    cursor:pointer;
-    text-decoration:none;
-    color:white;
-    font-size:15px;
-    font-weight:800;
-    transition:.35s;
-    display:flex;
-    align-items:center;
-    gap:10px;
-    position:relative;
-    overflow:hidden;
-}
+        .icon-button {
+            width: 50px;
+            flex: 0 0 50px;
+            font-size: 20px;
+        }
 
-.btn::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(120deg,transparent,rgba(255,255,255,.22),transparent);
-    transform:translateX(-120%);
-    transition:.6s;
-}
+        .hero {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            width: 100%;
+            grid-column: 1;
+            grid-row: 1;
+            min-height: 240px;
+            overflow: hidden;
+            margin: 0;
+            padding: 30px;
+            border: 1px solid rgba(96, 165, 250, .22);
+            border-bottom-color: var(--border);
+            border-radius: 30px 30px 0 0;
+            background:
+                linear-gradient(112deg, rgba(30, 64, 175, .9), rgba(15, 23, 42, .9) 62%, rgba(8, 145, 178, .5)),
+                var(--surface-solid);
+            box-shadow: none;
+        }
 
-.btn:hover::before{transform:translateX(120%)}
-.btn:hover{transform:translateY(-4px)}
+        .hero::before,
+        .hero::after {
+            position: absolute;
+            content: "";
+            pointer-events: none;
+            border-radius: 50%;
+        }
 
-.btn-voltar{background:linear-gradient(135deg,#2563eb,#1d4ed8)}
-.btn-imprimir{background:linear-gradient(135deg,#16a34a,#15803d)}
-.btn-restringir{background:linear-gradient(135deg,#dc2626,#991b1b)}
-.btn-liberar{background:linear-gradient(135deg,#f59e0b,#d97706)}
+        .hero::before {
+            top: -190px;
+            right: -90px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(34, 211, 238, .22), transparent 66%);
+        }
 
-.footer{
-    margin-top:50px;
-    text-align:center;
-    color:var(--muted);
-    font-size:14px;
-}
+        .hero::after {
+            bottom: -210px;
+            left: 28%;
+            width: 430px;
+            height: 430px;
+            background: radial-gradient(circle, rgba(96, 165, 250, .22), transparent 68%);
+        }
 
-@keyframes entradaCard{
-    from{opacity:0;transform:translateY(35px) scale(.98)}
-    to{opacity:1;transform:translateY(0) scale(1)}
-}
+        .profile-summary {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            min-width: 0;
+            gap: 24px;
+        }
 
-@keyframes aparecer{
-    from{opacity:0;transform:translateY(25px)}
-    to{opacity:1;transform:translateY(0)}
-}
+        .photo-button {
+            position: relative;
+            display: grid;
+            flex: 0 0 185px;
+            width: 185px;
+            height: 185px;
+            place-items: center;
+            overflow: hidden;
+            cursor: zoom-in;
+            color: #fff;
+            border: 5px solid rgba(255, 255, 255, .88);
+            border-radius: 28px;
+            background: linear-gradient(135deg, #2563eb, #0891b2);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, .35);
+            font-size: 52px;
+            font-weight: 800;
+            transition: .25s ease;
+        }
 
-@keyframes subir{
-    from{opacity:0;transform:translateY(20px)}
-    to{opacity:1;transform:translateY(0)}
-}
+        .photo-button:hover {
+            transform: translateY(-4px) scale(1.015);
+            box-shadow: 0 25px 58px rgba(0, 0, 0, .42);
+        }
 
-@keyframes fotoPulse{
-    0%,100%{box-shadow:0 15px 45px rgba(0,0,0,.45),0 0 0 rgba(255,255,255,0)}
-    50%{box-shadow:0 15px 45px rgba(0,0,0,.45),0 0 35px rgba(255,255,255,.35)}
-}
+        .photo-button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-@keyframes brilhoHeader{
-    100%{transform:translateX(100%)}
-}
+        .photo-button::after {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            display: grid;
+            width: 34px;
+            height: 34px;
+            content: "＋";
+            place-items: center;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .25);
+            border-radius: 10px;
+            background: rgba(2, 6, 23, .72);
+            font-size: 17px;
+            backdrop-filter: blur(8px);
+        }
 
-@keyframes flutuar{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(25px)}
-}
+        .profile-copy {
+            min-width: 0;
+        }
 
-@keyframes pulseBloq{
-    0%,100%{transform:scale(1);box-shadow:0 0 20px rgba(239,68,68,.2)}
-    50%{transform:scale(1.03);box-shadow:0 0 45px rgba(239,68,68,.45)}
-}
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 10px;
+            color: #bfdbfe;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-@media(max-width:768px){
-    body{padding:18px}
-    .header{padding:35px 25px}
-    .conteudo{padding:25px}
-    .topo{justify-content:center;text-align:center}
-    .foto{width:155px;height:155px}
-    .nome{font-size:30px}
-    .titulo-secao{font-size:24px}
-    .acoes{justify-content:center}
-    .btn{width:100%;justify-content:center}
-}
+        .eyebrow::before {
+            width: 7px;
+            height: 7px;
+            content: "";
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 14px currentColor;
+        }
 
-@media print{
-    body{background:white;padding:0;color:#000}
-    body::before{display:none}
-    .acoes{display:none}
-    .card{box-shadow:none;border:none;background:white}
-    .header{background:#1d4ed8}
-    .box{background:white;border:1px solid #ddd;color:#000;box-shadow:none}
-    .titulo{color:#444}
-    .footer{color:#444}
-}
-</style>
+        .profile-name {
+            max-width: 900px;
+            overflow: hidden;
+            margin-bottom: 14px;
+            color: #fff;
+            font-size: clamp(30px, 2.6vw, 46px);
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .profile-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta-chip {
+            display: inline-flex;
+            align-items: center;
+            min-height: 34px;
+            padding: 0 12px;
+            color: #dbeafe;
+            border: 1px solid rgba(255, 255, 255, .15);
+            border-radius: 999px;
+            background: rgba(2, 6, 23, .24);
+            font-size: 12px;
+            font-weight: 700;
+            backdrop-filter: blur(8px);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 0 16px;
+            border: 1px solid;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: .25px;
+            text-transform: uppercase;
+        }
+
+        .status-badge::before {
+            width: 8px;
+            height: 8px;
+            content: "";
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 13px currentColor;
+        }
+
+        .status-badge.success {
+            color: #86efac;
+            border-color: rgba(34, 197, 94, .38);
+            background: rgba(20, 83, 45, .42);
+        }
+
+        .status-badge.danger {
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, .4);
+            background: rgba(127, 29, 29, .44);
+        }
+
+        .status-badge.warning {
+            color: #fde68a;
+            border-color: rgba(245, 158, 11, .4);
+            background: rgba(120, 53, 15, .4);
+        }
+
+        .hero-actions {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            flex: 0 0 260px;
+            gap: 10px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            min-height: 50px;
+            padding: 0 18px;
+            cursor: pointer;
+            color: #fff;
+            border: 1px solid transparent;
+            border-radius: 13px;
+            background: #334155;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: .2s ease;
+        }
+
+        .button:hover:not(:disabled) {
+            filter: brightness(1.08);
+            transform: translateY(-2px);
+        }
+
+        .button.primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow: 0 10px 26px rgba(37, 99, 235, .22);
+        }
+
+        .button.success {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+        }
+
+        .button.danger {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+        }
+
+        .button.warning {
+            background: linear-gradient(135deg, #d97706, #b45309);
+        }
+
+        .button.secondary {
+            color: var(--text-soft);
+            border-color: var(--border);
+            background: var(--surface-soft);
+        }
+
+        .button.glass {
+            color: #fff;
+            border-color: rgba(255, 255, 255, .18);
+            background: rgba(2, 6, 23, .35);
+            backdrop-filter: blur(8px);
+        }
+
+        .button.compact {
+            min-height: 42px;
+            padding: 0 14px;
+            border-radius: 11px;
+            font-size: 12px;
+        }
+
+        .content-layout {
+            display: contents;
+            width: 100%;
+            margin: 0;
+        }
+
+        .content-layout > .card {
+            grid-column: 1;
+            grid-row: 2;
+            border: 1px solid var(--border);
+            border-top: 0;
+            border-radius: 0 0 30px 30px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+        }
+
+        .section-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 26px 28px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-kicker {
+            display: block;
+            margin-bottom: 7px;
+            color: #60a5fa;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .9px;
+            text-transform: uppercase;
+        }
+
+        .section-title {
+            color: var(--text);
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -.6px;
+        }
+
+        .section-subtitle {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .detail-section {
+            padding: 24px 26px 27px;
+        }
+
+        .detail-section + .detail-section {
+            border-top: 1px solid var(--border);
+        }
+
+        .detail-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .detail-icon {
+            display: grid;
+            width: 36px;
+            height: 36px;
+            place-items: center;
+            color: #93c5fd;
+            border-radius: 11px;
+            background: var(--primary-soft);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .info-item {
+            position: relative;
+            min-width: 0;
+            min-height: 92px;
+            overflow: hidden;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--surface-soft);
+            transition: .2s ease;
+        }
+
+        .info-item:hover {
+            border-color: var(--border-strong);
+            background: var(--primary-soft);
+            transform: translateY(-2px);
+        }
+
+        .info-label {
+            display: block;
+            margin-bottom: 9px;
+            color: var(--muted);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .75px;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            display: block;
+            padding-right: 34px;
+            overflow: hidden;
+            color: var(--text-soft);
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.55;
+            text-overflow: ellipsis;
+            word-break: break-word;
+        }
+
+        .copy-field {
+            position: absolute;
+            top: 13px;
+            right: 13px;
+            display: grid;
+            width: 30px;
+            height: 30px;
+            place-items: center;
+            cursor: pointer;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: color-mix(in srgb, var(--surface-solid) 65%, transparent);
+            font-size: 13px;
+            transition: .18s ease;
+        }
+
+        .copy-field:hover {
+            color: #fff;
+            border-color: var(--primary);
+            background: var(--primary-strong);
+        }
+
+        .inline-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            color: #86efac;
+            font-size: 11px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .inline-action:hover {
+            text-decoration: underline;
+        }
+
+        .side-stack {
+            position: sticky;
+            top: 110px;
+            display: grid;
+            grid-column: 2;
+            grid-row: 1 / span 2;
+            grid-template-columns: 1fr;
+            gap: 14px;
+            padding: 0;
+            border: 0;
+        }
+
+        .side-card {
+            overflow: hidden;
+            border-radius: 16px;
+            background: var(--surface);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .side-card-head {
+            padding: 22px 22px 17px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .side-card-head h2 {
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .side-card-head p {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .side-card-body {
+            padding: 20px 22px 22px;
+        }
+
+        .progress-ring-wrap {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .progress-ring {
+            --progress: 0deg;
+            position: relative;
+            display: grid;
+            flex: 0 0 82px;
+            width: 82px;
+            height: 82px;
+            place-items: center;
+            border-radius: 50%;
+            background: conic-gradient(var(--success) var(--progress), var(--surface-soft) 0);
+        }
+
+        .progress-ring::before {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            content: "";
+            border-radius: 50%;
+            background: var(--surface-solid);
+        }
+
+        .progress-ring strong {
+            position: relative;
+            z-index: 1;
+            color: var(--text);
+            font-size: 17px;
+        }
+
+        .progress-copy strong,
+        .progress-copy span {
+            display: block;
+        }
+
+        .progress-copy strong {
+            margin-bottom: 6px;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .progress-copy span {
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .status-panel {
+            padding: 20px 22px 22px;
+        }
+
+        .status-panel .status-badge {
+            margin-bottom: 16px;
+        }
+
+        .reason-box {
+            padding: 14px;
+            color: var(--text-soft);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: var(--surface-soft);
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .reason-box span {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--muted);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+        }
+
+        .quick-actions {
+            display: grid;
+            gap: 9px;
+        }
+
+        .quick-actions .button {
+            width: 100%;
+        }
+
+        .meta-list {
+            display: grid;
+            gap: 11px;
+        }
+
+        .meta-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding-bottom: 11px;
+            color: var(--muted);
+            border-bottom: 1px solid var(--border);
+            font-size: 11px;
+        }
+
+        .meta-row:last-child {
+            padding-bottom: 0;
+            border-bottom: 0;
+        }
+
+        .meta-row strong {
+            max-width: 62%;
+            overflow: hidden;
+            color: var(--text-soft);
+            text-align: right;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .footer {
+            width: min(1820px, 100%);
+            margin: 0 auto;
+            padding: 28px 10px 8px;
+            color: var(--muted);
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .footer strong {
+            color: var(--text-soft);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            z-index: 200;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(2, 6, 23, .8);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+            animation: fade-in .18s ease both;
+        }
+
+        .modal {
+            width: min(470px, 100%);
+            max-height: calc(100vh - 40px);
+            overflow: auto;
+            border: 1px solid var(--border);
+            border-radius: 23px;
+            background: var(--surface-solid);
+            box-shadow: 0 28px 90px rgba(0, 0, 0, .5);
+            animation: modal-in .24s ease both;
+        }
+
+        .modal.photo-modal {
+            width: min(720px, 100%);
+            overflow: hidden;
+            background: #020617;
+        }
+
+        .photo-preview {
+            display: grid;
+            min-height: min(720px, calc(100vh - 90px));
+            place-items: center;
+            padding: 24px;
+        }
+
+        .photo-preview img {
+            display: block;
+            max-width: 100%;
+            max-height: calc(100vh - 138px);
+            object-fit: contain;
+            border-radius: 18px;
+        }
+
+        .photo-preview .large-initial {
+            display: grid;
+            width: 290px;
+            height: 290px;
+            place-items: center;
+            color: #fff;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #0891b2);
+            font-size: 110px;
+            font-weight: 800;
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-head h2 {
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .modal-close {
+            display: grid;
+            width: 36px;
+            height: 36px;
+            place-items: center;
+            cursor: pointer;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface-soft);
+            font-size: 20px;
+        }
+
+        .modal-body {
+            padding: 22px;
+            color: var(--text-soft);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .modal-body p + p {
+            margin-top: 8px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 9px;
+            padding: 17px 22px;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .toast-container {
+            position: fixed;
+            z-index: 300;
+            right: 20px;
+            bottom: 20px;
+            display: grid;
+            width: min(370px, calc(100vw - 40px));
+            gap: 9px;
+        }
+
+        .toast {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 14px 15px;
+            color: var(--text-soft);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--surface-solid);
+            box-shadow: var(--shadow);
+            font-size: 12px;
+            line-height: 1.45;
+            animation: toast-in .25s ease both;
+        }
+
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.info { border-left: 4px solid var(--primary); }
+        .toast.out { animation: toast-out .2s ease both; }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes modal-in {
+            from { opacity: 0; transform: translateY(14px) scale(.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes toast-in {
+            from { opacity: 0; transform: translateX(18px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toast-out {
+            to { opacity: 0; transform: translateX(18px); }
+        }
+
+        @media (max-width: 1180px) {
+            .profile-frame {
+                display: block;
+            }
+
+            .hero,
+            .content-layout > .card,
+            .side-stack {
+                grid-column: auto;
+                grid-row: auto;
+            }
+
+            .content-layout {
+                display: block;
+            }
+
+            .info-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .side-stack {
+                position: static;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                margin-top: 18px;
+            }
+
+            .hero-actions {
+                flex-basis: 230px;
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .info-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 900px) {
+            body {
+                padding: 16px;
+            }
+
+            .topbar {
+                position: relative;
+                top: 0;
+                flex-wrap: wrap;
+            }
+
+            .brand strong {
+                font-size: 30px;
+            }
+
+            .nav-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .hero {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .hero-actions {
+                grid-template-columns: repeat(3, 1fr);
+                flex-basis: auto;
+            }
+
+            .side-stack {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .topbar {
+                padding: 14px;
+                border-radius: 18px;
+            }
+
+            .brand strong {
+                max-width: 270px;
+                font-size: 25px;
+            }
+
+            .brand span {
+                font-size: 10px;
+            }
+
+            .nav-link {
+                width: 44px;
+                min-height: 44px;
+                padding: 0;
+                font-size: 17px;
+            }
+
+            .nav-link span {
+                display: none;
+            }
+
+            .icon-button {
+                width: 44px;
+                min-height: 44px;
+                flex-basis: 44px;
+            }
+
+            .hero {
+                padding: 24px 20px;
+                border-radius: 22px 22px 0 0;
+            }
+
+            .profile-summary {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .photo-button {
+                width: 145px;
+                height: 145px;
+                flex-basis: 145px;
+            }
+
+            .profile-name {
+                font-size: 30px;
+                white-space: normal;
+            }
+
+            .hero-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .section-head,
+            .detail-section {
+                padding-right: 20px;
+                padding-left: 20px;
+            }
+
+            .section-head {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .section-head .button {
+                width: 100%;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-actions .button {
+                flex: 1;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 12mm;
+            }
+
+            html,
+            body {
+                color: #172033 !important;
+                background: #fff !important;
+            }
+
+            body {
+                padding: 0;
+            }
+
+            body::before,
+            .topbar,
+            .hero-actions,
+            .copy-field,
+            .side-stack,
+            .footer,
+            .toast-container,
+            .modal-backdrop,
+            .section-head .button,
+            .photo-button::after {
+                display: none !important;
+            }
+
+            .hero {
+                min-height: auto;
+                margin-bottom: 10mm;
+                padding: 10mm;
+                break-inside: avoid;
+                border: 1px solid #cbd5e1;
+                background: #1d4ed8 !important;
+                box-shadow: none;
+            }
+
+            .photo-button {
+                width: 38mm;
+                height: 38mm;
+                flex-basis: 38mm;
+                cursor: default;
+            }
+
+            .profile-name {
+                font-size: 25pt;
+            }
+
+            .content-layout {
+                display: block;
+            }
+
+            .profile-frame {
+                display: block;
+                width: 100%;
+                border: 0;
+                border-radius: 0;
+                background: #fff !important;
+                box-shadow: none;
+            }
+
+            .card {
+                border: 1px solid #cbd5e1;
+                background: #fff !important;
+                box-shadow: none;
+            }
+
+            .section-head,
+            .detail-section {
+                padding: 6mm;
+            }
+
+            .section-title,
+            .detail-title,
+            .info-value {
+                color: #172033 !important;
+            }
+
+            .section-subtitle,
+            .info-label {
+                color: #64748b !important;
+            }
+
+            .info-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 3mm;
+            }
+
+            .info-item {
+                min-height: 24mm;
+                padding: 4mm;
+                break-inside: avoid;
+                border: 1px solid #e2e8f0;
+                background: #f8fafc !important;
+                transform: none !important;
+            }
+
+            .inline-action {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
-
-<div class="card">
-
-    <div class="header">
-        <div class="topo">
-
-            {% if c.foto %}
-                <img class="foto" src="{{ c.foto }}">
-            {% else %}
-                <img class="foto" src="https://cdn-icons-png.flaticon.com/512/149/149071.png">
-            {% endif %}
-
-            <div class="dados-principais">
-                <div class="nome">
-                    {{ c.nome or '-' }}
-                </div>
-
-                {% if c.restrito %}
-                    <div class="status status-bloq">
-                        🚫 COLABORADOR RESTRITO
-                    </div>
-                {% elif c.status %}
-                    <div class="status status-admissao">
-                        ✅ {{ c.status }}
-                    </div>
-                {% else %}
-                    <div class="status status-ok">
-                        ✅ SEM RESTRIÇÃO
-                    </div>
-                {% endif %}
-            </div>
-
-        </div>
-    </div>
-
-    <div class="conteudo">
-
-        <div class="titulo-secao">
-            📋 Informações do Colaborador
-        </div>
-
-        <div class="info">
-
-            <div class="box">
-                <div class="titulo">CPF</div>
-                <div class="valor">{{ c.cpf or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Telefone</div>
-                <div class="valor">
-                    {{ c.telefone or '-' }}
-
-                    {% if c.telefone %}
-                        <br>
-                        <a class="whatsapp" href="https://wa.me/55{{ c.telefone|replace(' ', '')|replace('-', '')|replace('(', '')|replace(')', '') }}" target="_blank">
-                            💬 Chamar no WhatsApp
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Nascimento</div>
-                <div class="valor">{{ c.data_nascimento or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Naturalidade</div>
-                <div class="valor">{{ c.naturalidade or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">CEP</div>
-                <div class="valor">{{ c.cep or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Endereço</div>
-                <div class="valor">{{ c.endereco or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Cidade</div>
-                <div class="valor">{{ c.cidade or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Estado</div>
-                <div class="valor">{{ c.estado or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Função</div>
-                <div class="valor">{{ c.funcao or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Obra</div>
-                <div class="valor">{{ c.obra or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Campo</div>
-                <div class="valor">{{ c.campo or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Data Admissão</div>
-                <div class="valor">{{ c.data_admissao or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Status</div>
-                <div class="valor">
-                    {% if c.restrito %}
-                        Restrito
-                    {% else %}
-                        {{ c.status or 'Liberado' }}
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Pré-Admissão</div>
-                <div class="valor">{{ c.pre_admissao or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Data Cadastro</div>
-                <div class="valor">{{ c.data_cadastro or '-' }}</div>
-            </div>
-
-            <div class="box">
-                <div class="titulo">Motivo da Restrição</div>
-                <div class="valor motivo">
-                    {{ c.motivo or 'Nenhum motivo informado' }}
-                </div>
-            </div>
-
-        </div>
-
-        <div class="acoes">
-
-            <a href="{{ url_for('index') }}" class="btn btn-voltar">
-                ← Voltar
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="{{ url_for('index') }}" aria-label="Voltar aos colaboradores">
+                <strong>DADOS COLABORADORES</strong>
+                <span>Face System</span>
             </a>
 
-            <button onclick="window.print()" class="btn btn-imprimir">
-                🖨️ Imprimir
-            </button>
+            <nav class="nav-actions" aria-label="Menu principal">
+                <a class="nav-link active" href="{{ url_for('index') }}" title="Colaboradores">👥 <span>Colaboradores</span></a>
+                <a class="nav-link" href="/admissao" title="Admissão">✅ <span>Admissão</span></a>
+                <a class="nav-link danger" href="/lista_negra" title="Lista Negra">🚫 <span>Lista Negra</span></a>
+                <button class="icon-button" id="themeToggle" type="button" title="Alternar tema" aria-label="Alternar tema">
+                    <span id="themeIcon" aria-hidden="true">☀️</span>
+                </button>
+            </nav>
+        </header>
 
-            {% if c.restrito %}
-                <a href="{{ url_for('liberar', id=c.id) }}" class="btn btn-liberar">
-                    ✅ Liberar
-                </a>
-            {% else %}
-                <a href="{{ url_for('restringir', id=c.id) }}" class="btn btn-restringir">
-                    🚫 Restringir
-                </a>
-            {% endif %}
+        <main>
+            <div class="profile-frame">
+            <section class="hero" aria-labelledby="nomeColaborador">
+                <div class="profile-summary">
+                    <button class="photo-button" id="abrirFoto" type="button" aria-label="Ampliar foto de {{ c.nome or 'colaborador' }}">
+                        {% if c.foto %}
+                            <img src="{{ c.foto }}" alt="Foto de {{ c.nome or 'colaborador' }}" loading="eager" decoding="async">
+                        {% else %}
+                            <span aria-hidden="true">{{ (c.nome or '?')[:1]|upper }}</span>
+                        {% endif %}
+                    </button>
 
-        </div>
+                    <div class="profile-copy">
+                        <span class="eyebrow">Ficha do colaborador · ID #{{ c.id }}</span>
+                        <h1 class="profile-name" id="nomeColaborador">{{ c.nome or '-' }}</h1>
 
-        <div class="footer">
-            ORCA FACE SYSTEM © 2026
-        </div>
+                        <div class="profile-meta">
+                            <span class="meta-chip">{{ c.funcao or 'Função não informada' }}</span>
+                            <span class="meta-chip">{{ c.obra or 'Obra não informada' }}</span>
+                            <span class="meta-chip">{{ c.cidade or 'Cidade não informada' }}</span>
+                        </div>
 
+                        {% if c.restrito %}
+                            <span class="status-badge danger">Colaborador restrito</span>
+                        {% elif c.status %}
+                            <span class="status-badge warning">{{ c.status }}</span>
+                        {% else %}
+                            <span class="status-badge success">Sem restrição</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="hero-actions">
+                    <button class="button glass" id="copiarResumo" type="button">⧉ Copiar resumo</button>
+                    {% if c.telefone %}
+                        <a
+                            class="button success"
+                            href="https://wa.me/55{{ c.telefone|replace(' ', '')|replace('-', '')|replace('(', '')|replace(')', '') }}"
+                            target="_blank"
+                            rel="noopener noreferrer">
+                            💬 WhatsApp
+                        </a>
+                    {% endif %}
+                    <button class="button glass" type="button" onclick="window.print()">🖨 Imprimir / PDF</button>
+                </div>
+            </section>
+
+            <div class="content-layout">
+                <article class="card">
+                    <div class="section-head">
+                        <div>
+                            <span class="section-kicker">Cadastro completo</span>
+                            <h2 class="section-title">Informações do colaborador</h2>
+                            <p class="section-subtitle">Dados pessoais e profissionais registrados no sistema.</p>
+                        </div>
+                        <button class="button secondary compact" id="abrirMapa" type="button">⌖ Ver endereço no mapa</button>
+                    </div>
+
+                    <section class="detail-section">
+                        <h3 class="detail-title"><span class="detail-icon" aria-hidden="true">♙</span> Dados pessoais</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">CPF</span>
+                                <strong class="info-value" data-profile-value>{{ c.cpf or '-' }}</strong>
+                                {% if c.cpf %}<button class="copy-field" type="button" data-copy="{{ c.cpf }}" title="Copiar CPF" aria-label="Copiar CPF">⧉</button>{% endif %}
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Telefone</span>
+                                <strong class="info-value" data-profile-value>{{ c.telefone or '-' }}</strong>
+                                {% if c.telefone %}
+                                    <button class="copy-field" type="button" data-copy="{{ c.telefone }}" title="Copiar telefone" aria-label="Copiar telefone">⧉</button>
+                                    <a
+                                        class="inline-action"
+                                        href="https://wa.me/55{{ c.telefone|replace(' ', '')|replace('-', '')|replace('(', '')|replace(')', '') }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer">
+                                        WhatsApp →
+                                    </a>
+                                {% endif %}
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Data de nascimento</span>
+                                <strong class="info-value" data-profile-value>{{ c.data_nascimento or '-' }}</strong>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Naturalidade</span>
+                                <strong class="info-value" data-profile-value>{{ c.naturalidade or '-' }}</strong>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">CEP</span>
+                                <strong class="info-value" data-profile-value>{{ c.cep or '-' }}</strong>
+                                {% if c.cep %}<button class="copy-field" type="button" data-copy="{{ c.cep }}" title="Copiar CEP" aria-label="Copiar CEP">⧉</button>{% endif %}
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Endereço</span>
+                                <strong class="info-value" data-profile-value id="valorEndereco">{{ c.endereco or '-' }}</strong>
+                                {% if c.endereco %}<button class="copy-field" type="button" data-copy="{{ c.endereco }}" title="Copiar endereço" aria-label="Copiar endereço">⧉</button>{% endif %}
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Cidade</span>
+                                <strong class="info-value" data-profile-value id="valorCidade">{{ c.cidade or '-' }}</strong>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Estado</span>
+                                <strong class="info-value" data-profile-value id="valorEstado">{{ c.estado or '-' }}</strong>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="detail-section">
+                        <h3 class="detail-title"><span class="detail-icon" aria-hidden="true">▦</span> Dados profissionais</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Função</span>
+                                <strong class="info-value" data-profile-value id="valorFuncao">{{ c.funcao or '-' }}</strong>
+                                {% if c.funcao %}<button class="copy-field" type="button" data-copy="{{ c.funcao }}" title="Copiar função" aria-label="Copiar função">⧉</button>{% endif %}
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Obra</span>
+                                <strong class="info-value" data-profile-value id="valorObra">{{ c.obra or '-' }}</strong>
+                                {% if c.obra %}<button class="copy-field" type="button" data-copy="{{ c.obra }}" title="Copiar obra" aria-label="Copiar obra">⧉</button>{% endif %}
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Campo</span>
+                                <strong class="info-value" data-profile-value>{{ c.campo or '-' }}</strong>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Data de admissão</span>
+                                <strong class="info-value" data-profile-value>{{ c.data_admissao or '-' }}</strong>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Status</span>
+                                <strong class="info-value" data-profile-value>
+                                    {% if c.restrito %}Restrito{% else %}{{ c.status or 'Liberado' }}{% endif %}
+                                </strong>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-label">Pré-admissão</span>
+                                <strong class="info-value" data-profile-value>{{ c.pre_admissao or '-' }}</strong>
+                            </div>
+                        </div>
+                    </section>
+                </article>
+
+                <aside class="side-stack" aria-label="Resumo e ações">
+                    <section class="card side-card">
+                        <div class="side-card-head">
+                            <h2>Qualidade do cadastro</h2>
+                            <p>Percentual calculado com os campos desta ficha.</p>
+                        </div>
+                        <div class="side-card-body">
+                            <div class="progress-ring-wrap">
+                                <div class="progress-ring" id="progressRing"><strong id="progressValue">0%</strong></div>
+                                <div class="progress-copy">
+                                    <strong id="progressTitle">Analisando cadastro</strong>
+                                    <span id="progressDescription">Verificando os campos preenchidos.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="card side-card">
+                        <div class="side-card-head">
+                            <h2>Situação do colaborador</h2>
+                            <p>Condição atual registrada no sistema.</p>
+                        </div>
+                        <div class="status-panel">
+                            {% if c.restrito %}
+                                <span class="status-badge danger">Restrito</span>
+                            {% elif c.status %}
+                                <span class="status-badge warning">{{ c.status }}</span>
+                            {% else %}
+                                <span class="status-badge success">Liberado</span>
+                            {% endif %}
+
+                            <div class="reason-box">
+                                <span>Motivo da restrição</span>
+                                {{ c.motivo or 'Nenhum motivo informado' }}
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="card side-card">
+                        <div class="side-card-head">
+                            <h2>Ações rápidas</h2>
+                            <p>Gerencie esta ficha com segurança.</p>
+                        </div>
+                        <div class="side-card-body quick-actions">
+                            <a class="button secondary" href="{{ url_for('index') }}">← Voltar aos colaboradores</a>
+                            <button class="button primary" type="button" onclick="window.print()">🖨 Imprimir / PDF</button>
+
+                            {% if c.restrito %}
+                                <a
+                                    class="button warning"
+                                    href="{{ url_for('liberar', id=c.id) }}"
+                                    data-confirm-link
+                                    data-confirm-title="Liberar colaborador?"
+                                    data-confirm-message="{{ c.nome or 'Este colaborador' }} será removido do status de restrição."
+                                    data-confirm-button="Sim, liberar">
+                                    ✓ Liberar colaborador
+                                </a>
+                            {% else %}
+                                <a
+                                    class="button danger"
+                                    href="{{ url_for('restringir', id=c.id) }}"
+                                    data-confirm-link
+                                    data-confirm-title="Restringir colaborador?"
+                                    data-confirm-message="{{ c.nome or 'Este colaborador' }} será marcado como restrito."
+                                    data-confirm-button="Sim, restringir">
+                                    🚫 Restringir colaborador
+                                </a>
+                            {% endif %}
+                        </div>
+                    </section>
+
+                    <section class="card side-card">
+                        <div class="side-card-head">
+                            <h2>Controle do registro</h2>
+                            <p>Identificação interna da ficha.</p>
+                        </div>
+                        <div class="side-card-body meta-list">
+                            <div class="meta-row"><span>ID do registro</span><strong>#{{ c.id }}</strong></div>
+                            <div class="meta-row"><span>Data do cadastro</span><strong>{{ c.data_cadastro or '-' }}</strong></div>
+                            <div class="meta-row"><span>Pré-admissão</span><strong>{{ c.pre_admissao or '-' }}</strong></div>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+            </div>
+        </main>
+
+        <footer class="footer"><strong>ORCA Face System</strong> · Ficha do colaborador © 2026</footer>
     </div>
 
-</div>
+    <div class="modal-backdrop" id="modalFoto" aria-hidden="true">
+        <div class="modal photo-modal" role="dialog" aria-modal="true" aria-label="Foto ampliada do colaborador">
+            <div class="modal-head">
+                <h2>{{ c.nome or 'Colaborador' }}</h2>
+                <button class="modal-close" type="button" data-close-modal aria-label="Fechar">×</button>
+            </div>
+            <div class="photo-preview">
+                {% if c.foto %}
+                    <img src="{{ c.foto }}" alt="Foto ampliada de {{ c.nome or 'colaborador' }}">
+                {% else %}
+                    <span class="large-initial" aria-hidden="true">{{ (c.nome or '?')[:1]|upper }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 
+    <div class="modal-backdrop" id="modalConfirmacao" aria-hidden="true">
+        <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="confirmacaoTitulo" aria-describedby="confirmacaoMensagem">
+            <div class="modal-head">
+                <h2 id="confirmacaoTitulo">Confirmar ação</h2>
+                <button class="modal-close" type="button" data-close-modal aria-label="Fechar">×</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmacaoMensagem">Deseja continuar?</p>
+                <p style="color:var(--muted);font-size:11px;">Confira a ação antes de confirmar.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="button secondary" type="button" data-close-modal>Cancelar</button>
+                <button class="button danger" id="confirmarAcao" type="button">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+    <script>
+        const $ = (seletor, contexto = document) => contexto.querySelector(seletor);
+        const $$ = (seletor, contexto = document) => [...contexto.querySelectorAll(seletor)];
+        const modalFoto = $('#modalFoto');
+        const modalConfirmacao = $('#modalConfirmacao');
+        let acaoConfirmada = null;
+
+        function mostrarToast(mensagem, tipo = 'info', duracao = 3400) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+
+            const icone = document.createElement('span');
+            icone.setAttribute('aria-hidden', 'true');
+            icone.textContent = tipo === 'success' ? '✓' : tipo === 'error' ? '!' : 'i';
+
+            const texto = document.createElement('span');
+            texto.textContent = mensagem;
+
+            toast.append(icone, texto);
+            $('#toastContainer').appendChild(toast);
+
+            window.setTimeout(() => {
+                toast.classList.add('out');
+                window.setTimeout(() => toast.remove(), 220);
+            }, duracao);
+        }
+
+        function abrirModal(modal) {
+            if (!modal) return;
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            window.setTimeout(() => $('.modal-close', modal)?.focus(), 30);
+        }
+
+        function fecharModal(modal) {
+            if (!modal) return;
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+            if (!$('.modal-backdrop.open')) document.body.style.overflow = '';
+        }
+
+        $$('.modal-backdrop').forEach(fundo => {
+            fundo.addEventListener('click', evento => {
+                if (evento.target === fundo) fecharModal(fundo);
+            });
+        });
+
+        $$('[data-close-modal]').forEach(botao => {
+            botao.addEventListener('click', () => fecharModal(botao.closest('.modal-backdrop')));
+        });
+
+        document.addEventListener('keydown', evento => {
+            if (evento.key === 'Escape') $$('.modal-backdrop.open').forEach(fecharModal);
+        });
+
+        $('#abrirFoto')?.addEventListener('click', () => abrirModal(modalFoto));
+
+        function atualizarTema() {
+            const tema = document.documentElement.dataset.theme || 'dark';
+            if ($('#themeIcon')) $('#themeIcon').textContent = tema === 'dark' ? '☀️' : '🌙';
+        }
+
+        $('#themeToggle')?.addEventListener('click', () => {
+            const novoTema = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+            document.documentElement.dataset.theme = novoTema;
+            try { localStorage.setItem('orca-tema', novoTema); } catch (erro) {}
+            atualizarTema();
+        });
+        atualizarTema();
+
+        async function copiarTexto(texto, mensagem = 'Informação copiada.') {
+            try {
+                await navigator.clipboard.writeText(texto);
+                mostrarToast(mensagem, 'success');
+            } catch (erro) {
+                const area = document.createElement('textarea');
+                area.value = texto;
+                area.style.position = 'fixed';
+                area.style.opacity = '0';
+                document.body.appendChild(area);
+                area.select();
+                const copiado = document.execCommand('copy');
+                area.remove();
+                mostrarToast(copiado ? mensagem : 'Não foi possível copiar.', copiado ? 'success' : 'error');
+            }
+        }
+
+        $$('.copy-field').forEach(botao => {
+            botao.addEventListener('click', () => copiarTexto(botao.dataset.copy || ''));
+        });
+
+        $('#copiarResumo')?.addEventListener('click', () => {
+            const linhas = [
+                `Nome: ${$('#nomeColaborador')?.textContent.trim() || '-'}`,
+                `CPF: ${$$('.info-item').find(item => $('.info-label', item)?.textContent.trim() === 'CPF')?.querySelector('.info-value')?.textContent.trim() || '-'}`,
+                `Função: ${$('#valorFuncao')?.textContent.trim() || '-'}`,
+                `Obra: ${$('#valorObra')?.textContent.trim() || '-'}`,
+                `Cidade: ${$('#valorCidade')?.textContent.trim() || '-'}`
+            ];
+            copiarTexto(linhas.join('\n'), 'Resumo do colaborador copiado.');
+        });
+
+        $('#abrirMapa')?.addEventListener('click', () => {
+            const partes = [
+                $('#valorEndereco')?.textContent.trim(),
+                $('#valorCidade')?.textContent.trim(),
+                $('#valorEstado')?.textContent.trim()
+            ].filter(valor => valor && valor !== '-');
+
+            if (!partes.length) {
+                mostrarToast('O endereço não está preenchido.', 'error');
+                return;
+            }
+
+            const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(partes.join(', '))}`;
+            window.open(url, '_blank', 'noopener,noreferrer');
+        });
+
+        function calcularCompletude() {
+            const campos = $$('[data-profile-value]');
+            const preenchidos = campos.filter(campo => {
+                const valor = campo.textContent.trim().toLowerCase();
+                return valor && valor !== '-' && valor !== 'não informado';
+            }).length;
+
+            const percentual = campos.length ? Math.round((preenchidos / campos.length) * 100) : 0;
+            const anel = $('#progressRing');
+            const valor = $('#progressValue');
+            const titulo = $('#progressTitle');
+            const descricao = $('#progressDescription');
+
+            if (anel) anel.style.setProperty('--progress', `${percentual * 3.6}deg`);
+            if (valor) valor.textContent = `${percentual}%`;
+
+            if (percentual === 100) {
+                titulo.textContent = 'Cadastro completo';
+                descricao.textContent = 'Todos os principais campos estão preenchidos.';
+            } else if (percentual >= 70) {
+                titulo.textContent = 'Cadastro quase completo';
+                descricao.textContent = `${campos.length - preenchidos} campo(s) ainda sem informação.`;
+            } else {
+                titulo.textContent = 'Cadastro incompleto';
+                descricao.textContent = `${campos.length - preenchidos} campo(s) precisam ser revisados.`;
+            }
+        }
+        calcularCompletude();
+
+        function abrirConfirmacao({ titulo, mensagem, textoBotao, perigoso, acao }) {
+            $('#confirmacaoTitulo').textContent = titulo;
+            $('#confirmacaoMensagem').textContent = mensagem;
+            const confirmar = $('#confirmarAcao');
+            confirmar.textContent = textoBotao;
+            confirmar.className = `button ${perigoso ? 'danger' : 'warning'}`;
+            acaoConfirmada = acao;
+            abrirModal(modalConfirmacao);
+        }
+
+        $$('[data-confirm-link]').forEach(link => {
+            link.addEventListener('click', evento => {
+                evento.preventDefault();
+                const destino = link.href;
+                abrirConfirmacao({
+                    titulo: link.dataset.confirmTitle || 'Confirmar ação',
+                    mensagem: link.dataset.confirmMessage || 'Deseja continuar?',
+                    textoBotao: link.dataset.confirmButton || 'Confirmar',
+                    perigoso: link.classList.contains('danger'),
+                    acao: () => { window.location.href = destino; }
+                });
+            });
+        });
+
+        $('#confirmarAcao')?.addEventListener('click', () => {
+            if (typeof acaoConfirmada !== 'function') return;
+            const acao = acaoConfirmada;
+            acaoConfirmada = null;
+            fecharModal(modalConfirmacao);
+            acao();
+        });
+    </script>
 </body>
 </html>
