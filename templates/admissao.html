@@ -1,830 +1,2282 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR" data-theme="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRÉ-ADMISSÃO</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-
-:root{
-    --bg:#020617;
-    --card:#0f172a;
-    --blue:#2563eb;
-    --green:#22c55e;
-    --red:#ef4444;
-    --muted:#94a3b8;
-    --border:rgba(255,255,255,.08);
-}
-
-body{
-    font-family:'Poppins',sans-serif;
-    background:
-    radial-gradient(circle at top left,#1e3a8a 0%,transparent 30%),
-    radial-gradient(circle at bottom right,#0f766e 0%,transparent 30%),
-    linear-gradient(135deg,#020617,#0f172a,#111827);
-    min-height:100vh;
-    color:white;
-    padding:30px;
-}
-
-body::-webkit-scrollbar{width:10px;}
-body::-webkit-scrollbar-thumb{background:#2563eb;border-radius:30px;}
-
-.container-box{max-width:1450px;margin:auto;}
-
-.topo{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:20px;
-    flex-wrap:wrap;
-    margin-bottom:30px;
-}
-
-.logo{
-    font-size:38px;
-    font-weight:800;
-    letter-spacing:-1px;
-    background:linear-gradient(90deg,#60a5fa,#06b6d4);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.subtitulo{color:#94a3b8;margin-top:5px;font-size:14px;}
-
-.top-actions{display:flex;gap:12px;flex-wrap:wrap;}
-
-.top-link{
-    text-decoration:none;
-    color:white;
-    padding:13px 18px;
-    border-radius:15px;
-    font-weight:700;
-    background:rgba(255,255,255,.08);
-    border:1px solid var(--border);
-    transition:.25s;
-}
-
-.top-link:hover{
-    transform:translateY(-2px);
-    background:#2563eb;
-    color:white;
-}
-
-.card-admissao{
-    background:rgba(15,23,42,0.78);
-    backdrop-filter:blur(18px);
-    border:1px solid var(--border);
-    border-radius:30px;
-    padding:35px;
-    box-shadow:0 15px 50px rgba(0,0,0,0.4);
-    margin-bottom:25px;
-}
-
-.card-head{
-    display:flex;
-    justify-content:space-between;
-    gap:20px;
-    align-items:flex-start;
-    flex-wrap:wrap;
-    margin-bottom:28px;
-}
-
-.titulo{font-size:32px;font-weight:800;margin-bottom:8px;}
-.desc{color:#94a3b8;margin-bottom:0;}
-
-.form-label{
-    color:#cbd5e1;
-    font-weight:600;
-    margin-bottom:8px;
-    font-size:13px;
-}
-
-.form-control,
-.form-select{
-    background:#1e293b !important;
-    border:1px solid transparent !important;
-    border-radius:16px !important;
-    padding:14px 18px !important;
-    color:white !important;
-    transition:0.3s;
-    min-height:52px;
-}
-
-.form-control:focus,
-.form-select:focus{
-    border-color:#38bdf8 !important;
-    box-shadow:0 0 0 4px rgba(56,189,248,0.15) !important;
-}
-
-.form-control::placeholder{color:#94a3b8;}
-.form-select option{background:#1e293b;}
-
-.btn-admitir{
-    width:100%;
-    border:none;
-    padding:17px;
-    border-radius:18px;
-    background:linear-gradient(135deg,#16a34a,#15803d);
-    color:white;
-    font-weight:800;
-    font-size:16px;
-    transition:0.35s;
-    margin-top:10px;
-    box-shadow:0 12px 30px rgba(34,197,94,.18);
-}
-
-.btn-admitir:hover{
-    transform:translateY(-3px);
-    box-shadow:0 16px 35px rgba(34,197,94,.28);
-}
-
-.alert{
-    border:none !important;
-    border-radius:16px !important;
-    padding:15px 18px !important;
-    font-weight:600;
-}
-
-.alert-success{background:rgba(34,197,94,0.15) !important;color:#86efac !important;}
-.alert-danger{background:rgba(239,68,68,0.15) !important;color:#fca5a5 !important;}
-.alert-warning{background:rgba(245,158,11,0.15) !important;color:#fde68a !important;}
-.alert-info{background:rgba(14,165,233,0.15) !important;color:#7dd3fc !important;}
-
-.checkbox-box{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-top:14px;
-    background:#1e293b;
-    padding:13px 16px;
-    border-radius:16px;
-}
-
-.checkbox-box input{
-    width:18px;
-    height:18px;
-    accent-color:#ef4444;
-}
-
-.status-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-    gap:15px;
-    margin-bottom:25px;
-}
-
-.status-card{
-    background:rgba(255,255,255,.045);
-    border:1px solid var(--border);
-    border-radius:22px;
-    padding:18px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-}
-
-.status-card small{
-    color:#94a3b8;
-    display:block;
-    font-weight:700;
-    margin-bottom:6px;
-}
-
-.status-card strong{font-size:26px;line-height:1;}
-
-.status-icon{
-    width:44px;
-    height:44px;
-    border-radius:15px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:20px;
-    background:rgba(255,255,255,.08);
-}
-
-.filtros-box{
-    background:rgba(2,6,23,.38);
-    border:1px solid var(--border);
-    border-radius:24px;
-    padding:20px;
-    margin-bottom:25px;
-}
-
-.filter-actions{display:flex;gap:10px;flex-wrap:wrap;}
-
-.btn-filter{
-    border:none;
-    border-radius:14px;
-    padding:13px 18px;
-    color:white;
-    text-decoration:none;
-    font-weight:800;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    min-height:52px;
-    transition:.25s;
-}
-
-.btn-filter:hover{transform:translateY(-2px);color:white;}
-.btn-primary-soft{background:linear-gradient(135deg,#2563eb,#1d4ed8);}
-.btn-secondary-soft{background:#475569;}
-.btn-success-soft{background:linear-gradient(135deg,#16a34a,#15803d);}
-
-.table-card{
-    border-radius:24px;
-    overflow:hidden;
-    border:1px solid var(--border);
-    background:rgba(2,6,23,.35);
-}
-
-.table{
-    color:white;
-    margin-bottom:0;
-    min-width:1100px;
-}
-
-.table thead th{
-    background:#1e293b;
-    color:#cbd5e1;
-    border:none;
-    padding:17px 14px;
-    font-size:12px;
-    text-transform:uppercase;
-    letter-spacing:.8px;
-    white-space:nowrap;
-}
-
-.table tbody td{
-    background:rgba(15,23,42,.40);
-    color:#e2e8f0;
-    border-color:rgba(255,255,255,0.06);
-    padding:16px 14px;
-    vertical-align:middle;
-    font-size:13px;
-}
-
-.table tbody tr:hover td{background:rgba(37,99,235,.10);}
-
-.nome-colab{
-    font-weight:800;
-    color:white;
-    min-width:190px;
-}
-
-.text-muted-custom{color:#94a3b8;}
-
-.badge-status{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    border-radius:999px;
-    padding:9px 12px;
-    font-size:12px;
-    font-weight:800;
-    white-space:nowrap;
-}
-
-.status-admitido{
-    background:rgba(34,197,94,.16);
-    color:#86efac;
-    border:1px solid rgba(34,197,94,.28);
-}
-
-.status-recusado{
-    background:rgba(239,68,68,.16);
-    color:#fca5a5;
-    border:1px solid rgba(239,68,68,.28);
-}
-
-.status-aguardando{
-    background:rgba(14,165,233,.16);
-    color:#7dd3fc;
-    border:1px solid rgba(14,165,233,.28);
-}
-
-.status-sem{
-    background:rgba(148,163,184,.18);
-    color:#cbd5e1;
-    border:1px solid rgba(148,163,184,.25);
-}
-
-.badge-isolado{
-    background:rgba(239,68,68,.16);
-    color:#fca5a5;
-    border:1px solid rgba(239,68,68,.28);
-    padding:8px 12px;
-    border-radius:999px;
-    font-size:12px;
-    font-weight:800;
-}
-
-.acoes-status{
-    display:flex;
-    gap:7px;
-    flex-wrap:wrap;
-}
-
-.btn-status{
-    width:34px;
-    height:34px;
-    border-radius:11px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    text-decoration:none;
-    color:white;
-    font-size:14px;
-    font-weight:800;
-    transition:.22s;
-    border:1px solid rgba(255,255,255,.12);
-}
-
-.btn-status:hover{
-    color:white;
-    transform:translateY(-2px);
-    filter:brightness(1.1);
-}
-
-.btn-ag{background:#0ea5e9;}
-.btn-ad{background:#16a34a;}
-.btn-re{background:#dc2626;}
-
-.footer{
-    text-align:center;
-    margin-top:30px;
-    color:#94a3b8;
-    font-size:14px;
-}
-
-.modal-content-custom{
-    background:#0f172a;
-    color:white;
-    border-radius:25px;
-    border:1px solid rgba(255,255,255,.1);
-}
-
-.modal-foto{
-    width:170px;
-    height:170px;
-    object-fit:cover;
-    border-radius:25px;
-    border:5px solid white;
-    background:white;
-}
-
-.restricao-box{
-    display:none;
-    background:linear-gradient(135deg,rgba(239,68,68,.22),rgba(127,29,29,.35));
-    color:#fecaca;
-    padding:18px 60px 18px 18px;
-    border-radius:20px;
-    margin-top:15px;
-    border:2px solid rgba(239,68,68,.55);
-    position:relative;
-    overflow:hidden;
-    font-weight:700;
-    animation:pulseRestricao 1.8s infinite, shakeRestricao 4s infinite;
-}
-
-.restricao-box b{
-    color:#fff;
-    font-size:15px;
-    letter-spacing:.4px;
-}
-
-.restricao-box span{
-    color:#fee2e2;
-    font-weight:600;
-}
-
-.restricao-box::before{
-    content:"🚫";
-    position:absolute;
-    right:16px;
-    top:50%;
-    transform:translateY(-50%);
-    font-size:35px;
-    animation:giraRestricao 3s linear infinite;
-    z-index:2;
-}
-
-.restricao-box::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
-    transform:translateX(-100%);
-    animation:brilhoRestricao 2.4s infinite;
-}
-
-@keyframes pulseRestricao{
-    0%{
-        box-shadow:0 0 0 rgba(239,68,68,0);
-    }
-    50%{
-        box-shadow:
-        0 0 30px rgba(239,68,68,.55),
-        0 0 70px rgba(239,68,68,.25);
-    }
-    100%{
-        box-shadow:0 0 0 rgba(239,68,68,0);
-    }
-}
-
-@keyframes brilhoRestricao{
-    100%{
-        transform:translateX(120%);
-    }
-}
-
-@keyframes giraRestricao{
-    from{
-        transform:translateY(-50%) rotate(0deg);
-    }
-    to{
-        transform:translateY(-50%) rotate(360deg);
-    }
-}
-
-@keyframes shakeRestricao{
-    0%,90%,100%{transform:translateX(0);}
-    92%{transform:translateX(-3px);}
-    94%{transform:translateX(3px);}
-    96%{transform:translateX(-3px);}
-    98%{transform:translateX(3px);}
-}
-
-.empty-state{
-    background:rgba(255,255,255,.04);
-    border:1px dashed rgba(255,255,255,.15);
-    border-radius:22px;
-    padding:35px;
-    text-align:center;
-    color:#94a3b8;
-}
-
-@media(max-width:768px){
-    body{padding:15px;}
-    .card-admissao{padding:22px;border-radius:24px;}
-    .logo{font-size:28px;}
-    .titulo{font-size:25px;}
-    .filter-actions{width:100%;}
-    .btn-filter{width:100%;}
-    .restricao-box{padding:16px 55px 16px 16px;}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="Controle de pré-admissões do ORCA Face System">
+    <title>Pré-Admissão | ORCA Face</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        try {
+            const temaSalvo = localStorage.getItem('orca-tema');
+            if (temaSalvo === 'light' || temaSalvo === 'dark') {
+                document.documentElement.dataset.theme = temaSalvo;
+            }
+        } catch (erro) {}
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #070b14;
+            --bg-secondary: #0b1220;
+            --surface: rgba(15, 23, 42, .88);
+            --surface-solid: #111a2d;
+            --surface-soft: rgba(255, 255, 255, .045);
+            --field: #172238;
+            --text: #f8fafc;
+            --text-soft: #d9e2ef;
+            --muted: #8fa0b8;
+            --border: rgba(148, 163, 184, .16);
+            --border-strong: rgba(96, 165, 250, .38);
+            --primary: #3b82f6;
+            --primary-strong: #2563eb;
+            --primary-soft: rgba(59, 130, 246, .14);
+            --success: #22c55e;
+            --success-soft: rgba(34, 197, 94, .13);
+            --danger: #ef4444;
+            --danger-soft: rgba(239, 68, 68, .13);
+            --warning: #f59e0b;
+            --warning-soft: rgba(245, 158, 11, .13);
+            --cyan: #22d3ee;
+            --shadow: 0 24px 70px rgba(0, 0, 0, .35);
+            --shadow-soft: 0 12px 35px rgba(0, 0, 0, .22);
+            --radius: 24px;
+        }
+
+        html[data-theme="light"] {
+            --bg: #eef3f9;
+            --bg-secondary: #e7eef7;
+            --surface: rgba(255, 255, 255, .92);
+            --surface-solid: #fff;
+            --surface-soft: rgba(15, 23, 42, .045);
+            --field: #f5f8fc;
+            --text: #142033;
+            --text-soft: #263449;
+            --muted: #64748b;
+            --border: rgba(15, 23, 42, .1);
+            --border-strong: rgba(37, 99, 235, .3);
+            --primary-soft: rgba(37, 99, 235, .1);
+            --success-soft: rgba(22, 163, 74, .1);
+            --danger-soft: rgba(220, 38, 38, .09);
+            --warning-soft: rgba(217, 119, 6, .1);
+            --shadow: 0 24px 70px rgba(30, 64, 110, .13);
+            --shadow-soft: 0 12px 35px rgba(30, 64, 110, .1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 30px;
+            overflow-x: hidden;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 6% 2%, rgba(37, 99, 235, .27), transparent 28rem),
+                radial-gradient(circle at 96% 92%, rgba(8, 145, 178, .18), transparent 30rem),
+                linear-gradient(145deg, var(--bg), var(--bg-secondary));
+            font-family: "Inter", "Segoe UI", sans-serif;
+        }
+
+        body::before {
+            position: fixed;
+            z-index: -1;
+            inset: 0;
+            content: "";
+            pointer-events: none;
+            opacity: .4;
+            background-image:
+                linear-gradient(rgba(148, 163, 184, .045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, .045) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, #000 0, transparent 78%);
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button {
+            border: 0;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :focus-visible {
+            outline: 3px solid rgba(96, 165, 250, .7);
+            outline-offset: 3px;
+        }
+
+        ::selection {
+            color: #fff;
+            background: #2563eb;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            border: 3px solid transparent;
+            border-radius: 99px;
+            background: #3c4d67;
+            background-clip: padding-box;
+        }
+
+        .app-shell {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+        }
+
+        .topbar {
+            position: sticky;
+            z-index: 50;
+            top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 92px;
+            margin-bottom: 24px;
+            padding: 18px 20px;
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            background: color-mix(in srgb, var(--surface-solid) 84%, transparent);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(22px);
+        }
+
+        .brand {
+            min-width: 0;
+            text-decoration: none;
+        }
+
+        .brand strong,
+        .brand span {
+            display: block;
+        }
+
+        .brand strong {
+            overflow: hidden;
+            color: transparent;
+            background: linear-gradient(90deg, #60a5fa, #22d3ee, #34d399);
+            -webkit-background-clip: text;
+            background-clip: text;
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .brand span {
+            margin-top: 5px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link,
+        .icon-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 50px;
+            cursor: pointer;
+            color: var(--text-soft);
+            border: 1px solid transparent;
+            border-radius: 13px;
+            background: transparent;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: .2s ease;
+        }
+
+        .nav-link {
+            gap: 8px;
+            padding: 0 18px;
+        }
+
+        .nav-link:hover,
+        .icon-button:hover {
+            color: var(--text);
+            border-color: var(--border);
+            background: var(--surface-soft);
+            transform: translateY(-1px);
+        }
+
+        .nav-link.active {
+            color: #dcfce7;
+            border-color: rgba(34, 197, 94, .22);
+            background: linear-gradient(135deg, rgba(22, 163, 74, .24), rgba(8, 145, 178, .12));
+        }
+
+        html[data-theme="light"] .nav-link.active {
+            color: #15803d;
+        }
+
+        .nav-link.danger:hover {
+            color: #fecaca;
+            border-color: rgba(239, 68, 68, .22);
+            background: var(--danger-soft);
+        }
+
+        .icon-button {
+            width: 50px;
+            flex: 0 0 50px;
+            font-size: 20px;
+        }
+
+        .flash-stack {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .flash {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 14px 16px;
+            color: var(--text-soft);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            background: var(--surface);
+            box-shadow: var(--shadow-soft);
+        }
+
+        .flash.success {
+            color: #bbf7d0;
+            border-color: rgba(34, 197, 94, .25);
+            background: var(--success-soft);
+        }
+
+        .flash.danger,
+        .flash.error {
+            color: #fecaca;
+            border-color: rgba(239, 68, 68, .25);
+            background: var(--danger-soft);
+        }
+
+        .flash.warning {
+            color: #fde68a;
+            border-color: rgba(245, 158, 11, .25);
+            background: var(--warning-soft);
+        }
+
+        html[data-theme="light"] .flash.success { color: #166534; }
+        html[data-theme="light"] .flash.danger,
+        html[data-theme="light"] .flash.error { color: #991b1b; }
+        html[data-theme="light"] .flash.warning { color: #92400e; }
+
+        .flash-close {
+            flex: 0 0 auto;
+            cursor: pointer;
+            color: currentColor;
+            background: transparent;
+            font-size: 18px;
+            opacity: .7;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 390px minmax(0, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+        }
+
+        .form-card {
+            position: sticky;
+            top: 126px;
+            overflow: hidden;
+        }
+
+        .card-head {
+            padding: 25px 26px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 9px;
+            color: #60a5fa;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            width: 7px;
+            height: 7px;
+            content: "";
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 14px currentColor;
+        }
+
+        .section-title {
+            color: var(--text);
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: -.55px;
+        }
+
+        .section-subtitle {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .form-body {
+            padding: 22px 26px 26px;
+        }
+
+        .form-stack {
+            display: grid;
+            gap: 13px;
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 11px;
+        }
+
+        .field {
+            display: grid;
+            gap: 7px;
+        }
+
+        .field label {
+            color: var(--text-soft);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .field label span {
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        input,
+        select {
+            width: 100%;
+            min-height: 48px;
+            padding: 0 13px;
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            outline: none;
+            background: var(--field);
+            font-size: 13px;
+            transition: border-color .2s ease, box-shadow .2s ease;
+        }
+
+        input::placeholder {
+            color: var(--muted);
+            opacity: .76;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-soft);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        option {
+            color: var(--text);
+            background: var(--surface-solid);
+        }
+
+        .check-card {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-height: 48px;
+            padding: 0 13px;
+            cursor: pointer;
+            color: var(--text-soft);
+            border: 1px solid var(--border);
+            border-radius: 13px;
+            background: var(--field);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .check-card input {
+            width: 18px;
+            min-height: auto;
+            height: 18px;
+            padding: 0;
+            accent-color: var(--danger);
+        }
+
+        .lookup-status {
+            display: none;
+            padding: 12px 13px;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface-soft);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .lookup-status.show {
+            display: block;
+        }
+
+        .lookup-status.searching {
+            color: #bfdbfe;
+            border-color: rgba(59, 130, 246, .25);
+            background: var(--primary-soft);
+        }
+
+        .lookup-status.ok {
+            color: #bbf7d0;
+            border-color: rgba(34, 197, 94, .25);
+            background: var(--success-soft);
+        }
+
+        .button-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 9px;
+            margin-top: 3px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 48px;
+            padding: 0 16px;
+            cursor: pointer;
+            color: #fff;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            background: #334155;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            transition: .2s ease;
+        }
+
+        .button:hover:not(:disabled) {
+            filter: brightness(1.08);
+            transform: translateY(-2px);
+        }
+
+        .button.primary {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow: 0 10px 26px rgba(37, 99, 235, .22);
+        }
+
+        .button.success {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+        }
+
+        .button.danger {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+        }
+
+        .button.warning {
+            background: linear-gradient(135deg, #d97706, #b45309);
+        }
+
+        .button.secondary {
+            color: var(--text-soft);
+            border-color: var(--border);
+            background: var(--surface-soft);
+        }
+
+        .button.compact {
+            min-height: 40px;
+            padding: 0 12px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        .dashboard {
+            min-width: 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(150px, 1fr));
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .stat-card {
+            position: relative;
+            min-height: 126px;
+            overflow: hidden;
+            padding: 20px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--surface);
+            box-shadow: var(--shadow-soft);
+            backdrop-filter: blur(18px);
+            transition: .2s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-strong);
+            transform: translateY(-3px);
+        }
+
+        .stat-card::after {
+            position: absolute;
+            right: -28px;
+            bottom: -52px;
+            width: 112px;
+            height: 112px;
+            content: "";
+            border-radius: 50%;
+            background: var(--stat-color, var(--primary));
+            opacity: .13;
+        }
+
+        .stat-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .55px;
+            text-transform: uppercase;
+        }
+
+        .stat-icon {
+            display: grid;
+            width: 34px;
+            height: 34px;
+            place-items: center;
+            color: var(--stat-color, #60a5fa);
+            border-radius: 10px;
+            background: color-mix(in srgb, var(--stat-color, #3b82f6) 13%, transparent);
+            font-size: 16px;
+        }
+
+        .stat-value {
+            display: block;
+            margin-top: 13px;
+            color: var(--text);
+            font-size: 29px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .stat-total { --stat-color: #60a5fa; }
+        .stat-wait { --stat-color: #22d3ee; }
+        .stat-ok { --stat-color: #22c55e; }
+        .stat-danger { --stat-color: #ef4444; }
+
+        .content-card {
+            overflow: hidden;
+        }
+
+        .content-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 25px 27px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .content-head .head-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: minmax(240px, 2fr) minmax(170px, 1fr) auto auto auto;
+            gap: 10px;
+            padding: 18px 26px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface-soft);
+        }
+
+        .search-field {
+            position: relative;
+        }
+
+        .search-field input {
+            padding-right: 42px;
+        }
+
+        .search-shortcut {
+            position: absolute;
+            top: 50%;
+            right: 11px;
+            padding: 3px 7px;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--surface-soft);
+            font-size: 10px;
+            transform: translateY(-50%);
+        }
+
+        .table-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 16px 26px;
+        }
+
+        .result-info {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .result-info strong {
+            color: var(--text-soft);
+        }
+
+        .legend {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--muted);
+            font-size: 10px;
+            flex-wrap: wrap;
+        }
+
+        .legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .table-wrap {
+            overflow: auto;
+            margin: 0 14px 18px;
+            border: 1px solid var(--border);
+            border-radius: 17px;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1180px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            text-align: left;
+        }
+
+        th {
+            position: sticky;
+            z-index: 2;
+            top: 0;
+            height: 50px;
+            padding: 0 13px;
+            color: #9fb0c8;
+            border-bottom: 1px solid var(--border);
+            background: color-mix(in srgb, var(--surface-solid) 94%, #000 6%);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .sort-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: inherit;
+            background: transparent;
+            font-size: inherit;
+            font-weight: inherit;
+            letter-spacing: inherit;
+            text-transform: inherit;
+        }
+
+        .sort-button::after {
+            content: "↕";
+            font-size: 11px;
+            opacity: .45;
+        }
+
+        th[aria-sort="ascending"] .sort-button::after { content: "↑"; opacity: 1; }
+        th[aria-sort="descending"] .sort-button::after { content: "↓"; opacity: 1; }
+
+        td {
+            height: 70px;
+            padding: 10px 13px;
+            color: var(--text-soft);
+            border-bottom: 1px solid var(--border);
+            background: color-mix(in srgb, var(--surface-solid) 42%, transparent);
+            font-size: 12px;
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            transition: .18s ease;
+        }
+
+        tbody tr:hover td {
+            background: var(--primary-soft);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .person-name {
+            display: block;
+            max-width: 220px;
+            overflow: hidden;
+            color: var(--text);
+            font-weight: 800;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .person-code {
+            display: block;
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 30px;
+            padding: 0 10px;
+            border: 1px solid;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .badge::before {
+            width: 6px;
+            height: 6px;
+            content: "";
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 9px currentColor;
+        }
+
+        .badge.admitted {
+            color: #86efac;
+            border-color: rgba(34, 197, 94, .25);
+            background: var(--success-soft);
+        }
+
+        .badge.refused {
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, .25);
+            background: var(--danger-soft);
+        }
+
+        .badge.waiting {
+            color: #67e8f9;
+            border-color: rgba(34, 211, 238, .25);
+            background: rgba(34, 211, 238, .1);
+        }
+
+        .badge.neutral {
+            color: #cbd5e1;
+            border-color: rgba(148, 163, 184, .25);
+            background: rgba(148, 163, 184, .1);
+        }
+
+        .badge.isolated {
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, .25);
+            background: var(--danger-soft);
+        }
+
+        html[data-theme="light"] .badge.admitted { color: #15803d; }
+        html[data-theme="light"] .badge.refused,
+        html[data-theme="light"] .badge.isolated { color: #b91c1c; }
+        html[data-theme="light"] .badge.waiting { color: #0e7490; }
+        html[data-theme="light"] .badge.neutral { color: #475569; }
+
+        .status-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-button {
+            display: inline-flex;
+            width: 34px;
+            height: 34px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, .12);
+            border-radius: 10px;
+            font-size: 13px;
+            text-decoration: none;
+            transition: .18s ease;
+        }
+
+        .status-button:hover {
+            color: #fff;
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+
+        .status-button.wait { background: #0891b2; }
+        .status-button.admit { background: #16a34a; }
+        .status-button.refuse { background: #dc2626; }
+
+        .empty-state {
+            padding: 52px 20px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .empty-icon {
+            display: grid;
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 14px;
+            place-items: center;
+            border-radius: 18px;
+            background: var(--primary-soft);
+            font-size: 25px;
+        }
+
+        .empty-state strong {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text);
+            font-size: 15px;
+        }
+
+        .footer {
+            padding: 26px 10px 8px;
+            color: var(--muted);
+            font-size: 11px;
+            text-align: center;
+        }
+
+        .footer strong {
+            color: var(--text-soft);
+        }
+
+        .modal-backdrop {
+            position: fixed;
+            z-index: 200;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(2, 6, 23, .8);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+            animation: fade-in .18s ease both;
+        }
+
+        .modal {
+            width: min(720px, 100%);
+            max-height: calc(100vh - 40px);
+            overflow: auto;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            background: var(--surface-solid);
+            box-shadow: 0 28px 90px rgba(0, 0, 0, .52);
+            animation: modal-in .24s ease both;
+        }
+
+        .modal.small {
+            width: min(450px, 100%);
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-head h2 {
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .modal-close {
+            display: grid;
+            width: 36px;
+            height: 36px;
+            place-items: center;
+            cursor: pointer;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--surface-soft);
+            font-size: 20px;
+        }
+
+        .modal-close:hover {
+            color: var(--text);
+            border-color: var(--border-strong);
+            background: var(--primary-soft);
+            transform: rotate(4deg);
+        }
+
+        .candidate-modal {
+            width: min(920px, 100%);
+            overflow: hidden;
+            border-color: rgba(96, 165, 250, .26);
+            background:
+                radial-gradient(circle at 100% 0, rgba(34, 211, 238, .08), transparent 24rem),
+                var(--surface-solid);
+        }
+
+        .candidate-modal .modal-head {
+            position: relative;
+            z-index: 2;
+            padding: 17px 22px;
+            border-bottom-color: rgba(255, 255, 255, .1);
+            background: linear-gradient(110deg, #1d4ed8, #2563eb 58%, #0891b2);
+        }
+
+        .candidate-modal .modal-head-copy {
+            min-width: 0;
+        }
+
+        .candidate-modal .modal-head-copy span,
+        .candidate-modal .modal-head-copy h2 {
+            display: block;
+            color: #fff;
+        }
+
+        .candidate-modal .modal-head-copy span {
+            margin-bottom: 3px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 1.1px;
+            opacity: .72;
+            text-transform: uppercase;
+        }
+
+        .candidate-modal .modal-head-copy h2 {
+            font-size: 17px;
+        }
+
+        .candidate-modal .modal-close {
+            color: #fff;
+            border-color: rgba(255, 255, 255, .25);
+            background: rgba(15, 23, 42, .22);
+        }
+
+        .candidate-profile {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            padding: 24px 26px;
+            border-bottom: 1px solid var(--border);
+            background:
+                linear-gradient(105deg, rgba(37, 99, 235, .2), rgba(8, 145, 178, .06) 64%, transparent),
+                var(--surface-soft);
+        }
+
+        .candidate-photo {
+            position: relative;
+            display: grid;
+            flex: 0 0 112px;
+            width: 112px;
+            height: 112px;
+            place-items: center;
+            overflow: hidden;
+            color: #fff;
+            border: 3px solid rgba(255, 255, 255, .82);
+            border-radius: 22px;
+            background: linear-gradient(135deg, #2563eb, #0891b2);
+            box-shadow: 0 14px 34px rgba(2, 132, 199, .23);
+            font-size: 36px;
+            font-weight: 800;
+        }
+
+        .candidate-photo img {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .candidate-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .candidate-kicker {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 7px;
+            color: #60a5fa;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .candidate-kicker::before {
+            width: 7px;
+            height: 7px;
+            content: "";
+            border-radius: 50%;
+            background: #34d399;
+            box-shadow: 0 0 0 4px rgba(52, 211, 153, .11);
+        }
+
+        .candidate-main h3 {
+            overflow: hidden;
+            margin-bottom: 6px;
+            color: var(--text);
+            font-size: clamp(21px, 3vw, 28px);
+            letter-spacing: -.6px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .candidate-main p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .candidate-badges {
+            display: flex;
+            gap: 7px;
+            margin-top: 13px;
+            flex-wrap: wrap;
+        }
+
+        .candidate-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            min-height: 26px;
+            padding: 5px 9px;
+            color: var(--text-soft);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            background: var(--surface-soft);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: .25px;
+            text-transform: uppercase;
+        }
+
+        .candidate-badge::before {
+            width: 6px;
+            height: 6px;
+            content: "";
+            border-radius: 50%;
+            background: var(--muted);
+        }
+
+        .candidate-badge.success {
+            color: #86efac;
+            border-color: rgba(34, 197, 94, .3);
+            background: var(--success-soft);
+        }
+
+        .candidate-badge.success::before { background: var(--success); }
+
+        .candidate-badge.warning {
+            color: #fcd34d;
+            border-color: rgba(245, 158, 11, .3);
+            background: var(--warning-soft);
+        }
+
+        .candidate-badge.warning::before { background: var(--warning); }
+
+        .candidate-badge.danger {
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, .32);
+            background: var(--danger-soft);
+        }
+
+        .candidate-badge.danger::before { background: var(--danger); }
+
+        html[data-theme="light"] .candidate-badge.success { color: #15803d; }
+        html[data-theme="light"] .candidate-badge.warning { color: #a16207; }
+        html[data-theme="light"] .candidate-badge.danger { color: #b91c1c; }
+
+        .candidate-content {
+            padding: 22px 26px 0;
+        }
+
+        .candidate-section-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .candidate-section-icon {
+            display: grid;
+            width: 30px;
+            height: 30px;
+            place-items: center;
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, .2);
+            border-radius: 9px;
+            background: var(--primary-soft);
+            font-size: 13px;
+        }
+
+        .candidate-section-head strong,
+        .candidate-section-head span {
+            display: block;
+        }
+
+        .candidate-section-head strong {
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .candidate-section-head span {
+            margin-top: 2px;
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .candidate-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            padding: 0 0 22px;
+        }
+
+        .candidate-item {
+            position: relative;
+            min-width: 0;
+            min-height: 74px;
+            padding: 13px 14px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--surface-soft);
+            transition: border-color .18s ease, transform .18s ease, background .18s ease;
+        }
+
+        .candidate-item:hover {
+            border-color: var(--border-strong);
+            background: var(--primary-soft);
+            transform: translateY(-1px);
+        }
+
+        .candidate-item span,
+        .candidate-item strong {
+            display: block;
+        }
+
+        .candidate-item span {
+            margin-bottom: 5px;
+            color: var(--muted);
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+        }
+
+        .candidate-item strong {
+            overflow: hidden;
+            color: var(--text-soft);
+            font-size: 12px;
+            line-height: 1.35;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .candidate-item.has-copy {
+            padding-right: 42px;
+        }
+
+        .copy-detail {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            display: grid;
+            width: 27px;
+            height: 27px;
+            place-items: center;
+            cursor: pointer;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface-solid);
+            transform: translateY(-50%);
+        }
+
+        .copy-detail:hover {
+            color: #93c5fd;
+            border-color: var(--border-strong);
+        }
+
+        .restriction-alert {
+            display: none;
+            align-items: flex-start;
+            gap: 12px;
+            margin: 0 26px 22px;
+            padding: 16px 17px;
+            color: #fecaca;
+            border: 1px solid rgba(239, 68, 68, .35);
+            border-radius: 16px;
+            background:
+                linear-gradient(90deg, rgba(239, 68, 68, .12), transparent),
+                var(--danger-soft);
+            font-size: 12px;
+            line-height: 1.55;
+        }
+
+        .restriction-alert.show {
+            display: flex;
+        }
+
+        .restriction-icon {
+            display: grid;
+            flex: 0 0 36px;
+            width: 36px;
+            height: 36px;
+            place-items: center;
+            border-radius: 11px;
+            background: rgba(239, 68, 68, .17);
+            font-size: 16px;
+        }
+
+        .restriction-copy {
+            min-width: 0;
+        }
+
+        .restriction-alert strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #fff;
+            font-size: 13px;
+        }
+
+        html[data-theme="light"] .restriction-alert,
+        html[data-theme="light"] .restriction-alert strong {
+            color: #991b1b;
+        }
+
+        .candidate-modal .modal-actions {
+            align-items: center;
+            justify-content: space-between;
+            padding: 17px 26px;
+            background: var(--surface-soft);
+        }
+
+        .candidate-action-note {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            max-width: 360px;
+            color: var(--muted);
+            font-size: 9px;
+            line-height: 1.45;
+        }
+
+        .candidate-action-buttons {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .modal-body {
+            padding: 22px;
+            color: var(--text-soft);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 9px;
+            padding: 17px 22px;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .toast-container {
+            position: fixed;
+            z-index: 300;
+            right: 20px;
+            bottom: 20px;
+            display: grid;
+            width: min(370px, calc(100vw - 40px));
+            gap: 9px;
+        }
+
+        .toast {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 14px 15px;
+            color: var(--text-soft);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--surface-solid);
+            box-shadow: var(--shadow);
+            font-size: 12px;
+            line-height: 1.45;
+            animation: toast-in .25s ease both;
+        }
+
+        .toast.success { border-left: 4px solid var(--success); }
+        .toast.error { border-left: 4px solid var(--danger); }
+        .toast.info { border-left: 4px solid var(--primary); }
+        .toast.out { animation: toast-out .2s ease both; }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes modal-in {
+            from { opacity: 0; transform: translateY(14px) scale(.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes toast-in {
+            from { opacity: 0; transform: translateX(18px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toast-out {
+            to { opacity: 0; transform: translateX(18px); }
+        }
+
+        @media (max-width: 1250px) {
+            .layout {
+                grid-template-columns: 340px minmax(0, 1fr);
+            }
+
+            .filters {
+                grid-template-columns: 2fr 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 980px) {
+            body {
+                padding: 16px;
+            }
+
+            .topbar {
+                position: relative;
+                top: 0;
+                flex-wrap: wrap;
+            }
+
+            .brand strong {
+                font-size: 30px;
+            }
+
+            .nav-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .form-card {
+                position: static;
+            }
+
+            .form-stack {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .form-stack > .field-grid,
+            .form-stack > .lookup-status,
+            .form-stack > .button-row {
+                grid-column: 1 / -1;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 680px) {
+            .topbar {
+                padding: 14px;
+                border-radius: 18px;
+            }
+
+            .brand strong {
+                max-width: 260px;
+                font-size: 25px;
+            }
+
+            .brand span {
+                font-size: 10px;
+            }
+
+            .nav-link {
+                width: 44px;
+                min-height: 44px;
+                padding: 0;
+                font-size: 17px;
+            }
+
+            .nav-link span {
+                display: none;
+            }
+
+            .icon-button {
+                width: 44px;
+                min-height: 44px;
+                flex-basis: 44px;
+            }
+
+            .form-stack,
+            .field-grid,
+            .stats,
+            .candidate-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+                padding: 16px;
+            }
+
+            .content-head,
+            .table-toolbar,
+            .candidate-profile {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .content-head {
+                padding: 20px;
+            }
+
+            .table-toolbar {
+                padding: 16px;
+            }
+
+            .candidate-photo {
+                width: 95px;
+                height: 95px;
+                flex-basis: 95px;
+            }
+
+            .modal-actions .button {
+                flex: 1;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="/" aria-label="Ir para colaboradores">
+                <strong>FICHÁRIO COLABORADORES</strong>
+                <span>ORCA Face System</span>
+            </a>
 
-<div class="container-box">
-
-    <div class="topo">
-        <div>
-            <div class="logo">ORCA FACE SYSTEM</div>
-            <div class="subtitulo">Sistema de Pré-Admissão Industrial</div>
-        </div>
-
-        <div class="top-actions">
-            <a href="/" class="top-link">👥 Colaboradores</a>
-            <a href="/lista_negra" class="top-link">🚫 Lista Negra</a>
-        </div>
-    </div>
-
-    <div class="card-admissao">
-
-        <div class="card-head">
-            <div>
-                <div class="titulo">📋 Pré-Admissão</div>
-                <div class="desc">Controle de campo isolado, bloqueio automático e validação de colaboradores.</div>
-            </div>
-        </div>
+            <nav class="nav-actions" aria-label="Menu principal">
+                <a class="nav-link" href="/" title="Colaboradores">👥 <span>Colaboradores</span></a>
+                <a class="nav-link active" href="{{ url_for('admissao') }}" aria-current="page" title="Admissão">✅ <span>Admissão</span></a>
+                <a class="nav-link danger" href="/lista_negra" title="Lista Negra">🚫 <span>Lista Negra</span></a>
+                <button class="icon-button" id="themeToggle" type="button" title="Alternar tema" aria-label="Alternar tema">
+                    <span id="themeIcon" aria-hidden="true">☀️</span>
+                </button>
+            </nav>
+        </header>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">{{ message }}</div>
-                {% endfor %}
+                <div class="flash-stack" aria-live="polite">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">
+                            <span>{{ message }}</span>
+                            <button class="flash-close" type="button" aria-label="Fechar aviso">×</button>
+                        </div>
+                    {% endfor %}
+                </div>
             {% endif %}
         {% endwith %}
 
-        <form method="POST">
-            <div class="row">
-
-                <div class="col-md-4 mb-4">
-                    <label class="form-label">Nome</label>
-                    <input type="text" name="nome" id="nome" class="form-control" placeholder="Digite o nome" onblur="buscarColaborador()" required>
+        <main class="layout">
+            <aside class="card form-card">
+                <div class="card-head">
+                    <span class="eyebrow">Novo registro</span>
+                    <h1 class="section-title">Pré-admissão</h1>
+                    <p class="section-subtitle">Cadastre o candidato e valide automaticamente o histórico.</p>
                 </div>
 
-                <div class="col-md-4 mb-4">
-                    <label class="form-label">CPF</label>
-                    <input type="text" name="cpf" id="cpf" class="form-control" placeholder="000.000.000-00" onblur="buscarColaboradorCpf()" required>
-                </div>
+                <div class="form-body">
+                    <form class="form-stack" id="formPreAdmissao" method="POST">
+                        <div class="field">
+                            <label for="nome">Nome completo</label>
+                            <input type="text" name="nome" id="nome" autocomplete="name" placeholder="Digite o nome" required>
+                        </div>
 
-                <div class="col-md-4 mb-4">
-                    <label class="form-label">Telefone</label>
-                    <input type="text" name="telefone" id="telefone" class="form-control" placeholder="62999999999">
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <label class="form-label">Função</label>
-                    <input type="text" name="funcao" id="funcao" class="form-control" placeholder="Função do colaborador">
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <label class="form-label">Campo / Empresa</label>
-                    <input type="text" name="campo" id="campo" class="form-control" placeholder="Nome do campo">
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <label class="form-label">Obra</label>
-                    <input type="text" name="obra" id="obra" class="form-control" placeholder="Nome da obra">
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <label class="form-label">Data da Admissão</label>
-                    <input type="date" name="data_admissao" class="form-control">
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <label class="form-label">Status</label>
-                    <select name="status" class="form-select">
-                        <option value="Aguardando" selected>Aguardando</option>
-                        <option value="Admitido">Admitido</option>
-                        <option value="Recusado">Recusado</option>
-                    </select>
-                </div>
-
-                <div class="col-md-4 mb-4">
-                    <label class="form-label">Campo Isolado</label>
-                    <label class="checkbox-box">
-                        <input type="checkbox" name="campo_isolado" value="1">
-                        <span>🚫 Campo isolado</span>
-                    </label>
-                </div>
-
-            </div>
-
-            <button class="btn-admitir">✅ Salvar Pré-Admissão</button>
-        </form>
-    </div>
-
-    <div class="card-admissao mt-4">
-
-        <div class="card-head">
-            <div>
-                <div class="titulo">👷 Pré-Admissões Salvas</div>
-                <div class="desc">Acompanhe os candidatos cadastrados no sistema.</div>
-            </div>
-        </div>
-
-        <div class="status-grid">
-            <div class="status-card">
-                <div><small>Total</small><strong>{{ pre_admissoes|length }}</strong></div>
-                <div class="status-icon">📋</div>
-            </div>
-
-            <div class="status-card">
-                <div><small>Aguardando</small><strong>{{ pre_admissoes|selectattr('status','equalto','Aguardando')|list|length }}</strong></div>
-                <div class="status-icon">⏳</div>
-            </div>
-
-            <div class="status-card">
-                <div><small>Admitidos</small><strong>{{ pre_admissoes|selectattr('status','equalto','Admitido')|list|length }}</strong></div>
-                <div class="status-icon">✅</div>
-            </div>
-
-            <div class="status-card">
-                <div><small>Recusados</small><strong>{{ pre_admissoes|selectattr('status','equalto','Recusado')|list|length }}</strong></div>
-                <div class="status-icon">❌</div>
-            </div>
-        </div>
-
-        <form method="GET" action="{{ url_for('admissao') }}" class="filtros-box">
-            <div class="row align-items-end">
-
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Pesquisar na tabela</label>
-                    <input type="text" id="pesquisaTabela" class="form-control" placeholder="Nome, CPF, função ou obra...">
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Filtrar por status</label>
-                    <select name="status" class="form-select" onchange="this.form.submit()">
-                        <option value="Todos" {% if filtro_status == 'Todos' %}selected{% endif %}>Todos</option>
-                        <option value="Aguardando" {% if filtro_status == 'Aguardando' %}selected{% endif %}>Aguardando</option>
-                        <option value="Admitido" {% if filtro_status == 'Admitido' %}selected{% endif %}>Admitido</option>
-                        <option value="Recusado" {% if filtro_status == 'Recusado' %}selected{% endif %}>Recusado</option>
-                    </select>
-                </div>
-
-                <div class="col-md-4 mb-3">
-                    <label class="form-label">Ações</label>
-                    <div class="filter-actions">
-                        <button type="submit" class="btn-filter btn-primary-soft">🔎 Filtrar</button>
-                        <a href="{{ url_for('admissao') }}" class="btn-filter btn-secondary-soft">Limpar</a>
-                        <a href="{{ url_for('exportar_pre_admissoes_excel') }}" class="btn-filter btn-success-soft">📊 Excel</a>
-                    </div>
-                </div>
-
-            </div>
-        </form>
-
-        {% if pre_admissoes %}
-
-        <div class="table-responsive table-card">
-            <table class="table table-hover align-middle" id="tabelaPreAdmissao">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>CPF</th>
-                        <th>Telefone</th>
-                        <th>Função</th>
-                        <th>Campo</th>
-                        <th>Obra</th>
-                        <th>Status</th>
-                        <th>Isolado</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for c in pre_admissoes %}
-                    <tr>
-                        <td class="nome-colab">{{ c.nome }}</td>
-                        <td>{{ c.cpf or '-' }}</td>
-                        <td>{{ c.telefone or '-' }}</td>
-                        <td>{{ c.funcao or '-' }}</td>
-                        <td>{{ c.campo or '-' }}</td>
-                        <td>{{ c.obra or '-' }}</td>
-
-                        <td>
-                            {% if c.status == 'Admitido' %}
-                                <span class="badge-status status-admitido">✅ Admitido</span>
-                            {% elif c.status == 'Recusado' %}
-                                <span class="badge-status status-recusado">❌ Recusado</span>
-                            {% elif c.status == 'Aguardando' %}
-                                <span class="badge-status status-aguardando">⏳ Aguardando</span>
-                            {% else %}
-                                <span class="badge-status status-sem">{{ c.status or 'Sem status' }}</span>
-                            {% endif %}
-                        </td>
-
-                        <td>
-                            {% if c.isolado %}
-                                <span class="badge-isolado">ISOLADO</span>
-                            {% else %}
-                                <span class="text-muted-custom">-</span>
-                            {% endif %}
-                        </td>
-
-                        <td>
-                            <div class="acoes-status">
-                                <a title="Aguardando" href="{{ url_for('alterar_status_pre_admissao', id=c.id, novo_status='aguardando') }}" class="btn-status btn-ag">⏳</a>
-                                <a title="Admitido" href="{{ url_for('alterar_status_pre_admissao', id=c.id, novo_status='admitido') }}" class="btn-status btn-ad">✅</a>
-                                <a title="Recusado" href="{{ url_for('alterar_status_pre_admissao', id=c.id, novo_status='recusado') }}" class="btn-status btn-re">❌</a>
+                        <div class="field-grid">
+                            <div class="field">
+                                <label for="cpf">CPF</label>
+                                <input type="text" name="cpf" id="cpf" inputmode="numeric" maxlength="14" autocomplete="off" placeholder="000.000.000-00" required>
                             </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                            <div class="field">
+                                <label for="telefone">Telefone</label>
+                                <input type="text" name="telefone" id="telefone" inputmode="tel" maxlength="15" autocomplete="tel" placeholder="(00) 00000-0000">
+                            </div>
+                        </div>
 
-        {% else %}
-            <div class="empty-state">
-                Nenhuma pré-admissão encontrada para esse filtro.
-            </div>
-        {% endif %}
-    </div>
+                        <div class="field">
+                            <label for="funcao">Função</label>
+                            <input type="text" name="funcao" id="funcao" placeholder="Função do colaborador">
+                        </div>
 
-    <div class="footer">ORCA FACE SYSTEM © 2026</div>
-</div>
+                        <div class="field-grid">
+                            <div class="field">
+                                <label for="campo">Campo / Empresa</label>
+                                <input type="text" name="campo" id="campo" placeholder="Campo ou empresa">
+                            </div>
+                            <div class="field">
+                                <label for="obra">Obra</label>
+                                <input type="text" name="obra" id="obra" placeholder="Nome da obra">
+                            </div>
+                        </div>
 
-<div class="modal fade" id="modalColaborador" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content modal-content-custom">
-            <div class="modal-header border-0">
-                <h4 class="modal-title">👷 Colaborador já trabalhou aqui</h4>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
+                        <div class="field-grid">
+                            <div class="field">
+                                <label for="dataAdmissao">Data da admissão</label>
+                                <input type="date" name="data_admissao" id="dataAdmissao">
+                            </div>
+                            <div class="field">
+                                <label for="statusCadastro">Status</label>
+                                <select name="status" id="statusCadastro">
+                                    <option value="Aguardando" selected>Aguardando</option>
+                                    <option value="Admitido">Admitido</option>
+                                    <option value="Recusado">Recusado</option>
+                                </select>
+                            </div>
+                        </div>
 
-            <div class="modal-body">
-                <div style="display:flex;gap:25px;align-items:center;flex-wrap:wrap;">
-                    <img id="modalFoto" src="" class="modal-foto">
+                        <label class="check-card">
+                            <input type="checkbox" name="campo_isolado" value="1">
+                            <span>🚫 Marcar como campo isolado</span>
+                        </label>
 
-                    <div style="flex:1;">
-                        <h2 id="modalNome"></h2>
-                        <p><b>CPF:</b> <span id="modalCpf"></span></p>
-                        <p><b>Telefone:</b> <span id="modalTelefone"></span></p>
-                        <p><b>Função:</b> <span id="modalFuncao"></span></p>
-                        <p><b>Obra:</b> <span id="modalObra"></span></p>
-                        <p><b>Campo:</b> <span id="modalCampo"></span></p>
-                        <p><b>Status:</b> <span id="modalStatus"></span></p>
-                        <p><b>Pré-admissão:</b> <span id="modalPreAdmissao"></span></p>
-                        <p><b>Origem:</b> <span id="modalOrigem"></span></p>
+                        <div class="lookup-status" id="lookupStatus" role="status" aria-live="polite"></div>
 
-                        <div id="modalRestricao" class="restricao-box">
-                            <b>COLABORADOR RESTRITO NO SISTEMA</b><br>
-                            Motivo: <span id="modalMotivo"></span>
+                        <div class="button-row">
+                            <button class="button success" type="submit">✓ Salvar pré-admissão</button>
+                            <button class="button secondary" id="limparCadastro" type="button" title="Limpar formulário">↺</button>
+                        </div>
+                    </form>
+                </div>
+            </aside>
+
+            <section class="dashboard" aria-label="Painel de pré-admissões">
+                <div class="stats">
+                    <article class="stat-card stat-total">
+                        <div class="stat-top"><span class="stat-label">Total</span><span class="stat-icon" aria-hidden="true">▦</span></div>
+                        <strong class="stat-value">{{ pre_admissoes|length }}</strong>
+                    </article>
+
+                    <article class="stat-card stat-wait">
+                        <div class="stat-top"><span class="stat-label">Aguardando</span><span class="stat-icon" aria-hidden="true">◷</span></div>
+                        <strong class="stat-value">{{ pre_admissoes|selectattr('status','equalto','Aguardando')|list|length }}</strong>
+                    </article>
+
+                    <article class="stat-card stat-ok">
+                        <div class="stat-top"><span class="stat-label">Admitidos</span><span class="stat-icon" aria-hidden="true">✓</span></div>
+                        <strong class="stat-value">{{ pre_admissoes|selectattr('status','equalto','Admitido')|list|length }}</strong>
+                    </article>
+
+                    <article class="stat-card stat-danger">
+                        <div class="stat-top"><span class="stat-label">Recusados</span><span class="stat-icon" aria-hidden="true">×</span></div>
+                        <strong class="stat-value">{{ pre_admissoes|selectattr('status','equalto','Recusado')|list|length }}</strong>
+                    </article>
+                </div>
+
+                <div class="card content-card">
+                    <div class="content-head">
+                        <div>
+                            <span class="eyebrow">Acompanhamento</span>
+                            <h2 class="section-title">Pré-admissões salvas</h2>
+                            <p class="section-subtitle">Consulte candidatos e atualize o andamento com segurança.</p>
+                        </div>
+                        <div class="head-actions">
+                            <a class="button success compact" href="{{ url_for('exportar_pre_admissoes_excel') }}">⇩ Exportar Excel</a>
                         </div>
                     </div>
+
+                    <form class="filters" method="GET" action="{{ url_for('admissao') }}" id="formFiltros">
+                        <div class="search-field">
+                            <input type="search" id="pesquisaTabela" autocomplete="off" placeholder="Nome, CPF, função, campo ou obra..." aria-label="Pesquisar na tabela">
+                            <span class="search-shortcut" aria-hidden="true">/</span>
+                        </div>
+
+                        <select name="status" id="filtroStatus" aria-label="Filtrar por status">
+                            <option value="Todos" {% if filtro_status == 'Todos' %}selected{% endif %}>Todos os status</option>
+                            <option value="Aguardando" {% if filtro_status == 'Aguardando' %}selected{% endif %}>Aguardando</option>
+                            <option value="Admitido" {% if filtro_status == 'Admitido' %}selected{% endif %}>Admitidos</option>
+                            <option value="Recusado" {% if filtro_status == 'Recusado' %}selected{% endif %}>Recusados</option>
+                        </select>
+
+                        <button class="button primary" type="submit">🔎 Filtrar</button>
+                        <a class="button secondary" href="{{ url_for('admissao') }}">Limpar</a>
+                        <a class="button success" href="{{ url_for('exportar_pre_admissoes_excel') }}">Excel</a>
+                    </form>
+
+                    <div class="table-toolbar">
+                        <p class="result-info"><strong id="contadorVisiveis">{{ pre_admissoes|length }}</strong> registro(s) visível(is)</p>
+                        <div class="legend" aria-label="Legenda das ações">
+                            <span style="color:#22d3ee"><i></i>Aguardando</span>
+                            <span style="color:#22c55e"><i></i>Admitido</span>
+                            <span style="color:#ef4444"><i></i>Recusado</span>
+                        </div>
+                    </div>
+
+                    {% if pre_admissoes %}
+                        <div class="table-wrap">
+                            <table id="tabelaPreAdmissao">
+                                <thead>
+                                    <tr>
+                                        <th data-column="nome"><button class="sort-button" type="button">Nome</button></th>
+                                        <th data-column="cpf"><button class="sort-button" type="button">CPF</button></th>
+                                        <th data-column="telefone"><button class="sort-button" type="button">Telefone</button></th>
+                                        <th data-column="funcao"><button class="sort-button" type="button">Função</button></th>
+                                        <th data-column="campo"><button class="sort-button" type="button">Campo</button></th>
+                                        <th data-column="obra"><button class="sort-button" type="button">Obra</button></th>
+                                        <th data-column="status"><button class="sort-button" type="button">Status</button></th>
+                                        <th>Isolado</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for c in pre_admissoes %}
+                                        <tr
+                                            data-nome="{{ c.nome }}"
+                                            data-cpf="{{ c.cpf or '' }}"
+                                            data-telefone="{{ c.telefone or '' }}"
+                                            data-funcao="{{ c.funcao or '' }}"
+                                            data-campo="{{ c.campo or '' }}"
+                                            data-obra="{{ c.obra or '' }}"
+                                            data-status="{{ c.status or '' }}">
+                                            <td>
+                                                <span class="person-name" title="{{ c.nome }}">{{ c.nome }}</span>
+                                                <span class="person-code">ID #{{ c.id }}</span>
+                                            </td>
+                                            <td>{{ c.cpf or '-' }}</td>
+                                            <td>{{ c.telefone or '-' }}</td>
+                                            <td>{{ c.funcao or '-' }}</td>
+                                            <td>{{ c.campo or '-' }}</td>
+                                            <td>{{ c.obra or '-' }}</td>
+                                            <td>
+                                                {% if c.status == 'Admitido' %}
+                                                    <span class="badge admitted">Admitido</span>
+                                                {% elif c.status == 'Recusado' %}
+                                                    <span class="badge refused">Recusado</span>
+                                                {% elif c.status == 'Aguardando' %}
+                                                    <span class="badge waiting">Aguardando</span>
+                                                {% else %}
+                                                    <span class="badge neutral">{{ c.status or 'Sem status' }}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if c.isolado %}
+                                                    <span class="badge isolated">Isolado</span>
+                                                {% else %}
+                                                    <span style="color:var(--muted)">—</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="status-actions">
+                                                    <a
+                                                        class="status-button wait"
+                                                        href="{{ url_for('alterar_status_pre_admissao', id=c.id, novo_status='aguardando') }}"
+                                                        title="Marcar como aguardando"
+                                                        data-confirm-link
+                                                        data-confirm-title="Marcar como aguardando?"
+                                                        data-confirm-message="O status de {{ c.nome }} será alterado para Aguardando."
+                                                        data-confirm-button="Sim, alterar">◷</a>
+                                                    <a
+                                                        class="status-button admit"
+                                                        href="{{ url_for('alterar_status_pre_admissao', id=c.id, novo_status='admitido') }}"
+                                                        title="Marcar como admitido"
+                                                        data-confirm-link
+                                                        data-confirm-title="Confirmar admissão?"
+                                                        data-confirm-message="{{ c.nome }} será marcado como Admitido."
+                                                        data-confirm-button="Sim, admitir">✓</a>
+                                                    <a
+                                                        class="status-button refuse"
+                                                        href="{{ url_for('alterar_status_pre_admissao', id=c.id, novo_status='recusado') }}"
+                                                        title="Marcar como recusado"
+                                                        data-confirm-link
+                                                        data-confirm-title="Recusar candidato?"
+                                                        data-confirm-message="{{ c.nome }} será marcado como Recusado."
+                                                        data-confirm-button="Sim, recusar">×</a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <span class="empty-icon" aria-hidden="true">⌕</span>
+                            <strong>Nenhuma pré-admissão encontrada</strong>
+                            <p>Ajuste o filtro ou cadastre um novo candidato.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer"><strong>ORCA Face System</strong> · Controle de pré-admissões © 2026</footer>
+    </div>
+
+    <div class="modal-backdrop" id="modalColaborador" aria-hidden="true">
+        <div class="modal candidate-modal" role="dialog" aria-modal="true" aria-labelledby="modalColaboradorTitulo">
+            <div class="modal-head">
+                <div class="modal-head-copy">
+                    <span>Consulta automática</span>
+                    <h2 id="modalColaboradorTitulo">Colaborador localizado</h2>
+                </div>
+                <button class="modal-close" type="button" data-close-modal aria-label="Fechar">×</button>
+            </div>
+
+            <div class="candidate-profile">
+                <div class="candidate-photo" id="modalFotoBox">
+                    <img id="modalFoto" src="" alt="Foto do colaborador">
+                    <span id="modalInicial" aria-hidden="true">?</span>
+                </div>
+                <div class="candidate-main">
+                    <span class="candidate-kicker">Cadastro encontrado no sistema</span>
+                    <h3 id="modalNome">-</h3>
+                    <p>Confira o histórico antes de continuar com a pré-admissão.</p>
+                    <div class="candidate-badges" aria-label="Situação do colaborador">
+                        <span class="candidate-badge" id="modalStatusBadge">Status não informado</span>
+                        <span class="candidate-badge" id="modalPreAdmissaoBadge">Pré-admissão não informada</span>
+                        <span class="candidate-badge success" id="modalRestricaoBadge">Sem restrição</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="modal-footer border-0">
-                <a id="btnVerFicha" href="#" target="_blank" class="btn btn-primary">Ver ficha completa</a>
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Continuar pré-admissão</button>
+            <div class="candidate-content">
+                <div class="candidate-section-head">
+                    <span class="candidate-section-icon" aria-hidden="true">▦</span>
+                    <div>
+                        <strong>Informações do cadastro</strong>
+                        <span>Dados pessoais, profissionais e situação atual.</span>
+                    </div>
+                </div>
+
+                <div class="candidate-grid">
+                    <div class="candidate-item has-copy">
+                        <span>CPF</span>
+                        <strong id="modalCpf">-</strong>
+                        <button class="copy-detail" type="button" data-copy-target="modalCpf" title="Copiar CPF" aria-label="Copiar CPF">⧉</button>
+                    </div>
+                    <div class="candidate-item has-copy">
+                        <span>Telefone</span>
+                        <strong id="modalTelefone">-</strong>
+                        <button class="copy-detail" type="button" data-copy-target="modalTelefone" title="Copiar telefone" aria-label="Copiar telefone">⧉</button>
+                    </div>
+                    <div class="candidate-item"><span>Função</span><strong id="modalFuncao">-</strong></div>
+                    <div class="candidate-item"><span>Obra</span><strong id="modalObra">-</strong></div>
+                    <div class="candidate-item"><span>Campo</span><strong id="modalCampo">-</strong></div>
+                    <div class="candidate-item"><span>Status</span><strong id="modalStatus">-</strong></div>
+                    <div class="candidate-item"><span>Pré-admissão</span><strong id="modalPreAdmissao">-</strong></div>
+                    <div class="candidate-item"><span>Origem do cadastro</span><strong id="modalOrigem">-</strong></div>
+                </div>
+            </div>
+
+            <div class="restriction-alert" id="modalRestricao">
+                <span class="restriction-icon" aria-hidden="true">🚫</span>
+                <div class="restriction-copy">
+                    <strong>Atenção: colaborador restrito no sistema</strong>
+                    Motivo da restrição: <span id="modalMotivo">Sem motivo informado</span>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <span class="candidate-action-note">ⓘ Os campos vazios do formulário são preenchidos automaticamente com estes dados.</span>
+                <div class="candidate-action-buttons">
+                    <a class="button secondary" id="btnVerFicha" href="#" target="_blank" rel="noopener noreferrer">↗ Ver ficha completa</a>
+                    <button class="button success" type="button" data-close-modal>✓ Usar dados e continuar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="modal-backdrop" id="modalConfirmacao" aria-hidden="true">
+        <div class="modal small" role="alertdialog" aria-modal="true" aria-labelledby="confirmacaoTitulo" aria-describedby="confirmacaoMensagem">
+            <div class="modal-head">
+                <h2 id="confirmacaoTitulo">Confirmar alteração</h2>
+                <button class="modal-close" type="button" data-close-modal aria-label="Fechar">×</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmacaoMensagem">Deseja continuar?</p>
+            </div>
+            <div class="modal-actions">
+                <button class="button secondary" type="button" data-close-modal>Cancelar</button>
+                <button class="button primary" id="confirmarAcao" type="button">Confirmar</button>
+            </div>
+        </div>
+    </div>
 
-<script>
-function buscarColaborador(){
-    let nome = document.getElementById("nome").value.trim();
-    if(nome.length < 3){return;}
-    consultarColaborador(nome);
-}
+    <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
 
-function buscarColaboradorCpf(){
-    let cpf = document.getElementById("cpf").value.trim();
-    if(cpf.length < 5){return;}
-    consultarColaborador(cpf);
-}
+    <script>
+        const $ = (seletor, contexto = document) => contexto.querySelector(seletor);
+        const $$ = (seletor, contexto = document) => [...contexto.querySelectorAll(seletor)];
+        const modalColaborador = $('#modalColaborador');
+        const modalConfirmacao = $('#modalConfirmacao');
+        const formPreAdmissao = $('#formPreAdmissao');
+        const nomeInput = $('#nome');
+        const cpfInput = $('#cpf');
+        const telefoneInput = $('#telefone');
+        const pesquisaTabela = $('#pesquisaTabela');
+        let acaoConfirmada = null;
+        let consultaAtual = null;
+        let timerNome = null;
+        let timerCpf = null;
 
-function consultarColaborador(termo){
-    fetch("/buscar_colaborador_pre_admissao?termo=" + encodeURIComponent(termo))
-    .then(response => response.json())
-    .then(data => {
-        if(!data.encontrado){return;}
+        function mostrarToast(mensagem, tipo = 'info', duracao = 3500) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
 
-        document.getElementById("modalFoto").src = data.foto || "";
-        document.getElementById("modalNome").innerText = data.nome || "-";
-        document.getElementById("modalCpf").innerText = data.cpf || "-";
-        document.getElementById("modalTelefone").innerText = data.telefone || "-";
-        document.getElementById("modalFuncao").innerText = data.funcao || "-";
-        document.getElementById("modalObra").innerText = data.obra || "-";
-        document.getElementById("modalCampo").innerText = data.campo || "-";
-        document.getElementById("modalStatus").innerText = data.status || "-";
-        document.getElementById("modalPreAdmissao").innerText = data.pre_admissao || "-";
-        document.getElementById("modalOrigem").innerText = data.origem || "-";
+            const icone = document.createElement('span');
+            icone.setAttribute('aria-hidden', 'true');
+            icone.textContent = tipo === 'success' ? '✓' : tipo === 'error' ? '!' : 'i';
 
-        if(data.id){
-            document.getElementById("btnVerFicha").style.display = "inline-block";
-            document.getElementById("btnVerFicha").href = "/colaborador/" + data.id;
-        }else{
-            document.getElementById("btnVerFicha").style.display = "none";
-            document.getElementById("btnVerFicha").href = "#";
+            const texto = document.createElement('span');
+            texto.textContent = mensagem;
+
+            toast.append(icone, texto);
+            $('#toastContainer').appendChild(toast);
+
+            window.setTimeout(() => {
+                toast.classList.add('out');
+                window.setTimeout(() => toast.remove(), 220);
+            }, duracao);
         }
 
-        if(data.restrito || data.na_lista_negra){
-            document.getElementById("modalRestricao").style.display = "block";
-            document.getElementById("modalMotivo").innerText = data.motivo || "Sem motivo informado";
-        }else{
-            document.getElementById("modalRestricao").style.display = "none";
+        function normalizarSituacao(valor) {
+            return String(valor || '')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim()
+                .toLowerCase();
         }
 
-        if(!document.getElementById("cpf").value){document.getElementById("cpf").value = data.cpf || "";}
-        if(!document.getElementById("telefone").value){document.getElementById("telefone").value = data.telefone || "";}
-        if(!document.getElementById("funcao").value){document.getElementById("funcao").value = data.funcao || "";}
-        if(!document.getElementById("obra").value){document.getElementById("obra").value = data.obra || "";}
-        if(!document.getElementById("campo").value){document.getElementById("campo").value = data.campo || "";}
+        function tipoDaSituacao(valor) {
+            const situacao = normalizarSituacao(valor);
+            if (/admitido|liberado|ativo|aprovado|sem restricao/.test(situacao)) return 'success';
+            if (/recusado|restrito|restricao|bloqueado|lista negra|desligado|inativo/.test(situacao)) return 'danger';
+            if (/aguardando|analise|pendente|processo/.test(situacao)) return 'warning';
+            return '';
+        }
 
-        let modal = new bootstrap.Modal(document.getElementById("modalColaborador"));
-        modal.show();
-    })
-    .catch(error => {
-        console.log("Erro ao buscar colaborador:", error);
-    });
-}
+        function atualizarBadge(seletor, texto, prefixo = '') {
+            const badge = $(seletor);
+            if (!badge) return;
+            const valor = String(texto || '').trim() || 'Não informado';
+            badge.textContent = prefixo ? `${prefixo}: ${valor}` : valor;
+            badge.className = `candidate-badge ${tipoDaSituacao(valor)}`.trim();
+        }
 
-const pesquisaTabela = document.getElementById('pesquisaTabela');
+        async function copiarDetalhe(id) {
+            const valor = document.getElementById(id)?.textContent?.trim();
+            if (!valor || valor === '-') return;
 
-if(pesquisaTabela){
-    pesquisaTabela.addEventListener('keyup', function(){
-        let termo = this.value.toLowerCase().trim();
-        let linhas = document.querySelectorAll('#tabelaPreAdmissao tbody tr');
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(valor);
+                } else {
+                    const auxiliar = document.createElement('textarea');
+                    auxiliar.value = valor;
+                    auxiliar.style.position = 'fixed';
+                    auxiliar.style.opacity = '0';
+                    document.body.appendChild(auxiliar);
+                    auxiliar.select();
+                    document.execCommand('copy');
+                    auxiliar.remove();
+                }
+                mostrarToast('Informação copiada.', 'success', 2200);
+            } catch (erro) {
+                mostrarToast('Não foi possível copiar.', 'error');
+            }
+        }
 
-        linhas.forEach(function(linha){
-            let texto = linha.innerText.toLowerCase();
-            linha.style.display = texto.includes(termo) ? '' : 'none';
+        function abrirModal(modal) {
+            if (!modal) return;
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            window.setTimeout(() => $('.modal-close', modal)?.focus(), 30);
+        }
+
+        function fecharModal(modal) {
+            if (!modal) return;
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+            if (!$('.modal-backdrop.open')) document.body.style.overflow = '';
+        }
+
+        $$('.modal-backdrop').forEach(fundo => {
+            fundo.addEventListener('click', evento => {
+                if (evento.target === fundo) fecharModal(fundo);
+            });
         });
-    });
-}
-</script>
 
+        $$('[data-close-modal]').forEach(botao => {
+            botao.addEventListener('click', () => fecharModal(botao.closest('.modal-backdrop')));
+        });
+
+        $$('[data-copy-target]').forEach(botao => {
+            botao.addEventListener('click', () => copiarDetalhe(botao.dataset.copyTarget));
+        });
+
+        document.addEventListener('keydown', evento => {
+            if (evento.key === 'Escape') $$('.modal-backdrop.open').forEach(fecharModal);
+            const editavel = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName || '');
+            if (evento.key === '/' && !editavel && pesquisaTabela) {
+                evento.preventDefault();
+                pesquisaTabela.focus();
+            }
+        });
+
+        function atualizarTema() {
+            const tema = document.documentElement.dataset.theme || 'dark';
+            if ($('#themeIcon')) $('#themeIcon').textContent = tema === 'dark' ? '☀️' : '🌙';
+        }
+
+        $('#themeToggle')?.addEventListener('click', () => {
+            const novoTema = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+            document.documentElement.dataset.theme = novoTema;
+            try { localStorage.setItem('orca-tema', novoTema); } catch (erro) {}
+            atualizarTema();
+        });
+        atualizarTema();
+
+        $$('.flash-close').forEach(botao => {
+            botao.addEventListener('click', () => botao.closest('.flash')?.remove());
+        });
+
+        cpfInput?.addEventListener('input', () => {
+            const numeros = cpfInput.value.replace(/\D/g, '').slice(0, 11);
+            cpfInput.value = numeros
+                .replace(/^(\d{3})(\d)/, '$1.$2')
+                .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+                .replace(/\.(\d{3})(\d)/, '.$1-$2');
+
+            window.clearTimeout(timerCpf);
+            if (numeros.length === 11) {
+                timerCpf = window.setTimeout(() => consultarColaborador(numeros), 450);
+            }
+        });
+
+        telefoneInput?.addEventListener('input', () => {
+            const numeros = telefoneInput.value.replace(/\D/g, '').slice(0, 11);
+            telefoneInput.value = numeros
+                .replace(/^(\d{2})(\d)/, '($1) $2')
+                .replace(/(\d{5})(\d)/, '$1-$2');
+        });
+
+        nomeInput?.addEventListener('input', () => {
+            window.clearTimeout(timerNome);
+            const termo = nomeInput.value.trim();
+            if (termo.length >= 3) {
+                timerNome = window.setTimeout(() => consultarColaborador(termo), 700);
+            }
+        });
+
+        function atualizarLookup(mensagem = '', tipo = '') {
+            const box = $('#lookupStatus');
+            if (!box) return;
+            box.textContent = mensagem;
+            box.className = `lookup-status${mensagem ? ' show' : ''}${tipo ? ` ${tipo}` : ''}`;
+        }
+
+        function preencherSeVazio(id, valor) {
+            const campo = document.getElementById(id);
+            if (campo && !campo.value.trim() && valor) campo.value = valor;
+        }
+
+        async function consultarColaborador(termo) {
+            const valor = String(termo || '').trim();
+            if (valor.length < 3) return;
+
+            consultaAtual?.abort();
+            consultaAtual = new AbortController();
+            atualizarLookup('Consultando histórico do colaborador...', 'searching');
+
+            try {
+                const resposta = await fetch(
+                    `/buscar_colaborador_pre_admissao?termo=${encodeURIComponent(valor)}`,
+                    { signal: consultaAtual.signal }
+                );
+                if (!resposta.ok) throw new Error('Falha na consulta');
+                const dados = await resposta.json();
+
+                if (!dados.encontrado) {
+                    atualizarLookup('Nenhum histórico localizado. Novo candidato.', 'ok');
+                    return;
+                }
+
+                atualizarLookup('Cadastro anterior localizado. Confira os dados.', 'ok');
+                preencherSeVazio('cpf', dados.cpf);
+                preencherSeVazio('telefone', dados.telefone);
+                preencherSeVazio('funcao', dados.funcao);
+                preencherSeVazio('obra', dados.obra);
+                preencherSeVazio('campo', dados.campo);
+
+                $('#modalNome').textContent = dados.nome || '-';
+                $('#modalCpf').textContent = dados.cpf || '-';
+                $('#modalTelefone').textContent = dados.telefone || '-';
+                $('#modalFuncao').textContent = dados.funcao || '-';
+                $('#modalObra').textContent = dados.obra || '-';
+                $('#modalCampo').textContent = dados.campo || '-';
+                $('#modalStatus').textContent = dados.status || '-';
+                $('#modalPreAdmissao').textContent = dados.pre_admissao || '-';
+                $('#modalOrigem').textContent = dados.origem || '-';
+                atualizarBadge('#modalStatusBadge', dados.status, 'Status');
+                atualizarBadge('#modalPreAdmissaoBadge', dados.pre_admissao, 'Pré-admissão');
+
+                const nome = dados.nome || '?';
+                $('#modalInicial').textContent = nome.charAt(0).toUpperCase();
+                const imagem = $('#modalFoto');
+                imagem.style.display = 'none';
+                imagem.removeAttribute('src');
+                $('#modalInicial').style.display = 'block';
+
+                if (dados.foto) {
+                    imagem.onload = () => {
+                        imagem.style.display = 'block';
+                        $('#modalInicial').style.display = 'none';
+                    };
+                    imagem.onerror = () => {
+                        imagem.style.display = 'none';
+                        $('#modalInicial').style.display = 'block';
+                    };
+                    imagem.src = dados.foto;
+                }
+
+                const ficha = $('#btnVerFicha');
+                if (dados.id) {
+                    ficha.style.display = 'inline-flex';
+                    ficha.href = `/colaborador/${encodeURIComponent(dados.id)}`;
+                } else {
+                    ficha.style.display = 'none';
+                    ficha.href = '#';
+                }
+
+                const restricao = $('#modalRestricao');
+                const bloqueado = Boolean(dados.restrito || dados.na_lista_negra);
+                restricao.classList.toggle('show', bloqueado);
+                $('#modalMotivo').textContent = dados.motivo || 'Sem motivo informado';
+                atualizarBadge('#modalRestricaoBadge', bloqueado ? 'Com restrição' : 'Sem restrição');
+
+                abrirModal(modalColaborador);
+            } catch (erro) {
+                if (erro.name === 'AbortError') return;
+                atualizarLookup('Não foi possível consultar o histórico agora.');
+                mostrarToast('Falha ao consultar o colaborador.', 'error');
+            }
+        }
+
+        formPreAdmissao?.addEventListener('submit', evento => {
+            const cpfNumeros = cpfInput?.value.replace(/\D/g, '') || '';
+            if (cpfNumeros.length !== 11) {
+                evento.preventDefault();
+                cpfInput?.focus();
+                mostrarToast('Informe um CPF com 11 números.', 'error');
+                return;
+            }
+
+            cpfInput.value = cpfNumeros;
+            if (telefoneInput) telefoneInput.value = telefoneInput.value.replace(/\D/g, '');
+        });
+
+        $('#limparCadastro')?.addEventListener('click', () => {
+            formPreAdmissao?.reset();
+            atualizarLookup();
+            nomeInput?.focus();
+            mostrarToast('Formulário limpo.', 'info');
+        });
+
+        function linhasTabela() {
+            return $$('#tabelaPreAdmissao tbody tr');
+        }
+
+        function atualizarContagemTabela() {
+            const quantidade = linhasTabela().filter(linha => !linha.hidden).length;
+            if ($('#contadorVisiveis')) $('#contadorVisiveis').textContent = String(quantidade);
+        }
+
+        pesquisaTabela?.addEventListener('input', () => {
+            const termo = pesquisaTabela.value.toLocaleLowerCase('pt-BR').trim();
+            linhasTabela().forEach(linha => {
+                linha.hidden = !linha.textContent.toLocaleLowerCase('pt-BR').includes(termo);
+            });
+            atualizarContagemTabela();
+        });
+
+        $$('th[data-column]').forEach(cabecalho => {
+            $('.sort-button', cabecalho)?.addEventListener('click', () => {
+                const coluna = cabecalho.dataset.column;
+                const ascendente = cabecalho.getAttribute('aria-sort') !== 'ascending';
+
+                $$('th[data-column]').forEach(item => item.removeAttribute('aria-sort'));
+                cabecalho.setAttribute('aria-sort', ascendente ? 'ascending' : 'descending');
+
+                const corpo = $('#tabelaPreAdmissao tbody');
+                linhasTabela()
+                    .sort((a, b) => (a.dataset[coluna] || '').localeCompare(
+                        b.dataset[coluna] || '',
+                        'pt-BR',
+                        { numeric: true, sensitivity: 'base' }
+                    ) * (ascendente ? 1 : -1))
+                    .forEach(linha => corpo.appendChild(linha));
+            });
+        });
+
+        function abrirConfirmacao({ titulo, mensagem, textoBotao, tipo, acao }) {
+            $('#confirmacaoTitulo').textContent = titulo;
+            $('#confirmacaoMensagem').textContent = mensagem;
+            const confirmar = $('#confirmarAcao');
+            confirmar.textContent = textoBotao;
+            confirmar.className = `button ${tipo || 'primary'}`;
+            acaoConfirmada = acao;
+            abrirModal(modalConfirmacao);
+        }
+
+        $$('[data-confirm-link]').forEach(link => {
+            link.addEventListener('click', evento => {
+                evento.preventDefault();
+                const destino = link.href;
+                let tipo = 'primary';
+                if (link.classList.contains('admit')) tipo = 'success';
+                if (link.classList.contains('refuse')) tipo = 'danger';
+
+                abrirConfirmacao({
+                    titulo: link.dataset.confirmTitle || 'Confirmar alteração',
+                    mensagem: link.dataset.confirmMessage || 'Deseja continuar?',
+                    textoBotao: link.dataset.confirmButton || 'Confirmar',
+                    tipo,
+                    acao: () => { window.location.href = destino; }
+                });
+            });
+        });
+
+        $('#confirmarAcao')?.addEventListener('click', () => {
+            if (typeof acaoConfirmada !== 'function') return;
+            const acao = acaoConfirmada;
+            acaoConfirmada = null;
+            fecharModal(modalConfirmacao);
+            acao();
+        });
+
+        atualizarContagemTabela();
+    </script>
 </body>
 </html>
