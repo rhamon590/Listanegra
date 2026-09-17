@@ -1,2199 +1,1629 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="light">
-    <meta name="theme-color" content="#0f2747">
-
-    <title>Fichário de Colaboradores | ORCA Face</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --navy-950: #071426;
-            --navy-900: #0f2747;
-            --navy-800: #16375f;
-            --blue-700: #1d4ed8;
-            --blue-600: #2563eb;
-            --blue-100: #dbeafe;
-            --blue-50: #eff6ff;
-            --green-700: #15803d;
-            --green-600: #16a34a;
-            --green-100: #dcfce7;
-            --red-700: #b91c1c;
-            --red-600: #dc2626;
-            --red-100: #fee2e2;
-            --amber-700: #b45309;
-            --amber-100: #fef3c7;
-            --purple-700: #6d28d9;
-            --purple-100: #ede9fe;
-            --slate-950: #0f172a;
-            --slate-800: #1e293b;
-            --slate-700: #334155;
-            --slate-600: #475569;
-            --slate-500: #64748b;
-            --slate-400: #94a3b8;
-            --slate-300: #cbd5e1;
-            --slate-200: #e2e8f0;
-            --slate-100: #f1f5f9;
-            --slate-50: #f8fafc;
-            --white: #ffffff;
-            --page: #f3f6fa;
-            --shadow-sm: 0 1px 2px rgba(15, 23, 42, .06);
-            --shadow-md: 0 12px 28px rgba(15, 39, 71, .09);
-            --shadow-lg: 0 24px 55px rgba(15, 39, 71, .14);
-            --radius-sm: 10px;
-            --radius-md: 14px;
-            --radius-lg: 20px;
-            --transition: 180ms ease;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            min-height: 100vh;
-            margin: 0;
-            background:
-                radial-gradient(circle at 90% 0%, rgba(37, 99, 235, .08), transparent 28rem),
-                var(--page);
-            color: var(--slate-800);
-            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            font-size: 14px;
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        button,
-        input,
-        select {
-            font: inherit;
-        }
-
-        button,
-        a {
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        a {
-            color: inherit;
-        }
-
-        button:focus-visible,
-        a:focus-visible,
-        input:focus-visible,
-        select:focus-visible,
-        summary:focus-visible {
-            outline: 3px solid rgba(37, 99, 235, .22);
-            outline-offset: 2px;
-        }
-
-        .app-header {
-            position: sticky;
-            top: 0;
-            z-index: 30;
-            min-height: 76px;
-            color: var(--white);
-            background: rgba(7, 20, 38, .96);
-            border-bottom: 1px solid rgba(255, 255, 255, .08);
-            box-shadow: 0 8px 28px rgba(7, 20, 38, .18);
-            backdrop-filter: blur(16px);
-        }
-
-        .header-inner {
-            width: min(1680px, calc(100% - 40px));
-            min-height: 76px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-        }
-
-        .brand {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            min-width: 245px;
-            text-decoration: none;
-        }
-
-        .brand-mark {
-            width: 43px;
-            height: 43px;
-            border-radius: 13px;
-            display: grid;
-            place-items: center;
-            color: var(--navy-950);
-            background: linear-gradient(145deg, #ffffff, #bfdbfe);
-            font-size: 14px;
-            font-weight: 900;
-            letter-spacing: -.5px;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .65);
-        }
-
-        .brand-copy {
-            display: grid;
-            gap: 1px;
-        }
-
-        .brand-copy strong {
-            font-size: 15px;
-            letter-spacing: -.2px;
-        }
-
-        .brand-copy span {
-            color: var(--slate-400);
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: .11em;
-            text-transform: uppercase;
-        }
-
-        .main-nav {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 8px;
-        }
-
-        .nav-link {
-            min-height: 40px;
-            padding: 0 14px;
-            border: 1px solid transparent;
-            border-radius: 11px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--slate-300);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 700;
-            transition: color var(--transition), background var(--transition), border-color var(--transition);
-        }
-
-        .nav-link:hover {
-            color: var(--white);
-            background: rgba(255, 255, 255, .08);
-            border-color: rgba(255, 255, 255, .08);
-        }
-
-        .nav-link.active {
-            color: var(--white);
-            background: var(--blue-600);
-            box-shadow: 0 8px 18px rgba(37, 99, 235, .25);
-        }
-
-        .nav-link.danger:hover {
-            color: #fecaca;
-            background: rgba(220, 38, 38, .15);
-            border-color: rgba(248, 113, 113, .18);
-        }
-
-        .nav-icon {
-            width: 21px;
-            height: 21px;
-            border-radius: 7px;
-            display: inline-grid;
-            place-items: center;
-            background: rgba(255, 255, 255, .1);
-            font-size: 10px;
-            font-weight: 800;
-        }
-
-        .page-shell {
-            width: min(1680px, calc(100% - 40px));
-            margin: 0 auto;
-            padding: 30px 0 26px;
-        }
-
-        .page-heading {
-            margin-bottom: 22px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .eyebrow {
-            margin: 0 0 5px;
-            color: var(--blue-600);
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: .13em;
-            text-transform: uppercase;
-        }
-
-        h1,
-        h2,
-        h3,
-        p {
-            margin-top: 0;
-        }
-
-        .page-heading h1 {
-            margin-bottom: 5px;
-            color: var(--navy-950);
-            font-size: clamp(25px, 3vw, 34px);
-            line-height: 1.14;
-            letter-spacing: -.04em;
-        }
-
-        .page-heading p:last-child {
-            margin-bottom: 0;
-            color: var(--slate-500);
-        }
-
-        .today-pill {
-            padding: 9px 13px;
-            border: 1px solid var(--slate-200);
-            border-radius: 999px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--slate-600);
-            background: rgba(255, 255, 255, .78);
-            font-size: 12px;
-            font-weight: 700;
-            white-space: nowrap;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .today-pill::before {
-            content: "";
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--green-600);
-            box-shadow: 0 0 0 4px var(--green-100);
-        }
-
-        .flash-stack {
-            margin-bottom: 18px;
-            display: grid;
-            gap: 10px;
-        }
-
-        .flash-message {
-            padding: 13px 15px;
-            border: 1px solid var(--slate-200);
-            border-radius: var(--radius-md);
-            color: var(--slate-700);
-            background: var(--white);
-            box-shadow: var(--shadow-sm);
-            font-weight: 600;
-        }
-
-        .flash-message.success {
-            color: var(--green-700);
-            background: #f0fdf4;
-            border-color: #bbf7d0;
-        }
-
-        .flash-message.danger,
-        .flash-message.error {
-            color: var(--red-700);
-            background: #fef2f2;
-            border-color: #fecaca;
-        }
-
-        .flash-message.warning {
-            color: var(--amber-700);
-            background: #fffbeb;
-            border-color: #fde68a;
-        }
-
-        .stats-grid {
-            margin-bottom: 22px;
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 14px;
-        }
-
-        .stat-card {
-            min-height: 120px;
-            padding: 19px;
-            border: 1px solid var(--slate-200);
-            border-radius: var(--radius-lg);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: rgba(255, 255, 255, .92);
-            box-shadow: var(--shadow-sm);
-            transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--slate-300);
-            box-shadow: var(--shadow-md);
-        }
-
-        .stat-icon {
-            flex: 0 0 auto;
-            width: 48px;
-            height: 48px;
-            border-radius: 15px;
-            display: grid;
-            place-items: center;
-            color: var(--blue-700);
-            background: var(--blue-100);
-            font-size: 13px;
-            font-weight: 900;
-        }
-
-        .stat-card.green .stat-icon {
-            color: var(--green-700);
-            background: var(--green-100);
-        }
-
-        .stat-card.red .stat-icon {
-            color: var(--red-700);
-            background: var(--red-100);
-        }
-
-        .stat-card.purple .stat-icon {
-            color: var(--purple-700);
-            background: var(--purple-100);
-        }
-
-        .stat-copy {
-            min-width: 0;
-        }
-
-        .stat-label {
-            margin-bottom: 2px;
-            color: var(--slate-500);
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .stat-value {
-            display: block;
-            color: var(--navy-950);
-            font-size: 28px;
-            font-weight: 800;
-            line-height: 1.15;
-            letter-spacing: -.04em;
-        }
-
-        .stat-note {
-            margin-top: 4px;
-            display: block;
-            color: var(--slate-400);
-            font-size: 11px;
-        }
-
-        .workspace-grid {
-            display: grid;
-            grid-template-columns: minmax(360px, 430px) minmax(0, 1fr);
-            gap: 20px;
-            align-items: start;
-        }
-
-        .panel {
-            border: 1px solid var(--slate-200);
-            border-radius: var(--radius-lg);
-            background: var(--white);
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-        }
-
-        .side-column {
-            position: sticky;
-            top: 98px;
-            display: grid;
-            gap: 16px;
-        }
-
-        .panel-header {
-            min-height: 72px;
-            padding: 18px 20px;
-            border-bottom: 1px solid var(--slate-200);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 14px;
-            background: linear-gradient(180deg, #ffffff, #fbfdff);
-        }
-
-        .panel-title-group {
-            min-width: 0;
-        }
-
-        .panel-title {
-            margin: 0;
-            color: var(--navy-950);
-            font-size: 17px;
-            font-weight: 800;
-            letter-spacing: -.02em;
-        }
-
-        .panel-subtitle {
-            margin: 3px 0 0;
-            color: var(--slate-500);
-            font-size: 12px;
-        }
-
-        .panel-badge {
-            padding: 6px 9px;
-            border-radius: 999px;
-            color: var(--blue-700);
-            background: var(--blue-50);
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: .06em;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        .panel-body {
-            padding: 20px;
-        }
-
-        .form-section + .form-section {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid var(--slate-200);
-        }
-
-        .section-heading {
-            margin-bottom: 13px;
-            display: flex;
-            align-items: center;
-            gap: 9px;
-            color: var(--slate-700);
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: .04em;
-            text-transform: uppercase;
-        }
-
-        .section-number {
-            width: 24px;
-            height: 24px;
-            border-radius: 8px;
-            display: grid;
-            place-items: center;
-            color: var(--blue-700);
-            background: var(--blue-50);
-            font-size: 10px;
-        }
-
-        .fields-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 13px;
-        }
-
-        .field.full {
-            grid-column: 1 / -1;
-        }
-
-        .field label {
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            color: var(--slate-700);
-            font-size: 11px;
-            font-weight: 750;
-        }
-
-        .optional {
-            color: var(--slate-400);
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: .04em;
-            text-transform: uppercase;
-        }
-
-        .control {
-            width: 100%;
-            height: 43px;
-            padding: 0 12px;
-            border: 1px solid var(--slate-300);
-            border-radius: 11px;
-            outline: 0;
-            color: var(--slate-800);
-            background: var(--white);
-            transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
-        }
-
-        .control::placeholder {
-            color: var(--slate-400);
-        }
-
-        .control:hover {
-            border-color: var(--slate-400);
-        }
-
-        .control:focus {
-            border-color: var(--blue-600);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, .1);
-        }
-
-        select.control {
-            cursor: pointer;
-        }
-
-        .field-help {
-            margin: 5px 0 0;
-            color: var(--slate-400);
-            font-size: 10px;
-        }
-
-        .button {
-            min-height: 42px;
-            padding: 0 15px;
-            border: 1px solid transparent;
-            border-radius: 11px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            color: var(--slate-700);
-            background: var(--white);
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 800;
-            line-height: 1;
-            transition: transform var(--transition), background var(--transition), border-color var(--transition), box-shadow var(--transition), opacity var(--transition);
-        }
-
-        .button:hover:not(:disabled) {
-            transform: translateY(-1px);
-        }
-
-        .button:disabled {
-            cursor: not-allowed;
-            opacity: .52;
-        }
-
-        .button-primary {
-            color: var(--white);
-            background: var(--blue-600);
-            box-shadow: 0 8px 18px rgba(37, 99, 235, .2);
-        }
-
-        .button-primary:hover:not(:disabled) {
-            background: var(--blue-700);
-            box-shadow: 0 10px 24px rgba(37, 99, 235, .27);
-        }
-
-        .button-secondary {
-            border-color: var(--slate-300);
-            background: var(--white);
-        }
-
-        .button-secondary:hover:not(:disabled) {
-            border-color: var(--slate-400);
-            background: var(--slate-50);
-        }
-
-        .button-danger {
-            color: var(--red-700);
-            border-color: #fecaca;
-            background: #fff7f7;
-        }
-
-        .button-danger:hover:not(:disabled) {
-            color: var(--white);
-            border-color: var(--red-600);
-            background: var(--red-600);
-        }
-
-        .button-block {
-            width: 100%;
-            margin-top: 18px;
-        }
-
-        .import-panel .panel-body {
-            display: grid;
-            gap: 11px;
-        }
-
-        .upload-form {
-            display: block;
-        }
-
-        .upload-box {
-            min-height: 76px;
-            padding: 13px;
-            border: 1px dashed var(--slate-300);
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            background: var(--slate-50);
-            transition: border-color var(--transition), background var(--transition);
-        }
-
-        .upload-box:hover {
-            border-color: var(--blue-600);
-            background: var(--blue-50);
-        }
-
-        .upload-box input {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            overflow: hidden;
-            clip: rect(0 0 0 0);
-            clip-path: inset(50%);
-            white-space: nowrap;
-        }
-
-        .upload-icon {
-            flex: 0 0 auto;
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: grid;
-            place-items: center;
-            color: var(--blue-700);
-            background: var(--blue-100);
-            font-size: 11px;
-            font-weight: 900;
-        }
-
-        .upload-copy {
-            min-width: 0;
-            flex: 1;
-        }
-
-        .upload-copy strong,
-        .upload-copy small {
-            display: block;
-        }
-
-        .upload-copy strong {
-            color: var(--slate-800);
-            font-size: 12px;
-        }
-
-        .upload-copy small {
-            margin-top: 2px;
-            overflow: hidden;
-            color: var(--slate-500);
-            font-size: 10px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .upload-action {
-            color: var(--blue-700);
-            font-size: 11px;
-            font-weight: 800;
-        }
-
-        .list-panel {
-            min-width: 0;
-        }
-
-        .list-panel .panel-header {
-            flex-wrap: wrap;
-        }
-
-        .selection-tools {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-        }
-
-        .selection-count {
-            min-width: 105px;
-            color: var(--slate-500);
-            font-size: 11px;
-            font-weight: 700;
-            text-align: right;
-        }
-
-        .filters {
-            padding: 17px 20px;
-            border-bottom: 1px solid var(--slate-200);
-            display: grid;
-            grid-template-columns: minmax(230px, 2fr) minmax(150px, 1fr) minmax(150px, 1fr) auto auto;
-            gap: 10px;
-            align-items: end;
-            background: var(--slate-50);
-        }
-
-        .filter-field label {
-            margin-bottom: 6px;
-            display: block;
-            color: var(--slate-600);
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: .04em;
-            text-transform: uppercase;
-        }
-
-        .search-wrap {
-            position: relative;
-        }
-
-        .search-wrap::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 14px;
-            width: 12px;
-            height: 12px;
-            border: 2px solid var(--slate-400);
-            border-radius: 50%;
-            transform: translateY(-58%);
-            pointer-events: none;
-        }
-
-        .search-wrap::after {
-            content: "";
-            position: absolute;
-            top: calc(50% + 5px);
-            left: 25px;
-            width: 6px;
-            height: 2px;
-            border-radius: 999px;
-            background: var(--slate-400);
-            transform: rotate(45deg);
-            pointer-events: none;
-        }
-
-        .search-wrap .control {
-            padding-left: 40px;
-        }
-
-        .status-alert {
-            margin: 15px 20px 0;
-            padding: 13px 15px;
-            border: 1px solid transparent;
-            border-radius: var(--radius-md);
-            display: none;
-            font-size: 12px;
-            font-weight: 650;
-        }
-
-        .status-alert.show {
-            display: block;
-        }
-
-        .status-alert.ok {
-            color: var(--green-700);
-            border-color: #bbf7d0;
-            background: #f0fdf4;
-        }
-
-        .status-alert.danger {
-            color: var(--red-700);
-            border-color: #fecaca;
-            background: #fef2f2;
-        }
-
-        .status-alert.neutral {
-            color: var(--blue-700);
-            border-color: #bfdbfe;
-            background: var(--blue-50);
-        }
-
-        .status-alert.loading {
-            color: var(--slate-600);
-            border-color: var(--slate-200);
-            background: var(--slate-50);
-        }
-
-        .status-alert a {
-            margin-left: 6px;
-            color: inherit;
-            font-weight: 800;
-        }
-
-        .list-meta {
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            color: var(--slate-500);
-            font-size: 11px;
-        }
-
-        .list-meta strong {
-            color: var(--slate-700);
-        }
-
-        .table-shell {
-            overflow: auto;
-            border-top: 1px solid var(--slate-200);
-        }
-
-        table {
-            width: 100%;
-            min-width: 1160px;
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-
-        th {
-            position: sticky;
-            top: 0;
-            z-index: 2;
-            padding: 12px 14px;
-            color: var(--slate-500);
-            background: #f8fafc;
-            border-bottom: 1px solid var(--slate-200);
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: .06em;
-            text-align: left;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        td {
-            padding: 13px 14px;
-            border-bottom: 1px solid var(--slate-200);
-            color: var(--slate-600);
-            background: var(--white);
-            font-size: 12px;
-            vertical-align: middle;
-        }
-
-        tbody tr {
-            transition: background var(--transition);
-        }
-
-        tbody tr:hover td {
-            background: #f8fbff;
-        }
-
-        tbody tr.is-selected td {
-            background: var(--blue-50);
-        }
-
-        tbody tr:last-child td {
-            border-bottom: 0;
-        }
-
-        .checkbox {
-            width: 17px;
-            height: 17px;
-            margin: 0;
-            accent-color: var(--blue-600);
-            cursor: pointer;
-        }
-
-        .person-cell {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            min-width: 190px;
-        }
-
-        .avatar {
-            flex: 0 0 auto;
-            width: 43px;
-            height: 43px;
-            border: 2px solid var(--white);
-            border-radius: 13px;
-            object-fit: cover;
-            color: var(--navy-800);
-            background: var(--blue-100);
-            box-shadow: 0 0 0 1px var(--slate-200);
-        }
-
-        .avatar-fallback {
-            display: grid;
-            place-items: center;
-            font-size: 14px;
-            font-weight: 850;
-            text-transform: uppercase;
-        }
-
-        .person-copy {
-            min-width: 0;
-        }
-
-        .person-name {
-            max-width: 210px;
-            overflow: hidden;
-            display: block;
-            color: var(--slate-950);
-            font-weight: 800;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .person-detail {
-            max-width: 210px;
-            margin-top: 2px;
-            overflow: hidden;
-            display: block;
-            color: var(--slate-400);
-            font-size: 10px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .cpf-cell {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            white-space: nowrap;
-        }
-
-        .copy-button {
-            width: 25px;
-            height: 25px;
-            padding: 0;
-            border: 1px solid transparent;
-            border-radius: 7px;
-            display: grid;
-            place-items: center;
-            cursor: pointer;
-            color: var(--slate-400);
-            background: transparent;
-            font-size: 10px;
-            font-weight: 900;
-        }
-
-        .copy-button:hover {
-            color: var(--blue-700);
-            border-color: var(--blue-100);
-            background: var(--blue-50);
-        }
-
-        .badge {
-            min-height: 27px;
-            padding: 0 9px;
-            border-radius: 999px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 10px;
-            font-weight: 800;
-            white-space: nowrap;
-        }
-
-        .badge::before {
-            content: "";
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: currentColor;
-        }
-
-        .badge-success {
-            color: var(--green-700);
-            background: var(--green-100);
-        }
-
-        .badge-danger {
-            color: var(--red-700);
-            background: var(--red-100);
-        }
-
-        .badge-warning {
-            color: var(--amber-700);
-            background: var(--amber-100);
-        }
-
-        .badge-neutral {
-            color: var(--slate-600);
-            background: var(--slate-100);
-        }
-
-        .actions {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            white-space: nowrap;
-        }
-
-        .action-link {
-            min-height: 31px;
-            padding: 0 9px;
-            border: 1px solid var(--slate-200);
-            border-radius: 9px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--slate-600);
-            background: var(--white);
-            text-decoration: none;
-            font-size: 10px;
-            font-weight: 800;
-            transition: color var(--transition), background var(--transition), border-color var(--transition);
-        }
-
-        .action-link:hover {
-            color: var(--blue-700);
-            border-color: var(--blue-100);
-            background: var(--blue-50);
-        }
-
-        .action-link.danger:hover {
-            color: var(--red-700);
-            border-color: #fecaca;
-            background: #fef2f2;
-        }
-
-        .action-link.warning:hover {
-            color: var(--amber-700);
-            border-color: #fde68a;
-            background: #fffbeb;
-        }
-
-        .empty-state {
-            padding: 60px 24px;
-            text-align: center;
-        }
-
-        .empty-icon {
-            width: 54px;
-            height: 54px;
-            margin: 0 auto 13px;
-            border-radius: 17px;
-            display: grid;
-            place-items: center;
-            color: var(--slate-500);
-            background: var(--slate-100);
-            font-size: 13px;
-            font-weight: 900;
-        }
-
-        .empty-state h3 {
-            margin-bottom: 5px;
-            color: var(--slate-800);
-            font-size: 15px;
-        }
-
-        .empty-state p {
-            margin-bottom: 0;
-            color: var(--slate-500);
-            font-size: 12px;
-        }
-
-        .pagination {
-            padding: 17px 20px;
-            border-top: 1px solid var(--slate-200);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            flex-wrap: wrap;
-            background: var(--slate-50);
-        }
-
-        .page-link {
-            min-width: 36px;
-            height: 36px;
-            padding: 0 11px;
-            border: 1px solid var(--slate-200);
-            border-radius: 9px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--slate-600);
-            background: var(--white);
-            text-decoration: none;
-            font-size: 11px;
-            font-weight: 800;
-            transition: color var(--transition), background var(--transition), border-color var(--transition);
-        }
-
-        .page-link:hover {
-            color: var(--blue-700);
-            border-color: var(--blue-600);
-        }
-
-        .page-link.active {
-            color: var(--white);
-            border-color: var(--blue-600);
-            background: var(--blue-600);
-        }
-
-        .page-link.disabled {
-            cursor: not-allowed;
-            color: var(--slate-400);
-            background: var(--slate-100);
-        }
-
-        .app-footer {
-            padding: 25px 0 4px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            color: var(--slate-400);
-            font-size: 11px;
-        }
-
-        dialog {
-            width: min(450px, calc(100% - 28px));
-            padding: 0;
-            border: 0;
-            border-radius: 20px;
-            color: var(--slate-800);
-            background: var(--white);
-            box-shadow: var(--shadow-lg);
-        }
-
-        dialog::backdrop {
-            background: rgba(7, 20, 38, .62);
-            backdrop-filter: blur(3px);
-        }
-
-        .dialog-body {
-            padding: 25px;
-        }
-
-        .dialog-icon {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 15px;
-            border-radius: 15px;
-            display: grid;
-            place-items: center;
-            color: var(--red-700);
-            background: var(--red-100);
-            font-size: 13px;
-            font-weight: 900;
-        }
-
-        .dialog-body h2 {
-            margin-bottom: 7px;
-            color: var(--navy-950);
-            font-size: 20px;
-            letter-spacing: -.025em;
-        }
-
-        .dialog-body p {
-            margin-bottom: 0;
-            color: var(--slate-500);
-            font-size: 13px;
-        }
-
-        .dialog-actions {
-            padding: 15px 20px;
-            border-top: 1px solid var(--slate-200);
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 9px;
-            background: var(--slate-50);
-        }
-
-        .toast {
-            position: fixed;
-            right: 22px;
-            bottom: 22px;
-            z-index: 100;
-            max-width: min(390px, calc(100% - 30px));
-            padding: 13px 16px;
-            border: 1px solid rgba(255, 255, 255, .09);
-            border-radius: 13px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--white);
-            background: var(--navy-950);
-            box-shadow: var(--shadow-lg);
-            font-size: 12px;
-            font-weight: 700;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(15px);
-            transition: opacity var(--transition), transform var(--transition);
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .toast.success::before,
-        .toast.error::before {
-            content: "";
-            flex: 0 0 auto;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #4ade80;
-        }
-
-        .toast.error::before {
-            background: #f87171;
-        }
-
-        @media (max-width: 1280px) {
-            .workspace-grid {
-                grid-template-columns: 370px minmax(0, 1fr);
-            }
-
-            .filters {
-                grid-template-columns: 2fr 1fr 1fr;
-            }
-
-            .filters .button {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 1050px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .workspace-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .side-column {
-                position: static;
-                grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
-                align-items: start;
-            }
-        }
-
-        @media (max-width: 760px) {
-            .app-header,
-            .header-inner {
-                min-height: auto;
-            }
-
-            .header-inner {
-                width: min(100% - 28px, 1680px);
-                padding: 14px 0;
-                align-items: flex-start;
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .main-nav {
-                width: 100%;
-                overflow-x: auto;
-                justify-content: flex-start;
-                padding-bottom: 1px;
-            }
-
-            .nav-link {
-                flex: 0 0 auto;
-            }
-
-            .page-shell {
-                width: min(100% - 24px, 1680px);
-                padding-top: 21px;
-            }
-
-            .page-heading {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-
-            .stat-card {
-                min-height: 105px;
-                padding: 14px;
-                align-items: flex-start;
-                flex-direction: column;
-                gap: 9px;
-            }
-
-            .stat-icon {
-                width: 34px;
-                height: 34px;
-                border-radius: 10px;
-                font-size: 10px;
-            }
-
-            .stat-value {
-                font-size: 23px;
-            }
-
-            .stat-note {
-                display: none;
-            }
-
-            .side-column {
-                grid-template-columns: 1fr;
-            }
-
-            .panel-header {
-                padding: 16px;
-            }
-
-            .panel-body {
-                padding: 16px;
-            }
-
-            .filters {
-                padding: 15px 16px;
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .filters .filter-field:first-child {
-                grid-column: 1 / -1;
-            }
-
-            .status-alert {
-                margin-right: 16px;
-                margin-left: 16px;
-            }
-
-            .list-meta {
-                padding-right: 16px;
-                padding-left: 16px;
-            }
-
-            .selection-tools {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .selection-count {
-                text-align: left;
-            }
-
-            .app-footer {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .brand-copy strong {
-                font-size: 14px;
-            }
-
-            .page-heading h1 {
-                font-size: 25px;
-            }
-
-            .fields-grid,
-            .filters {
-                grid-template-columns: 1fr;
-            }
-
-            .filters .filter-field:first-child {
-                grid-column: auto;
-            }
-
-            .field.full {
-                grid-column: auto;
-            }
-
-            .button-label-mobile {
-                display: none;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                scroll-behavior: auto !important;
-                transition-duration: .01ms !important;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Fichário de Colaboradores</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#050816;
+    --surface:rgba(15,23,42,.86);
+    --surface-2:rgba(30,41,59,.76);
+    --surface-3:#111827;
+    --primary:#3b82f6;
+    --primary-dark:#1d4ed8;
+    --secondary:#06b6d4;
+    --success:#22c55e;
+    --danger:#ef4444;
+    --warning:#f59e0b;
+    --purple:#8b5cf6;
+    --text:#f8fafc;
+    --muted:#94a3b8;
+    --border:rgba(255,255,255,.09);
+    --shadow:0 22px 65px rgba(0,0,0,.36);
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    min-height:100vh;
+    font-family:'Poppins',sans-serif;
+    color:var(--text);
+    background:
+        radial-gradient(circle at 10% 5%,rgba(37,99,235,.32),transparent 30%),
+        radial-gradient(circle at 95% 90%,rgba(6,182,212,.24),transparent 32%),
+        linear-gradient(135deg,#020617 0%,#071020 48%,#111827 100%);
+    overflow-x:hidden;
+}
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+        linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+    background-size:48px 48px;
+    mask-image:linear-gradient(to bottom,black,transparent 85%);
+}
+
+body::-webkit-scrollbar{
+    width:10px;
+    height:10px;
+}
+
+body::-webkit-scrollbar-track{
+    background:#020617;
+}
+
+body::-webkit-scrollbar-thumb{
+    background:linear-gradient(var(--primary),var(--secondary));
+    border-radius:20px;
+}
+
+.app{
+    position:relative;
+    z-index:1;
+    width:min(1900px,100%);
+    margin:0 auto;
+    padding:28px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-bottom:26px;
+    padding:20px 22px;
+    border:1px solid var(--border);
+    border-radius:26px;
+    background:rgba(15,23,42,.62);
+    backdrop-filter:blur(18px);
+    box-shadow:0 16px 45px rgba(0,0,0,.22);
+    animation:slideDown .65s ease both;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.brand-icon{
+    width:54px;
+    height:54px;
+    display:grid;
+    place-items:center;
+    border-radius:18px;
+    font-size:23px;
+    background:linear-gradient(135deg,var(--primary),var(--secondary));
+    box-shadow:0 14px 30px rgba(37,99,235,.28);
+}
+
+.logo{
+    font-size:clamp(24px,3vw,36px);
+    line-height:1.1;
+    font-weight:800;
+    letter-spacing:-1px;
+    background:linear-gradient(90deg,#93c5fd,#67e8f9,#86efac);
+    background-size:200%;
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    animation:textGradient 5s ease infinite;
+}
+
+.logo small{
+    display:block;
+    margin-top:7px;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:1.4px;
+    text-transform:uppercase;
+    color:var(--muted);
+    -webkit-text-fill-color:var(--muted);
+}
+
+.menu{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.menu a{
+    text-decoration:none;
+}
+
+button,
+.button-link{
+    border:0;
+    outline:0;
+    cursor:pointer;
+    font-family:'Poppins',sans-serif;
+}
+
+.nav-btn{
+    min-height:46px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:9px;
+    padding:12px 17px;
+    border-radius:14px;
+    color:white;
+    font-weight:700;
+    background:rgba(255,255,255,.07);
+    border:1px solid var(--border);
+    transition:.25s ease;
+}
+
+.nav-btn:hover{
+    transform:translateY(-3px);
+    background:rgba(59,130,246,.2);
+    border-color:rgba(96,165,250,.35);
+}
+
+.nav-btn.admissao{
+    background:linear-gradient(135deg,#16a34a,#15803d);
+    box-shadow:0 10px 25px rgba(34,197,94,.2);
+}
+
+.nav-btn.lista-negra{
+    background:linear-gradient(135deg,#dc2626,#991b1b);
+    box-shadow:0 10px 25px rgba(239,68,68,.18);
+}
+
+.page-grid{
+    display:grid;
+    grid-template-columns:minmax(320px,390px) minmax(0,1fr);
+    gap:24px;
+    align-items:start;
+}
+
+.card{
+    border:1px solid var(--border);
+    border-radius:28px;
+    padding:24px;
+    background:var(--surface);
+    backdrop-filter:blur(20px);
+    box-shadow:var(--shadow);
+    animation:fadeUp .7s ease both;
+}
+
+.card.sticky{
+    position:sticky;
+    top:22px;
+}
+
+.card-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:14px;
+    margin-bottom:22px;
+}
+
+.card-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:20px;
+    font-weight:800;
+}
+
+.card-title .icon{
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    border-radius:14px;
+    background:linear-gradient(135deg,rgba(59,130,246,.25),rgba(6,182,212,.18));
+    color:#bfdbfe;
+    border:1px solid rgba(96,165,250,.2);
+}
+
+.card-subtitle{
+    margin-top:5px;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:500;
+}
+
+.form-grid{
+    display:grid;
+    gap:13px;
+}
+
+.field{
+    position:relative;
+}
+
+.field label{
+    display:block;
+    margin:0 0 7px 3px;
+    color:#cbd5e1;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.3px;
+}
+
+.field i{
+    position:absolute;
+    left:16px;
+    bottom:16px;
+    color:#64748b;
+    pointer-events:none;
+}
+
+input{
+    width:100%;
+    height:50px;
+    border:1px solid transparent;
+    outline:none;
+    border-radius:15px;
+    padding:0 16px 0 45px;
+    color:white;
+    font-family:'Poppins',sans-serif;
+    font-size:14px;
+    background:rgba(30,41,59,.88);
+    transition:.22s ease;
+}
+
+input::placeholder{
+    color:#64748b;
+}
+
+input:focus{
+    border-color:rgba(96,165,250,.7);
+    background:rgba(30,41,59,1);
+    box-shadow:0 0 0 4px rgba(59,130,246,.12);
+    transform:translateY(-1px);
+}
+
+input[type="file"]{
+    height:auto;
+    min-height:54px;
+    padding:12px;
+    cursor:pointer;
+}
+
+input[type="file"]::file-selector-button{
+    border:0;
+    margin-right:12px;
+    padding:10px 13px;
+    border-radius:11px;
+    font-family:'Poppins',sans-serif;
+    font-weight:700;
+    color:white;
+    cursor:pointer;
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+}
+
+.btn{
+    min-height:50px;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:13px 18px;
+    border-radius:15px;
+    color:white;
+    font-weight:800;
+    position:relative;
+    overflow:hidden;
+    transition:.25s ease;
+}
+
+.btn::before,
+.btn-mini::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(115deg,transparent,rgba(255,255,255,.19),transparent);
+    transform:translateX(-120%);
+    transition:.55s;
+}
+
+.btn:hover::before,
+.btn-mini:hover::before{
+    transform:translateX(120%);
+}
+
+.btn:hover{
+    transform:translateY(-3px);
+    filter:brightness(1.06);
+}
+
+.btn-primary{
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+    box-shadow:0 12px 28px rgba(37,99,235,.23);
+}
+
+.btn-import{
+    background:linear-gradient(135deg,#0891b2,#155e75);
+    box-shadow:0 12px 28px rgba(6,182,212,.16);
+}
+
+.btn-danger{
+    width:auto;
+    min-height:44px;
+    padding:10px 16px;
+    background:linear-gradient(135deg,#dc2626,#991b1b);
+    box-shadow:0 12px 25px rgba(220,38,38,.18);
+}
+
+.section-divider{
+    height:1px;
+    border:0;
+    margin:24px 0;
+    background:linear-gradient(90deg,transparent,#334155,transparent);
+}
+
+.upload-title{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:12px;
+    color:#e2e8f0;
+    font-size:14px;
+    font-weight:800;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:18px;
+    margin-bottom:22px;
+}
+
+.stat{
+    min-height:130px;
+    padding:21px;
+    border-radius:24px;
+    position:relative;
+    overflow:hidden;
+    border:1px solid var(--border);
+    background:rgba(15,23,42,.72);
+    box-shadow:0 16px 40px rgba(0,0,0,.2);
+    transition:.25s ease;
+    animation:fadeUp .75s ease both;
+}
+
+.stat:hover{
+    transform:translateY(-5px);
+}
+
+.stat::after{
+    content:"";
+    position:absolute;
+    width:120px;
+    height:120px;
+    right:-45px;
+    top:-45px;
+    border-radius:50%;
+    opacity:.35;
+}
+
+.stat.total::after{background:var(--primary);}
+.stat.liberados::after{background:var(--success);}
+.stat.restritos::after{background:var(--danger);}
+
+.stat-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+}
+
+.stat-icon{
+    width:42px;
+    height:42px;
+    display:grid;
+    place-items:center;
+    border-radius:14px;
+    background:rgba(255,255,255,.07);
+    border:1px solid var(--border);
+    font-size:18px;
+}
+
+.stat h3{
+    margin-top:14px;
+    color:var(--muted);
+    font-size:13px;
+    font-weight:700;
+}
+
+.stat span{
+    display:block;
+    margin-top:6px;
+    font-size:34px;
+    font-weight:800;
+    line-height:1;
+}
+
+.stat.total span{color:#93c5fd;}
+.stat.liberados span{color:#86efac;}
+.stat.restritos span{color:#fca5a5;}
+
+.content-card{
+    min-width:0;
+}
+
+.toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+}
+
+.search-wrap{
+    flex:1;
+    min-width:260px;
+}
+
+.search-box{
+    position:relative;
+}
+
+.search-box i{
+    position:absolute;
+    top:50%;
+    left:17px;
+    transform:translateY(-50%);
+    color:#64748b;
+}
+
+.search-box input{
+    height:52px;
+    padding-left:46px;
+    background:rgba(2,6,23,.48);
+    border-color:var(--border);
+}
+
+.alerta-busca{
+    display:none;
+    margin-top:12px;
+    padding:15px 17px;
+    border-radius:16px;
+    font-size:14px;
+    font-weight:700;
+    border:1px solid var(--border);
+    animation:fadeUp .28s ease both;
+}
+
+.alerta-busca.ok{
+    display:block;
+    color:#86efac;
+    background:rgba(34,197,94,.12);
+    border-color:rgba(34,197,94,.25);
+}
+
+.alerta-busca.perigo{
+    display:block;
+    color:#fecaca;
+    background:rgba(239,68,68,.13);
+    border-color:rgba(239,68,68,.28);
+}
+
+.alerta-busca.neutro{
+    display:block;
+    color:#bfdbfe;
+    background:rgba(59,130,246,.12);
+    border-color:rgba(59,130,246,.25);
+}
+
+.alerta-busca a{
+    color:white;
+}
+
+.selection-info{
+    color:var(--muted);
+    font-size:13px;
+    font-weight:600;
+}
+
+.table-shell{
+    border:1px solid var(--border);
+    border-radius:22px;
+    overflow:hidden;
+    background:rgba(2,6,23,.28);
+}
+
+.table-scroll{
+    overflow:auto;
+    max-height:720px;
+}
+
+table{
+    width:100%;
+    min-width:1080px;
+    border-collapse:separate;
+    border-spacing:0;
+}
+
+thead{
+    position:sticky;
+    top:0;
+    z-index:5;
+}
+
+th{
+    padding:16px;
+    text-align:left;
+    white-space:nowrap;
+    color:#dbeafe;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.7px;
+    background:linear-gradient(135deg,#1d4ed8,#2563eb);
+}
+
+td{
+    padding:15px 16px;
+    color:#dbe4ef;
+    font-size:13px;
+    border-bottom:1px solid rgba(255,255,255,.06);
+    background:rgba(15,23,42,.48);
+    vertical-align:middle;
+}
+
+tbody tr{
+    transition:.2s ease;
+}
+
+tbody tr:hover td{
+    background:rgba(37,99,235,.11);
+}
+
+tbody tr:last-child td{
+    border-bottom:0;
+}
+
+.foto{
+    width:58px;
+    height:58px;
+    border-radius:16px;
+    object-fit:cover;
+    border:2px solid rgba(96,165,250,.75);
+    box-shadow:0 9px 22px rgba(37,99,235,.2);
+    cursor:zoom-in;
+    transition:.23s ease;
+}
+
+.foto:hover{
+    transform:scale(1.07);
+}
+
+.nome-coluna{
+    color:white;
+    font-weight:800;
+    min-width:220px;
+}
+
+.cpf-coluna{
+    white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+}
+
+.status{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 12px;
+    border-radius:999px;
+    white-space:nowrap;
+    font-weight:800;
+    font-size:12px;
+}
+
+.status-ok{
+    color:#86efac;
+    background:rgba(34,197,94,.13);
+    border:1px solid rgba(34,197,94,.25);
+}
+
+.status-bloq{
+    color:#fca5a5;
+    background:rgba(239,68,68,.14);
+    border:1px solid rgba(239,68,68,.28);
+}
+
+.status-dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:currentColor;
+    box-shadow:0 0 10px currentColor;
+}
+
+.acoes{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.acoes a{
+    text-decoration:none;
+}
+
+.btn-mini{
+    min-height:37px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
+    padding:9px 12px;
+    border-radius:11px;
+    color:white;
+    font-size:12px;
+    font-weight:800;
+    position:relative;
+    overflow:hidden;
+    transition:.22s ease;
+}
+
+.btn-mini:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.08);
+}
+
+.btn-ver{background:var(--purple);}
+.btn-pdf{background:#16a34a;}
+.btn-restricao{background:#dc2626;}
+.btn-liberar{background:#d97706;}
+
+.check{
+    width:19px;
+    height:19px;
+    padding:0;
+    cursor:pointer;
+    accent-color:var(--primary);
+}
+
+.empty-state{
+    display:none;
+    padding:40px 20px;
+    text-align:center;
+    color:var(--muted);
+}
+
+.empty-state i{
+    display:block;
+    margin-bottom:12px;
+    font-size:34px;
+    color:#64748b;
+}
+
+.footer{
+    padding:32px 0 10px;
+    text-align:center;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:999;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    background:rgba(2,6,23,.82);
+    backdrop-filter:blur(10px);
+}
+
+.modal.ativo{
+    display:flex;
+    animation:modalBg .2s ease both;
+}
+
+.modal-content{
+    width:min(520px,100%);
+    padding:24px;
+    border-radius:24px;
+    background:#0f172a;
+    border:1px solid var(--border);
+    box-shadow:0 30px 90px rgba(0,0,0,.6);
+    animation:modalOpen .28s ease both;
+}
+
+.modal-content.foto-modal-content{
+    width:min(700px,100%);
+    padding:14px;
+    background:rgba(15,23,42,.95);
+}
+
+.modal-foto{
+    display:block;
+    width:100%;
+    max-height:78vh;
+    object-fit:contain;
+    border-radius:18px;
+}
+
+.modal-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+    font-size:20px;
+    font-weight:800;
+}
+
+.modal-text{
+    color:#cbd5e1;
+    line-height:1.7;
+    font-size:14px;
+}
+
+.modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:22px;
+}
+
+.modal-btn{
+    padding:11px 16px;
+    border-radius:12px;
+    color:white;
+    font-weight:800;
+}
+
+.modal-btn.cancelar{
+    background:#334155;
+}
+
+.modal-btn.confirmar{
+    background:linear-gradient(135deg,#dc2626,#991b1b);
+}
+
+.toast-container{
+    position:fixed;
+    top:22px;
+    right:22px;
+    z-index:1200;
+    display:grid;
+    gap:10px;
+}
+
+.toast{
+    width:min(380px,calc(100vw - 32px));
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:15px 16px;
+    border-radius:16px;
+    color:white;
+    background:#0f172a;
+    border:1px solid var(--border);
+    box-shadow:0 18px 50px rgba(0,0,0,.38);
+    animation:toastIn .3s ease both;
+}
+
+.toast.sucesso{border-left:4px solid var(--success);}
+.toast.erro{border-left:4px solid var(--danger);}
+.toast.info{border-left:4px solid var(--primary);}
+
+.loading-overlay{
+    position:fixed;
+    inset:0;
+    z-index:1300;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(2,6,23,.72);
+    backdrop-filter:blur(8px);
+}
+
+.loading-overlay.ativo{
+    display:flex;
+}
+
+.loader-box{
+    min-width:230px;
+    padding:24px;
+    border-radius:22px;
+    text-align:center;
+    background:#0f172a;
+    border:1px solid var(--border);
+    box-shadow:0 25px 70px rgba(0,0,0,.5);
+}
+
+.spinner{
+    width:48px;
+    height:48px;
+    margin:0 auto 14px;
+    border-radius:50%;
+    border:4px solid rgba(255,255,255,.12);
+    border-top-color:var(--primary);
+    animation:spin .85s linear infinite;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
+
+@keyframes fadeUp{
+    from{opacity:0;transform:translateY(22px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes slideDown{
+    from{opacity:0;transform:translateY(-18px);}
+    to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes textGradient{
+    0%,100%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+}
+
+@keyframes modalBg{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+@keyframes modalOpen{
+    from{opacity:0;transform:scale(.95) translateY(10px);}
+    to{opacity:1;transform:scale(1) translateY(0);}
+}
+
+@keyframes toastIn{
+    from{opacity:0;transform:translateX(30px);}
+    to{opacity:1;transform:translateX(0);}
+}
+
+@media(max-width:1180px){
+    .page-grid{
+        grid-template-columns:1fr;
+    }
+
+    .card.sticky{
+        position:static;
+    }
+}
+
+@media(max-width:760px){
+    .app{
+        padding:14px;
+    }
+
+    .topbar,
+    .card{
+        border-radius:21px;
+        padding:18px;
+    }
+
+    .brand-icon{
+        width:48px;
+        height:48px;
+    }
+
+    .menu{
+        width:100%;
+    }
+
+    .menu a,
+    .nav-btn{
+        width:100%;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .toolbar{
+        align-items:stretch;
+    }
+
+    .search-wrap,
+    .btn-danger{
+        width:100%;
+    }
+
+    .modal-actions{
+        flex-direction:column-reverse;
+    }
+
+    .modal-btn{
+        width:100%;
+    }
+}
+</style>
 </head>
 
 <body>
-    <header class="app-header">
-        <div class="header-inner">
-            <a href="/" class="brand" aria-label="Ir para a página inicial">
-                <span class="brand-mark">OF</span>
-                <span class="brand-copy">
-                    <strong>Fichário de Colaboradores</strong>
-                    <span>ORCA Face System</span>
-                </span>
+
+<div class="app">
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-address-book"></i>
+            </div>
+
+            <div class="logo">
+                Fichário de Colaboradores
+                <small>ORCA Face System</small>
+            </div>
+        </div>
+
+        <nav class="menu">
+            <a href="/">
+                <button type="button" class="nav-btn">
+                    <i class="fa-solid fa-users"></i>
+                    Colaboradores
+                </button>
             </a>
 
-            <nav class="main-nav" aria-label="Navegação principal">
-                <a href="/" class="nav-link active" aria-current="page">
-                    <span class="nav-icon">CO</span>
-                    Colaboradores
-                </a>
-                <a href="/admissao" class="nav-link">
-                    <span class="nav-icon">AD</span>
+            <a href="/admissao">
+                <button type="button" class="nav-btn admissao">
+                    <i class="fa-solid fa-user-check"></i>
                     Admissão
-                </a>
-                <a href="/lista_negra" class="nav-link danger">
-                    <span class="nav-icon">LN</span>
+                </button>
+            </a>
+
+            <a href="/lista_negra">
+                <button type="button" class="nav-btn lista-negra">
+                    <i class="fa-solid fa-user-slash"></i>
                     Lista Negra
-                </a>
-            </nav>
-        </div>
+                </button>
+            </a>
+        </nav>
     </header>
 
-    <main class="page-shell">
-        <section class="page-heading" aria-labelledby="titulo-pagina">
-            <div>
-                <p class="eyebrow">Gestão de pessoas</p>
-                <h1 id="titulo-pagina">Colaboradores</h1>
-                <p>Cadastre, consulte e acompanhe a situação dos profissionais em um só lugar.</p>
+    <main class="page-grid">
+
+        <aside class="card sticky">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">
+                        <span class="icon">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </span>
+                        Novo colaborador
+                    </div>
+
+                    <div class="card-subtitle">
+                        Preencha os dados abaixo para cadastrar.
+                    </div>
+                </div>
             </div>
-            <span class="today-pill">Sistema disponível</span>
-        </section>
 
-        {% with mensagens = get_flashed_messages(with_categories=true) %}
-            {% if mensagens %}
-                <div class="flash-stack" role="status" aria-live="polite">
-                    {% for categoria, mensagem in mensagens %}
-                        <div class="flash-message {{ categoria }}">{{ mensagem }}</div>
-                    {% endfor %}
+            <form action="/novo" method="POST" class="form-com-loading">
+                <div class="form-grid">
+                    <div class="field">
+                        <label>Nome completo</label>
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" name="nome" placeholder="Digite o nome completo" required>
+                    </div>
+
+                    <div class="field">
+                        <label>CPF</label>
+                        <i class="fa-solid fa-id-card"></i>
+                        <input type="text" name="cpf" id="cpfCadastro" maxlength="14" placeholder="000.000.000-00" required>
+                    </div>
+
+                    <div class="field">
+                        <label>Data de nascimento</label>
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <input type="date" name="data_nascimento">
+                    </div>
+
+                    <div class="field">
+                        <label>Naturalidade</label>
+                        <i class="fa-solid fa-location-dot"></i>
+                        <input type="text" name="naturalidade" placeholder="Cidade de nascimento">
+                    </div>
+
+                    <div class="field">
+                        <label>CEP</label>
+                        <i class="fa-solid fa-map-pin"></i>
+                        <input type="text" name="cep" id="cepCadastro" maxlength="9" placeholder="00000-000">
+                    </div>
+
+                    <div class="field">
+                        <label>Endereço</label>
+                        <i class="fa-solid fa-house"></i>
+                        <input type="text" name="endereco" placeholder="Rua, número e bairro">
+                    </div>
+
+                    <div class="field">
+                        <label>Cidade</label>
+                        <i class="fa-solid fa-city"></i>
+                        <input type="text" name="cidade" placeholder="Cidade">
+                    </div>
+
+                    <div class="field">
+                        <label>Função</label>
+                        <i class="fa-solid fa-helmet-safety"></i>
+                        <input type="text" name="funcao" placeholder="Função do colaborador">
+                    </div>
+
+                    <div class="field">
+                        <label>Obra</label>
+                        <i class="fa-solid fa-building"></i>
+                        <input type="text" name="obra" placeholder="Obra de destino">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Cadastrar colaborador
+                    </button>
                 </div>
-            {% endif %}
-        {% endwith %}
+            </form>
 
-        <section class="stats-grid" aria-label="Resumo dos colaboradores">
-            <article class="stat-card">
-                <span class="stat-icon">TC</span>
-                <div class="stat-copy">
-                    <span class="stat-label">Total cadastrado</span>
-                    <strong class="stat-value">{{ total_colaboradores }}</strong>
-                    <span class="stat-note">Base completa de colaboradores</span>
-                </div>
-            </article>
+            <hr class="section-divider">
 
-            <article class="stat-card green">
-                <span class="stat-icon">LB</span>
-                <div class="stat-copy">
-                    <span class="stat-label">Liberados</span>
-                    <strong class="stat-value">{{ total_liberados }}</strong>
-                    <span class="stat-note">Sem restrição cadastrada</span>
-                </div>
-            </article>
+            <div class="upload-title">
+                <i class="fa-solid fa-file-excel"></i>
+                Importar planilha
+            </div>
 
-            <article class="stat-card red">
-                <span class="stat-icon">RT</span>
-                <div class="stat-copy">
-                    <span class="stat-label">Restritos</span>
-                    <strong class="stat-value">{{ total_restritos }}</strong>
-                    <span class="stat-note">Exigem análise antes da admissão</span>
-                </div>
-            </article>
+            <form action="/importar" method="POST" enctype="multipart/form-data" class="form-com-loading">
+                <input type="file" name="arquivo" accept=".xlsx,.xls" required>
 
-            <article class="stat-card purple">
-                <span class="stat-icon">PG</span>
-                <div class="stat-copy">
-                    <span class="stat-label">Exibidos nesta página</span>
-                    <strong class="stat-value">{{ colaboradores.items|length }}</strong>
-                    <span class="stat-note">De {{ colaboradores.total }} resultado(s)</span>
-                </div>
-            </article>
-        </section>
+                <button type="submit" class="btn btn-import">
+                    <i class="fa-solid fa-file-arrow-up"></i>
+                    Importar Excel
+                </button>
+            </form>
 
-        <div class="workspace-grid">
-            <aside class="side-column">
-                <section class="panel" aria-labelledby="titulo-cadastro">
-                    <header class="panel-header">
-                        <div class="panel-title-group">
-                            <h2 class="panel-title" id="titulo-cadastro">Novo colaborador</h2>
-                            <p class="panel-subtitle">Preencha os dados principais e profissionais.</p>
+            <hr class="section-divider">
+
+            <div class="upload-title">
+                <i class="fa-solid fa-images"></i>
+                Importar fotos
+            </div>
+
+            <form action="/importar_fotos" method="POST" enctype="multipart/form-data" class="form-com-loading">
+                <input type="file" name="fotos" accept="image/*" multiple required>
+
+                <button type="submit" class="btn btn-import">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    Importar fotos
+                </button>
+            </form>
+        </aside>
+
+        <section class="content-card">
+
+            <div class="stats">
+                <div class="stat total">
+                    <div class="stat-top">
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-users"></i>
                         </div>
-                        <span class="panel-badge">Cadastro</span>
-                    </header>
-
-                    <div class="panel-body">
-                        <form action="/novo" method="POST" id="formNovoColaborador">
-                            <section class="form-section" aria-labelledby="secao-pessoais">
-                                <div class="section-heading" id="secao-pessoais">
-                                    <span class="section-number">01</span>
-                                    Dados pessoais
-                                </div>
-
-                                <div class="fields-grid">
-                                    <div class="field full">
-                                        <label for="nome">Nome completo</label>
-                                        <input class="control" type="text" id="nome" name="nome" placeholder="Digite o nome completo" autocomplete="name" required>
-                                    </div>
-
-                                    <div class="field">
-                                        <label for="cpf">CPF</label>
-                                        <input class="control" type="text" id="cpf" name="cpf" placeholder="000.000.000-00" inputmode="numeric" autocomplete="off" maxlength="14" required>
-                                    </div>
-
-                                    <div class="field">
-                                        <label for="rg">RG <span class="optional">Opcional</span></label>
-                                        <input class="control" type="text" id="rg" name="rg" placeholder="Número do RG" autocomplete="off">
-                                    </div>
-
-                                    <div class="field">
-                                        <label for="data_nascimento">Nascimento <span class="optional">Opcional</span></label>
-                                        <input class="control" type="date" id="data_nascimento" name="data_nascimento" autocomplete="bday">
-                                    </div>
-
-                                    <div class="field">
-                                        <label for="naturalidade">Naturalidade <span class="optional">Opcional</span></label>
-                                        <input class="control" type="text" id="naturalidade" name="naturalidade" placeholder="Cidade natal">
-                                    </div>
-                                </div>
-                            </section>
-
-                            <section class="form-section" aria-labelledby="secao-contato">
-                                <div class="section-heading" id="secao-contato">
-                                    <span class="section-number">02</span>
-                                    Contato e endereço
-                                </div>
-
-                                <div class="fields-grid">
-                                    <div class="field">
-                                        <label for="telefone">Telefone <span class="optional">Novo</span></label>
-                                        <input class="control" type="tel" id="telefone" name="telefone" placeholder="(00) 00000-0000" inputmode="tel" autocomplete="tel" maxlength="15">
-                                    </div>
-
-                                    <div class="field">
-                                        <label for="email">E-mail <span class="optional">Novo</span></label>
-                                        <input class="control" type="email" id="email" name="email" placeholder="nome@email.com" autocomplete="email">
-                                    </div>
-
-                                    <div class="field">
-                                        <label for="cep">CEP <span class="optional">Opcional</span></label>
-                                        <input class="control" type="text" id="cep" name="cep" placeholder="00000-000" inputmode="numeric" autocomplete="postal-code" maxlength="9">
-                                    </div>
-
-                                    <div class="field">
-                                        <label for="estado">Estado <span class="optional">Novo</span></label>
-                                        <select class="control" id="estado" name="estado" autocomplete="address-level1">
-                                            <option value="">Selecione</option>
-                                            <option value="AC">AC</option><option value="AL">AL</option><option value="AP">AP</option>
-                                            <option value="AM">AM</option><option value="BA">BA</option><option value="CE">CE</option>
-                                            <option value="DF">DF</option><option value="ES">ES</option><option value="GO">GO</option>
-                                            <option value="MA">MA</option><option value="MT">MT</option><option value="MS">MS</option>
-                                            <option value="MG">MG</option><option value="PA">PA</option><option value="PB">PB</option>
-                                            <option value="PR">PR</option><option value="PE">PE</option><option value="PI">PI</option>
-                                            <option value="RJ">RJ</option><option value="RN">RN</option><option value="RS">RS</option>
-                                            <option value="RO">RO</option><option value="RR">RR</option><option value="SC">SC</option>
-                                            <option value="SP">SP</option><option value="SE">SE</option><option value="TO">TO</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="field full">
-                                        <label for="endereco">Endereço <span class="optional">Opcional</span></label>
-                                        <input class="control" type="text" id="endereco" name="endereco" placeholder="Rua, número e bairro" autocomplete="street-address">
-                                    </div>
-
-                                    <div class="field full">
-                                        <label for="cidade">Cidade <span class="optional">Opcional</span></label>
-                                        <input class="control" type="text" id="cidade" name="cidade" placeholder="Cidade atual" autocomplete="address-level2">
-                                    </div>
-                                </div>
-                            </section>
-
-                            <section class="form-section" aria-labelledby="secao-profissionais">
-                                <div class="section-heading" id="secao-profissionais">
-                                    <span class="section-number">03</span>
-                                    Dados profissionais
-                                </div>
-
-                                <div class="fields-grid">
-                                    <div class="field">
-                                        <label for="funcao">Função</label>
-                                        <input class="control" type="text" id="funcao" name="funcao" placeholder="Ex.: Caldeireiro" required>
-                                    </div>
-
-                                    <div class="field">
-                                        <label for="obra">Obra</label>
-                                        <input class="control" type="text" id="obra" name="obra" placeholder="Nome da obra" required>
-                                    </div>
-
-                                    <div class="field">
-                                        <label for="data_admissao">Data de admissão <span class="optional">Novo</span></label>
-                                        <input class="control" type="date" id="data_admissao" name="data_admissao">
-                                    </div>
-
-                                    <div class="field">
-                                        <label for="status">Situação <span class="optional">Novo</span></label>
-                                        <select class="control" id="status" name="status">
-                                            <option value="Ativo" selected>Ativo</option>
-                                            <option value="Aguardando">Aguardando</option>
-                                            <option value="Afastado">Afastado</option>
-                                            <option value="Desligado">Desligado</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="field">
-                                        <label for="encarregado">Encarregado <span class="optional">Novo</span></label>
-                                        <input class="control" type="text" id="encarregado" name="encarregado" placeholder="Responsável em campo">
-                                    </div>
-
-                                    <div class="field">
-                                        <label for="responsavel_rh">Responsável do RH <span class="optional">Novo</span></label>
-                                        <input class="control" type="text" id="responsavel_rh" name="responsavel_rh" placeholder="Responsável pelo cadastro">
-                                    </div>
-                                </div>
-                            </section>
-
-                            <button type="submit" class="button button-primary button-block" id="btnCadastrar">
-                                <span>Cadastrar colaborador</span>
-                            </button>
-                        </form>
                     </div>
-                </section>
+                    <h3>Total de colaboradores</h3>
+                    <span class="contador" data-total="{{ colaboradores|length }}">0</span>
+                </div>
 
-                <section class="panel import-panel" aria-labelledby="titulo-importacao">
-                    <header class="panel-header">
-                        <div class="panel-title-group">
-                            <h2 class="panel-title" id="titulo-importacao">Importação rápida</h2>
-                            <p class="panel-subtitle">Atualize a base e as fotos em lote.</p>
+                <div class="stat liberados">
+                    <div class="stat-top">
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-circle-check"></i>
                         </div>
-                    </header>
-
-                    <div class="panel-body">
-                        <form action="/importar" method="POST" enctype="multipart/form-data" class="upload-form">
-                            <label class="upload-box" for="arquivoExcel">
-                                <input type="file" id="arquivoExcel" name="arquivo" accept=".xlsx,.xls,.csv" required>
-                                <span class="upload-icon">XLS</span>
-                                <span class="upload-copy">
-                                    <strong>Importar colaboradores</strong>
-                                    <small data-file-label="arquivoExcel">Excel ou CSV — clique para selecionar</small>
-                                </span>
-                                <span class="upload-action">Enviar</span>
-                            </label>
-                        </form>
-
-                        <form action="/importar_fotos" method="POST" enctype="multipart/form-data" class="upload-form">
-                            <label class="upload-box" for="arquivoFotos">
-                                <input type="file" id="arquivoFotos" name="fotos" accept="image/jpeg,image/png,image/webp" multiple required>
-                                <span class="upload-icon">IMG</span>
-                                <span class="upload-copy">
-                                    <strong>Importar fotos por CPF</strong>
-                                    <small data-file-label="arquivoFotos">JPG, PNG ou WEBP — seleção múltipla</small>
-                                </span>
-                                <span class="upload-action">Enviar</span>
-                            </label>
-                        </form>
                     </div>
-                </section>
-            </aside>
+                    <h3>Colaboradores liberados</h3>
+                    <span class="contador" data-total="{{ colaboradores | selectattr('restrito','equalto',False) | list | length }}">0</span>
+                </div>
 
-            <section class="panel list-panel" aria-labelledby="titulo-lista">
-                <header class="panel-header">
-                    <div class="panel-title-group">
-                        <h2 class="panel-title" id="titulo-lista">Base de colaboradores</h2>
-                        <p class="panel-subtitle">Use os filtros para localizar um cadastro rapidamente.</p>
+                <div class="stat restritos">
+                    <div class="stat-top">
+                        <div class="stat-icon">
+                            <i class="fa-solid fa-ban"></i>
+                        </div>
+                    </div>
+                    <h3>Colaboradores restritos</h3>
+                    <span class="contador" data-total="{{ colaboradores | selectattr('restrito') | list | length }}">0</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">
+                            <span class="icon">
+                                <i class="fa-solid fa-clipboard-list"></i>
+                            </span>
+                            Lista de colaboradores
+                        </div>
+
+                        <div class="card-subtitle">
+                            Consulte, visualize e gerencie os registros cadastrados.
+                        </div>
                     </div>
 
-                    <div class="selection-tools">
-                        <span class="selection-count" id="contadorSelecionados" aria-live="polite">Nenhum selecionado</span>
-                        <button type="button" class="button button-danger" id="btnExcluirSelecionados" disabled>
-                            Excluir <span class="button-label-mobile">selecionados</span>
-                        </button>
+                    <div class="selection-info" id="selectionInfo">
+                        Nenhum selecionado
                     </div>
-                </header>
+                </div>
 
-                <form method="GET" action="/" class="filters" id="formFiltros">
-                    <div class="filter-field">
-                        <label for="pesquisa">Nome ou CPF</label>
-                        <div class="search-wrap">
+                <div class="toolbar">
+                    <div class="search-wrap">
+                        <div class="search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
                             <input
-                                class="control"
-                                type="search"
+                                type="text"
                                 id="pesquisa"
-                                name="busca"
-                                value="{{ busca|default('', true) }}"
-                                placeholder="Pesquisar colaborador..."
-                                autocomplete="off">
+                                autocomplete="off"
+                                placeholder="Pesquisar por nome, CPF, cidade ou função...">
                         </div>
+
+                        <div id="resultadoBuscaStatus" class="alerta-busca"></div>
                     </div>
 
-                    <div class="filter-field">
-                        <label for="filtroObra">Obra</label>
-                        <select class="control" id="filtroObra" name="obra">
-                            <option value="">Todas as obras</option>
-                            {% for item in obras %}
-                                <option value="{{ item }}" {% if obra_selecionada == item %}selected{% endif %}>{{ item }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="filter-field">
-                        <label for="filtroFuncao">Função</label>
-                        <select class="control" id="filtroFuncao" name="funcao">
-                            <option value="">Todas as funções</option>
-                            {% for item in funcoes %}
-                                <option value="{{ item }}" {% if funcao_selecionada == item %}selected{% endif %}>{{ item }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <button type="submit" class="button button-primary">Buscar</button>
-                    <a href="/" class="button button-secondary">Limpar</a>
-                </form>
-
-                <div id="resultadoBuscaStatus" class="status-alert" role="status" aria-live="polite"></div>
-
-                <div class="list-meta">
-                    <span>Exibindo <strong>{{ colaboradores.items|length }}</strong> de <strong>{{ colaboradores.total }}</strong> resultado(s)</span>
-                    <span>Página <strong>{{ colaboradores.page }}</strong> de <strong>{{ colaboradores.pages or 1 }}</strong></span>
+                    <button id="btnExcluirSelecionados" type="button" class="btn btn-danger">
+                        <i class="fa-solid fa-trash-can"></i>
+                        Excluir selecionados
+                    </button>
                 </div>
 
-                {% if colaboradores.items %}
-                    <div class="table-shell">
+                <div class="table-shell">
+                    <div class="table-scroll">
                         <table id="tabela">
                             <thead>
                                 <tr>
                                     <th>
-                                        <input type="checkbox" id="selecionarTodos" class="checkbox" aria-label="Selecionar todos desta página">
+                                        <input type="checkbox" id="selecionarTodos" class="check">
                                     </th>
-                                    <th>Colaborador</th>
+                                    <th>Foto</th>
+                                    <th>Nome</th>
                                     <th>CPF</th>
                                     <th>Cidade</th>
                                     <th>Função</th>
-                                    <th>Obra</th>
-                                    <th>Situação</th>
-                                    <th>Restrição</th>
+                                    <th>Status</th>
                                     <th>Ações</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                {% for c in colaboradores.items %}
-                                    {% set situacao = c.status|default('Ativo', true) %}
-                                    <tr>
-                                        <td>
-                                            <input
-                                                type="checkbox"
-                                                class="checkbox check-colaborador"
-                                                value="{{ c.id }}"
-                                                aria-label="Selecionar {{ c.nome }}">
-                                        </td>
+                                {% for c in colaboradores %}
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" class="check-colaborador check" value="{{ c.id }}">
+                                    </td>
 
-                                        <td>
-                                            <div class="person-cell">
-                                                {% if c.foto %}
-                                                    <img class="avatar" src="{{ c.foto }}" loading="lazy" decoding="async" alt="Foto de {{ c.nome }}">
-                                                {% else %}
-                                                    <span class="avatar avatar-fallback" aria-label="Sem foto">{{ c.nome[:1]|upper }}</span>
-                                                {% endif %}
+                                    <td>
+                                        {% if c.foto %}
+                                            <img class="foto" src="{{ c.foto }}" alt="Foto de {{ c.nome }}" data-nome="{{ c.nome }}">
+                                        {% else %}
+                                            <img class="foto" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Sem foto" data-nome="{{ c.nome }}">
+                                        {% endif %}
+                                    </td>
 
-                                                <div class="person-copy">
-                                                    <span class="person-name" title="{{ c.nome }}">{{ c.nome }}</span>
-                                                    <span class="person-detail">
-                                                        {% if c.telefone %}{{ c.telefone }}{% elif c.email %}{{ c.email }}{% else %}Cadastro #{{ c.id }}{% endif %}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </td>
+                                    <td class="nome-coluna">{{ c.nome }}</td>
+                                    <td class="cpf-coluna">{{ c.cpf }}</td>
+                                    <td>{{ c.cidade or '-' }}</td>
+                                    <td>{{ c.funcao or '-' }}</td>
 
-                                        <td>
-                                            <div class="cpf-cell">
-                                                <span>{{ c.cpf }}</span>
-                                                <button type="button" class="copy-button" data-copy="{{ c.cpf }}" aria-label="Copiar CPF de {{ c.nome }}" title="Copiar CPF">CP</button>
-                                            </div>
-                                        </td>
+                                    <td>
+                                        {% if c.restrito %}
+                                            <span class="status status-bloq">
+                                                <span class="status-dot"></span>
+                                                Restrito
+                                            </span>
+                                        {% else %}
+                                            <span class="status status-ok">
+                                                <span class="status-dot"></span>
+                                                Liberado
+                                            </span>
+                                        {% endif %}
+                                    </td>
 
-                                        <td>{{ c.cidade or '—' }}</td>
-                                        <td>{{ c.funcao or '—' }}</td>
-                                        <td>{{ c.obra or '—' }}</td>
+                                    <td>
+                                        <div class="acoes">
+                                            <a href="/colaborador/{{ c.id }}">
+                                                <button type="button" class="btn-mini btn-ver">
+                                                    <i class="fa-solid fa-eye"></i>
+                                                    Ver
+                                                </button>
+                                            </a>
 
-                                        <td>
-                                            {% if situacao|lower == 'ativo' or situacao|lower == 'admitido' %}
-                                                <span class="badge badge-success">{{ situacao }}</span>
-                                            {% elif situacao|lower == 'desligado' %}
-                                                <span class="badge badge-neutral">{{ situacao }}</span>
-                                            {% elif situacao|lower == 'afastado' %}
-                                                <span class="badge badge-warning">{{ situacao }}</span>
-                                            {% else %}
-                                                <span class="badge badge-warning">{{ situacao }}</span>
-                                            {% endif %}
-                                        </td>
+                                            <a href="/colaborador/{{ c.id }}/pdf">
+                                                <button type="button" class="btn-mini btn-pdf">
+                                                    <i class="fa-solid fa-file-pdf"></i>
+                                                    PDF
+                                                </button>
+                                            </a>
 
-                                        <td>
                                             {% if c.restrito %}
-                                                <span class="badge badge-danger">Restrito</span>
+                                                <a href="/liberar/{{ c.id }}">
+                                                    <button type="button" class="btn-mini btn-liberar">
+                                                        <i class="fa-solid fa-unlock"></i>
+                                                        Liberar
+                                                    </button>
+                                                </a>
                                             {% else %}
-                                                <span class="badge badge-success">Liberado</span>
+                                                <a href="/restringir/{{ c.id }}">
+                                                    <button type="button" class="btn-mini btn-restricao">
+                                                        <i class="fa-solid fa-lock"></i>
+                                                        Restringir
+                                                    </button>
+                                                </a>
                                             {% endif %}
-                                        </td>
-
-                                        <td>
-                                            <div class="actions">
-                                                <a href="/colaborador/{{ c.id }}" class="action-link">Ver ficha</a>
-
-                                                <button type="button" class="action-link" data-print-profile="{{ c.id }}">PDF</button>
-
-                                                {% if c.restrito %}
-                                                    <a href="/liberar/{{ c.id }}" class="action-link warning">Liberar</a>
-                                                {% else %}
-                                                    <a href="/restringir/{{ c.id }}" class="action-link danger">Restringir</a>
-                                                {% endif %}
-                                            </div>
-                                        </td>
-                                    </tr>
+                                        </div>
+                                    </td>
+                                </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
+
+                        <div class="empty-state" id="emptyState">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            Nenhum colaborador encontrado com esse termo.
+                        </div>
                     </div>
-                {% else %}
-                    <div class="empty-state">
-                        <div class="empty-icon">RH</div>
-                        <h3>Nenhum colaborador encontrado</h3>
-                        <p>Revise os filtros usados ou cadastre um novo colaborador.</p>
-                    </div>
-                {% endif %}
-
-                {% if colaboradores.pages > 1 %}
-                    <nav class="pagination" aria-label="Paginação dos colaboradores">
-                        {% if colaboradores.has_prev %}
-                            <a class="page-link" href="{{ url_for('index', page=colaboradores.prev_num, busca=busca, obra=obra_selecionada, funcao=funcao_selecionada) }}">Anterior</a>
-                        {% else %}
-                            <span class="page-link disabled" aria-disabled="true">Anterior</span>
-                        {% endif %}
-
-                        {% for numero in colaboradores.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
-                            {% if numero %}
-                                {% if numero == colaboradores.page %}
-                                    <span class="page-link active" aria-current="page">{{ numero }}</span>
-                                {% else %}
-                                    <a class="page-link" href="{{ url_for('index', page=numero, busca=busca, obra=obra_selecionada, funcao=funcao_selecionada) }}">{{ numero }}</a>
-                                {% endif %}
-                            {% else %}
-                                <span class="page-link disabled" aria-hidden="true">…</span>
-                            {% endif %}
-                        {% endfor %}
-
-                        {% if colaboradores.has_next %}
-                            <a class="page-link" href="{{ url_for('index', page=colaboradores.next_num, busca=busca, obra=obra_selecionada, funcao=funcao_selecionada) }}">Próxima</a>
-                        {% else %}
-                            <span class="page-link disabled" aria-disabled="true">Próxima</span>
-                        {% endif %}
-                    </nav>
-                {% endif %}
-            </section>
-        </div>
-
-        <footer class="app-footer">
-            <span>ORCA Face System © 2026</span>
-            <span>Gestão segura e organizada de colaboradores</span>
-        </footer>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <dialog id="modalExclusao" aria-labelledby="tituloModalExclusao">
-        <div class="dialog-body">
-            <div class="dialog-icon">DEL</div>
-            <h2 id="tituloModalExclusao">Excluir colaboradores?</h2>
-            <p id="textoModalExclusao">Essa ação removerá os registros selecionados. Confirme somente depois de revisar a seleção.</p>
+    <footer class="footer">
+        ORCA Face System © 2026 · Gestão de colaboradores
+    </footer>
+</div>
+
+<div class="modal" id="modalFoto">
+    <div class="modal-content foto-modal-content">
+        <img id="imagemAmpliada" class="modal-foto" alt="Foto ampliada">
+    </div>
+</div>
+
+<div class="modal" id="modalExcluir">
+    <div class="modal-content">
+        <div class="modal-title">
+            <i class="fa-solid fa-triangle-exclamation" style="color:#f87171"></i>
+            Confirmar exclusão
         </div>
-        <div class="dialog-actions">
-            <button type="button" class="button button-secondary" id="btnCancelarExclusao">Cancelar</button>
-            <button type="button" class="button button-danger" id="btnConfirmarExclusao">Sim, excluir</button>
+
+        <div class="modal-text" id="textoModalExcluir">
+            Deseja realmente excluir os colaboradores selecionados?
         </div>
-    </dialog>
 
-    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+        <div class="modal-actions">
+            <button type="button" class="modal-btn cancelar" id="cancelarExclusao">
+                Cancelar
+            </button>
 
-    <script>
-        (() => {
-            "use strict";
+            <button type="button" class="modal-btn confirmar" id="confirmarExclusao">
+                Excluir
+            </button>
+        </div>
+    </div>
+</div>
 
-            const pesquisa = document.getElementById("pesquisa");
-            const statusBox = document.getElementById("resultadoBuscaStatus");
-            const selecionarTodos = document.getElementById("selecionarTodos");
-            const checkboxes = [...document.querySelectorAll(".check-colaborador")];
-            const btnExcluir = document.getElementById("btnExcluirSelecionados");
-            const contadorSelecionados = document.getElementById("contadorSelecionados");
-            const modalExclusao = document.getElementById("modalExclusao");
-            const btnCancelarExclusao = document.getElementById("btnCancelarExclusao");
-            const btnConfirmarExclusao = document.getElementById("btnConfirmarExclusao");
-            const textoModalExclusao = document.getElementById("textoModalExclusao");
-            const toast = document.getElementById("toast");
-            let timerBusca = null;
-            let controllerBusca = null;
-            let timerToast = null;
+<div class="toast-container" id="toastContainer"></div>
 
-            function escapeHtml(valor) {
-                return String(valor ?? "").replace(/[&<>'"]/g, caractere => ({
-                    "&": "&amp;",
-                    "<": "&lt;",
-                    ">": "&gt;",
-                    "'": "&#39;",
-                    '"': "&quot;"
-                })[caractere]);
-            }
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loader-box">
+        <div class="spinner"></div>
+        <strong id="loadingText">Processando...</strong>
+    </div>
+</div>
 
-            function showToast(mensagem, tipo = "success") {
-                if (!toast) return;
+<script>
+const pesquisa = document.getElementById('pesquisa');
+const tabela = document.getElementById('tabela');
+const linhas = Array.from(document.querySelectorAll('#tabela tbody tr'));
+const resultadoBusca = document.getElementById('resultadoBuscaStatus');
+const selecionarTodos = document.getElementById('selecionarTodos');
+const checks = Array.from(document.querySelectorAll('.check-colaborador'));
+const selectionInfo = document.getElementById('selectionInfo');
+const emptyState = document.getElementById('emptyState');
+const modalExcluir = document.getElementById('modalExcluir');
+const modalFoto = document.getElementById('modalFoto');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const loadingText = document.getElementById('loadingText');
 
-                clearTimeout(timerToast);
-                toast.textContent = mensagem;
-                toast.className = `toast ${tipo} show`;
-                timerToast = setTimeout(() => toast.classList.remove("show"), 3600);
-            }
+let timerBusca = null;
+let idsPendentesExclusao = [];
 
-            function showStatus(tipo, html) {
-                if (!statusBox) return;
+function normalizarTexto(texto){
+    return (texto || '')
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g,'')
+        .toLowerCase()
+        .trim();
+}
 
-                statusBox.className = `status-alert ${tipo} show`;
-                statusBox.innerHTML = html;
-            }
+function escaparHtml(valor){
+    return String(valor ?? '')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+}
 
-            function hideStatus() {
-                if (!statusBox) return;
+function mostrarLoading(texto = 'Processando...'){
+    loadingText.textContent = texto;
+    loadingOverlay.classList.add('ativo');
+}
 
-                statusBox.className = "status-alert";
-                statusBox.textContent = "";
-            }
+function esconderLoading(){
+    loadingOverlay.classList.remove('ativo');
+}
 
-            async function consultarStatusColaborador(termo) {
-                if (!statusBox) return;
+function toast(mensagem,tipo='info'){
+    const container = document.getElementById('toastContainer');
+    const item = document.createElement('div');
+    const icone = tipo === 'sucesso'
+        ? 'fa-circle-check'
+        : tipo === 'erro'
+            ? 'fa-circle-xmark'
+            : 'fa-circle-info';
 
-                if (termo.length < 3) {
-                    controllerBusca?.abort();
-                    hideStatus();
-                    return;
-                }
+    item.className = `toast ${tipo}`;
+    item.innerHTML = `
+        <i class="fa-solid ${icone}" style="margin-top:2px"></i>
+        <div>${escaparHtml(mensagem)}</div>
+    `;
 
-                controllerBusca?.abort();
-                controllerBusca = new AbortController();
-                showStatus("loading", "Consultando situação do colaborador...");
+    container.appendChild(item);
 
-                try {
-                    const resposta = await fetch(
-                        `/buscar_status_colaborador?termo=${encodeURIComponent(termo)}`,
-                        {
-                            signal: controllerBusca.signal,
-                            headers: { "Accept": "application/json" }
-                        }
-                    );
+    setTimeout(()=>{
+        item.style.opacity = '0';
+        item.style.transform = 'translateX(30px)';
+        setTimeout(()=>item.remove(),250);
+    },3500);
+}
 
-                    if (!resposta.ok) {
-                        throw new Error(`Falha na consulta: ${resposta.status}`);
-                    }
+function atualizarSelecionados(){
+    const total = checks.filter(check => check.checked).length;
 
-                    const data = await resposta.json();
+    selectionInfo.textContent = total === 0
+        ? 'Nenhum selecionado'
+        : `${total} selecionado${total > 1 ? 's' : ''}`;
 
-                    if (!data.encontrado) {
-                        showStatus("neutral", "Nenhum registro encontrado na base normal ou na Lista Negra.");
-                        return;
-                    }
+    selecionarTodos.checked = total > 0 && total === checks.length;
+    selecionarTodos.indeterminate = total > 0 && total < checks.length;
+}
 
-                    const nome = escapeHtml(data.nome || "Colaborador");
-                    const motivo = escapeHtml(data.motivo || "Sem motivo informado");
-                    let linkFicha = "";
+function filtrarTabela(){
+    const filtro = normalizarTexto(pesquisa.value);
+    let visiveis = 0;
 
-                    if (typeof data.url_ficha === "string" && data.url_ficha.startsWith("/")) {
-                        linkFicha = `<a href="${escapeHtml(data.url_ficha)}">Abrir ficha</a>`;
-                    }
+    linhas.forEach(linha=>{
+        const texto = normalizarTexto(linha.innerText);
+        const mostrar = texto.includes(filtro);
+        linha.style.display = mostrar ? '' : 'none';
 
-                    if (data.na_lista_negra || data.restrito) {
-                        showStatus(
-                            "danger",
-                            `<strong>${nome}</strong> consta como restrito. Motivo: ${motivo}.${linkFicha}`
-                        );
-                    } else {
-                        showStatus(
-                            "ok",
-                            `<strong>${nome}</strong> está liberado e não consta na Lista Negra.${linkFicha}`
-                        );
-                    }
-                } catch (erro) {
-                    if (erro.name !== "AbortError") {
-                        showStatus("neutral", "Não foi possível consultar o status agora. Tente novamente.");
-                    }
-                }
-            }
+        if(mostrar){
+            visiveis++;
+        }
+    });
 
-            pesquisa?.addEventListener("input", () => {
-                clearTimeout(timerBusca);
-                timerBusca = setTimeout(
-                    () => consultarStatusColaborador(pesquisa.value.trim()),
-                    450
-                );
-            });
+    emptyState.style.display = visiveis === 0 ? 'block' : 'none';
+    tabela.style.display = visiveis === 0 ? 'none' : 'table';
 
-            function getSelecionados() {
-                return checkboxes.filter(checkbox => checkbox.checked);
-            }
+    clearTimeout(timerBusca);
 
-            function atualizarSelecao() {
-                const selecionados = getSelecionados();
-                const quantidade = selecionados.length;
+    timerBusca = setTimeout(()=>{
+        consultarStatusColaborador(pesquisa.value.trim());
+    },400);
+}
 
-                checkboxes.forEach(checkbox => {
-                    checkbox.closest("tr")?.classList.toggle("is-selected", checkbox.checked);
-                });
+async function consultarStatusColaborador(termo){
+    if(termo.length < 3){
+        resultadoBusca.style.display = 'none';
+        resultadoBusca.className = 'alerta-busca';
+        resultadoBusca.innerHTML = '';
+        return;
+    }
 
-                if (contadorSelecionados) {
-                    contadorSelecionados.textContent = quantidade === 0
-                        ? "Nenhum selecionado"
-                        : `${quantidade} selecionado${quantidade > 1 ? "s" : ""}`;
-                }
+    try{
+        const resposta = await fetch(
+            '/buscar_status_colaborador?termo=' + encodeURIComponent(termo),
+            {headers:{'Accept':'application/json'}}
+        );
 
-                if (btnExcluir) {
-                    btnExcluir.disabled = quantidade === 0;
-                }
+        if(!resposta.ok){
+            throw new Error('Falha ao consultar');
+        }
 
-                if (selecionarTodos) {
-                    selecionarTodos.checked = checkboxes.length > 0 && quantidade === checkboxes.length;
-                    selecionarTodos.indeterminate = quantidade > 0 && quantidade < checkboxes.length;
-                }
-            }
+        const data = await resposta.json();
+        resultadoBusca.className = 'alerta-busca';
 
-            selecionarTodos?.addEventListener("change", () => {
-                checkboxes.forEach(checkbox => {
-                    checkbox.checked = selecionarTodos.checked;
-                });
-                atualizarSelecao();
-            });
+        if(!data.encontrado){
+            resultadoBusca.classList.add('neutro');
+            resultadoBusca.innerHTML =
+                '<i class="fa-solid fa-circle-info"></i> Não encontrado na lista normal nem na Lista Negra.';
+            return;
+        }
 
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener("change", atualizarSelecao);
-            });
+        const nome = escaparHtml(data.nome || 'Colaborador');
+        const motivo = escaparHtml(data.motivo || 'Sem motivo informado');
 
-            btnExcluir?.addEventListener("click", () => {
-                const quantidade = getSelecionados().length;
-                if (!quantidade) return;
+        if(data.na_lista_negra || data.restrito){
+            resultadoBusca.classList.add('perigo');
+            resultadoBusca.innerHTML =
+                `<i class="fa-solid fa-ban"></i> <b>${nome}</b> está na Lista Negra ou possui restrição.<br>Motivo: ${motivo}`;
+        }else{
+            resultadoBusca.classList.add('ok');
+            resultadoBusca.innerHTML =
+                `<i class="fa-solid fa-circle-check"></i> <b>${nome}</b> está liberado e não consta na Lista Negra.`;
+        }
 
-                if (textoModalExclusao) {
-                    textoModalExclusao.textContent = quantidade === 1
-                        ? "Essa ação removerá permanentemente o colaborador selecionado. Deseja continuar?"
-                        : `Essa ação removerá permanentemente ${quantidade} colaboradores selecionados. Deseja continuar?`;
-                }
+        if(data.url_ficha){
+            resultadoBusca.innerHTML +=
+                `<br><a href="${encodeURI(data.url_ficha)}">Abrir ficha do colaborador</a>`;
+        }
+    }catch(erro){
+        resultadoBusca.className = 'alerta-busca neutro';
+        resultadoBusca.innerHTML =
+            '<i class="fa-solid fa-triangle-exclamation"></i> Não foi possível consultar o status neste momento.';
+    }
+}
 
-                if (typeof modalExclusao?.showModal === "function") {
-                    modalExclusao.showModal();
-                } else if (window.confirm("Deseja excluir os colaboradores selecionados?")) {
-                    excluirSelecionados();
-                }
-            });
+pesquisa.addEventListener('input',filtrarTabela);
 
-            btnCancelarExclusao?.addEventListener("click", () => modalExclusao?.close());
+selecionarTodos.addEventListener('change',()=>{
+    checks.forEach(check=>{
+        const linha = check.closest('tr');
 
-            modalExclusao?.addEventListener("click", evento => {
-                if (evento.target === modalExclusao) modalExclusao.close();
-            });
+        if(linha.style.display !== 'none'){
+            check.checked = selecionarTodos.checked;
+        }
+    });
 
-            btnConfirmarExclusao?.addEventListener("click", excluirSelecionados);
+    atualizarSelecionados();
+});
 
-            async function excluirSelecionados() {
-                const ids = getSelecionados().map(checkbox => checkbox.value);
-                if (!ids.length) return;
+checks.forEach(check=>{
+    check.addEventListener('change',atualizarSelecionados);
+});
 
-                if (btnConfirmarExclusao) {
-                    btnConfirmarExclusao.disabled = true;
-                    btnConfirmarExclusao.textContent = "Excluindo...";
-                }
+document.getElementById('btnExcluirSelecionados').addEventListener('click',()=>{
+    idsPendentesExclusao = checks
+        .filter(check=>check.checked)
+        .map(check=>check.value);
 
-                try {
-                    const resposta = await fetch("/excluir_varios", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Accept": "application/json"
-                        },
-                        body: JSON.stringify({ ids })
-                    });
+    if(idsPendentesExclusao.length === 0){
+        toast('Selecione pelo menos um colaborador.','info');
+        return;
+    }
 
-                    const data = await resposta.json().catch(() => ({}));
+    document.getElementById('textoModalExcluir').textContent =
+        `Deseja realmente excluir ${idsPendentesExclusao.length} colaborador${idsPendentesExclusao.length > 1 ? 'es' : ''}? Essa ação não poderá ser desfeita.`;
 
-                    if (!resposta.ok) {
-                        throw new Error(data.mensagem || "Não foi possível excluir os registros.");
-                    }
+    modalExcluir.classList.add('ativo');
+});
 
-                    modalExclusao?.close();
-                    showToast(data.mensagem || "Colaboradores excluídos com sucesso.");
-                    setTimeout(() => window.location.reload(), 700);
-                } catch (erro) {
-                    modalExclusao?.close();
-                    showToast(erro.message || "Erro ao excluir os colaboradores selecionados.", "error");
-                } finally {
-                    if (btnConfirmarExclusao) {
-                        btnConfirmarExclusao.disabled = false;
-                        btnConfirmarExclusao.textContent = "Sim, excluir";
-                    }
-                }
-            }
+document.getElementById('cancelarExclusao').addEventListener('click',()=>{
+    modalExcluir.classList.remove('ativo');
+    idsPendentesExclusao = [];
+});
 
-            document.querySelectorAll("[data-copy]").forEach(botao => {
-                botao.addEventListener("click", async () => {
-                    const texto = botao.dataset.copy || "";
-                    try {
-                        await navigator.clipboard.writeText(texto);
-                        showToast("CPF copiado.");
-                    } catch {
-                        showToast("Não foi possível copiar o CPF.", "error");
-                    }
-                });
-            });
+document.getElementById('confirmarExclusao').addEventListener('click',async()=>{
+    modalExcluir.classList.remove('ativo');
+    mostrarLoading('Excluindo colaboradores...');
 
-            document.querySelectorAll("[data-print-profile]").forEach(botao => {
-                botao.addEventListener("click", () => {
-                    const id = botao.dataset.printProfile;
-                    window.open(`/colaborador/${encodeURIComponent(id)}?imprimir=1`, "_blank", "noopener");
-                });
-            });
+    try{
+        const resposta = await fetch('/excluir_varios',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'Accept':'application/json'
+            },
+            body:JSON.stringify({
+                ids:idsPendentesExclusao
+            })
+        });
 
-            document.querySelectorAll(".upload-form input[type='file']").forEach(input => {
-                input.addEventListener("change", () => {
-                    const label = document.querySelector(`[data-file-label="${input.id}"]`);
-                    if (!label || !input.files?.length) return;
+        const data = await resposta.json().catch(()=>({}));
 
-                    label.textContent = input.files.length === 1
-                        ? input.files[0].name
-                        : `${input.files.length} arquivos selecionados`;
+        if(!resposta.ok){
+            throw new Error(data.mensagem || 'Erro ao excluir colaboradores.');
+        }
 
-                    input.closest("form")?.requestSubmit();
-                });
-            });
+        toast(data.mensagem || 'Colaboradores excluídos com sucesso.','sucesso');
 
-            function somenteNumeros(valor) {
-                return valor.replace(/\D/g, "");
-            }
+        setTimeout(()=>{
+            location.reload();
+        },700);
+    }catch(erro){
+        esconderLoading();
+        toast(erro.message || 'Erro ao excluir colaboradores.','erro');
+    }
+});
 
-            const campoCpf = document.getElementById("cpf");
-            campoCpf?.addEventListener("input", () => {
-                let valor = somenteNumeros(campoCpf.value).slice(0, 11);
-                valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
-                valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
-                valor = valor.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-                campoCpf.value = valor;
-            });
+document.querySelectorAll('.foto').forEach(foto=>{
+    foto.addEventListener('click',()=>{
+        document.getElementById('imagemAmpliada').src = foto.src;
+        document.getElementById('imagemAmpliada').alt =
+            'Foto de ' + (foto.dataset.nome || 'colaborador');
 
-            const campoCep = document.getElementById("cep");
-            campoCep?.addEventListener("input", () => {
-                const valor = somenteNumeros(campoCep.value).slice(0, 8);
-                campoCep.value = valor.replace(/(\d{5})(\d)/, "$1-$2");
-            });
+        modalFoto.classList.add('ativo');
+    });
+});
 
-            const campoTelefone = document.getElementById("telefone");
-            campoTelefone?.addEventListener("input", () => {
-                let valor = somenteNumeros(campoTelefone.value).slice(0, 11);
-                valor = valor.replace(/^(\d{2})(\d)/, "($1) $2");
-                valor = valor.length > 13
-                    ? valor.replace(/(\d{5})(\d{4})$/, "$1-$2")
-                    : valor.replace(/(\d{4})(\d{4})$/, "$1-$2");
-                campoTelefone.value = valor;
-            });
+[modalFoto,modalExcluir].forEach(modal=>{
+    modal.addEventListener('click',evento=>{
+        if(evento.target === modal){
+            modal.classList.remove('ativo');
+        }
+    });
+});
 
-            const formNovo = document.getElementById("formNovoColaborador");
-            const btnCadastrar = document.getElementById("btnCadastrar");
+document.addEventListener('keydown',evento=>{
+    if(evento.key === 'Escape'){
+        modalFoto.classList.remove('ativo');
+        modalExcluir.classList.remove('ativo');
+    }
+});
 
-            formNovo?.addEventListener("submit", () => {
-                if (!btnCadastrar || !formNovo.checkValidity()) return;
-                btnCadastrar.disabled = true;
-                btnCadastrar.textContent = "Salvando cadastro...";
-            });
+document.querySelectorAll('.form-com-loading').forEach(form=>{
+    form.addEventListener('submit',()=>{
+        mostrarLoading('Enviando informações...');
+    });
+});
 
-            atualizarSelecao();
-        })();
-    </script>
+document.getElementById('cpfCadastro').addEventListener('input',evento=>{
+    let valor = evento.target.value.replace(/\D/g,'').slice(0,11);
+
+    valor = valor
+        .replace(/(\d{3})(\d)/,'$1.$2')
+        .replace(/(\d{3})(\d)/,'$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+
+    evento.target.value = valor;
+});
+
+document.getElementById('cepCadastro').addEventListener('input',evento=>{
+    let valor = evento.target.value.replace(/\D/g,'').slice(0,8);
+    valor = valor.replace(/(\d{5})(\d)/,'$1-$2');
+    evento.target.value = valor;
+});
+
+document.querySelectorAll('.contador').forEach(elemento=>{
+    const total = Number(elemento.dataset.total || 0);
+    const duracao = 700;
+    const inicio = performance.now();
+
+    function animar(tempo){
+        const progresso = Math.min((tempo - inicio) / duracao,1);
+        elemento.textContent = Math.floor(total * progresso);
+
+        if(progresso < 1){
+            requestAnimationFrame(animar);
+        }else{
+            elemento.textContent = total;
+        }
+    }
+
+    requestAnimationFrame(animar);
+});
+
+atualizarSelecionados();
+</script>
+
 </body>
 </html>
