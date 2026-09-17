@@ -449,6 +449,12 @@
     </style>
 </head>
 <body>
+<div style="position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:9999;padding:10px 18px;border-radius:12px;background:#172033;color:#fff;font:600 13px Arial,sans-serif;box-shadow:0 4px 20px #0003;text-align:center;pointer-events:none">Prévia do index de 29/08 · Dados fictícios · Nenhum cadastro é salvo</div>
+<script>
+document.addEventListener('submit',function(event){event.preventDefault();event.stopImmediatePropagation();},true);
+document.addEventListener('click',function(event){const link=event.target.closest('a');if(link){event.preventDefault();event.stopImmediatePropagation();}},true);
+window.fetch=async function(){throw new Error('Prévia visual: operação indisponível.');};
+</script>
     <div class="app-shell">
         <header class="topbar">
             <a class="brand" href="/" aria-label="Ir para colaboradores">
@@ -469,18 +475,9 @@
             </nav>
         </header>
 
-        {% with mensagens = get_flashed_messages(with_categories=true) %}
-            {% if mensagens %}
-                <div class="flash-stack" aria-live="polite">
-                    {% for categoria, mensagem in mensagens %}
-                        <div class="flash {{ categoria }}">
-                            <span>{{ mensagem }}</span>
-                            <button type="button" class="flash-close" aria-label="Fechar aviso">×</button>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+        
+            
+        
 
         <main class="layout">
             <aside class="card aside-card">
@@ -546,10 +543,10 @@
                         </div>
 
                         <datalist id="listaFuncoes">
-                            {% for item in funcoes %}<option value="{{ item }}">{% endfor %}
+                            <option value="Caldeireiro"><option value="Soldador"><option value="Auxiliar de produção"><option value="Eletricista">
                         </datalist>
                         <datalist id="listaObras">
-                            {% for item in obras %}<option value="{{ item }}">{% endfor %}
+                            <option value="Obra de exemplo">
                         </datalist>
 
                         <button class="button primary full" type="submit"><span aria-hidden="true">＋</span> Cadastrar colaborador</button>
@@ -582,19 +579,19 @@
                 <div class="stats">
                     <article class="stat-card stat-total">
                         <div class="stat-top"><span class="stat-label">Total cadastrado</span><span class="stat-icon" aria-hidden="true">👥</span></div>
-                        <strong class="stat-value">{{ total_colaboradores }}</strong>
+                        <strong class="stat-value">4</strong>
                     </article>
                     <article class="stat-card stat-ok">
                         <div class="stat-top"><span class="stat-label">Liberados</span><span class="stat-icon" aria-hidden="true">✓</span></div>
-                        <strong class="stat-value">{{ total_liberados }}</strong>
+                        <strong class="stat-value">3</strong>
                     </article>
                     <article class="stat-card stat-danger">
                         <div class="stat-top"><span class="stat-label">Restritos</span><span class="stat-icon" aria-hidden="true">!</span></div>
-                        <strong class="stat-value">{{ total_restritos }}</strong>
+                        <strong class="stat-value">1</strong>
                     </article>
                     <article class="stat-card stat-work">
                         <div class="stat-top"><span class="stat-label">Obras registradas</span><span class="stat-icon" aria-hidden="true">▦</span></div>
-                        <strong class="stat-value">{{ obras|length }}</strong>
+                        <strong class="stat-value">1</strong>
                     </article>
                 </div>
 
@@ -610,22 +607,28 @@
 
                     <form class="filters" method="GET" action="/" id="formFiltros">
                         <div class="search-field">
-                            <input type="search" id="pesquisa" name="busca" value="{{ busca }}" autocomplete="off" placeholder="Nome ou CPF..." aria-label="Pesquisar por nome ou CPF">
+                            <input type="search" id="pesquisa" name="busca" value="" autocomplete="off" placeholder="Nome ou CPF..." aria-label="Pesquisar por nome ou CPF">
                             <span class="search-shortcut" aria-hidden="true">/</span>
                         </div>
 
                         <select name="obra" aria-label="Filtrar por obra">
                             <option value="">Todas as obras</option>
-                            {% for item in obras %}
-                                <option value="{{ item }}" {% if obra_selecionada == item %}selected{% endif %}>{{ item }}</option>
-                            {% endfor %}
+                            
+                                <option value="Obra de exemplo" >Obra de exemplo</option>
+                            
                         </select>
 
                         <select name="funcao" aria-label="Filtrar por função">
                             <option value="">Todas as funções</option>
-                            {% for item in funcoes %}
-                                <option value="{{ item }}" {% if funcao_selecionada == item %}selected{% endif %}>{{ item }}</option>
-                            {% endfor %}
+                            
+                                <option value="Caldeireiro" >Caldeireiro</option>
+                            
+                                <option value="Soldador" >Soldador</option>
+                            
+                                <option value="Auxiliar de produção" >Auxiliar de produção</option>
+                            
+                                <option value="Eletricista" >Eletricista</option>
+                            
                         </select>
 
                         <select id="filtroStatusPagina" aria-label="Filtrar o status nesta página">
@@ -642,7 +645,7 @@
 
                     <div class="table-toolbar">
                         <p class="result-info">
-                            <strong id="contadorVisiveis">{{ colaboradores.items|length }}</strong> nesta página · {{ colaboradores.total }} resultado(s) encontrado(s)
+                            <strong id="contadorVisiveis">4</strong> nesta página · 4 resultado(s) encontrado(s)
                         </p>
                         <div class="selection-tools">
                             <span class="selected-count" id="contadorSelecionados">0 selecionados</span>
@@ -650,7 +653,7 @@
                         </div>
                     </div>
 
-                    {% if colaboradores.items %}
+                    
                         <div class="table-wrap">
                             <table id="tabelaColaboradores">
                                 <thead>
@@ -667,89 +670,165 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for c in colaboradores.items %}
+                                    
                                         <tr
-                                            data-id="{{ c.id }}"
-                                            data-nome="{{ c.nome }}"
-                                            data-cpf="{{ c.cpf }}"
-                                            data-cidade="{{ c.cidade or '-' }}"
-                                            data-funcao="{{ c.funcao or '-' }}"
-                                            data-obra="{{ c.obra or '-' }}"
-                                            data-status="{{ 'restrito' if c.restrito else 'liberado' }}"
-                                            data-foto="{% if c.foto %}{{ c.foto }}{% endif %}">
-                                            <td><input type="checkbox" class="check check-colaborador" value="{{ c.id }}" aria-label="Selecionar {{ c.nome }}"></td>
+                                            data-id="1"
+                                            data-nome="Colaborador de exemplo 01"
+                                            data-cpf="000.000.000-00"
+                                            data-cidade="Cidade de exemplo"
+                                            data-funcao="Caldeireiro"
+                                            data-obra="Obra de exemplo"
+                                            data-status="liberado"
+                                            data-foto="">
+                                            <td><input type="checkbox" class="check check-colaborador" value="1" aria-label="Selecionar Colaborador de exemplo 01"></td>
                                             <td>
-                                                <button class="photo-button" type="button" onclick="abrirFicha(this.closest('tr'))" aria-label="Ver ficha de {{ c.nome }}">
-                                                    {% if c.foto %}
-                                                        <img class="photo" src="{{ c.foto }}" loading="lazy" decoding="async" alt="Foto de {{ c.nome }}">
-                                                    {% else %}
-                                                        <span class="avatar-fallback" aria-hidden="true">{{ c.nome[:1]|upper }}</span>
-                                                    {% endif %}
+                                                <button class="photo-button" type="button" onclick="abrirFicha(this.closest('tr'))" aria-label="Ver ficha de Colaborador de exemplo 01">
+                                                    
+                                                        <span class="avatar-fallback" aria-hidden="true">C</span>
+                                                    
                                                 </button>
                                             </td>
-                                            <td><span class="person-name" title="{{ c.nome }}">{{ c.nome }}</span><span class="person-code">ID #{{ c.id }}</span></td>
-                                            <td>{{ c.cpf }}</td>
-                                            <td>{{ c.cidade or '-' }}</td>
-                                            <td>{{ c.funcao or '-' }}</td>
-                                            <td>{{ c.obra or '-' }}</td>
+                                            <td><span class="person-name" title="Colaborador de exemplo 01">Colaborador de exemplo 01</span><span class="person-code">ID #1</span></td>
+                                            <td>000.000.000-00</td>
+                                            <td>Cidade de exemplo</td>
+                                            <td>Caldeireiro</td>
+                                            <td>Obra de exemplo</td>
                                             <td>
-                                                {% if c.restrito %}
-                                                    <span class="badge danger">Restrito</span>
-                                                {% else %}
+                                                
                                                     <span class="badge success">Liberado</span>
-                                                {% endif %}
+                                                
                                             </td>
                                             <td>
                                                 <div class="row-actions">
                                                     <button class="action-button" type="button" onclick="abrirFicha(this.closest('tr'))">Detalhes</button>
                                                     <button class="action-button" type="button" onclick="imprimirFicha(this.closest('tr'))" title="Imprimir ou salvar a ficha em PDF">PDF</button>
-                                                    {% if c.restrito %}
-                                                        <a class="action-button warn" href="/liberar/{{ c.id }}" data-confirm-link data-confirm-title="Liberar colaborador?" data-confirm-message="{{ c.nome }} será removido do status de restrição.">Liberar</a>
-                                                    {% else %}
-                                                        <a class="action-button danger" href="/restringir/{{ c.id }}" data-confirm-link data-confirm-title="Restringir colaborador?" data-confirm-message="{{ c.nome }} será marcado como restrito.">Restringir</a>
-                                                    {% endif %}
+                                                    
+                                                        <a class="action-button danger" href="/restringir/1" data-confirm-link data-confirm-title="Restringir colaborador?" data-confirm-message="Colaborador de exemplo 01 será marcado como restrito.">Restringir</a>
+                                                    
                                                 </div>
                                             </td>
                                         </tr>
-                                    {% endfor %}
+                                    
+                                        <tr
+                                            data-id="2"
+                                            data-nome="Colaborador de exemplo 02"
+                                            data-cpf="000.000.000-00"
+                                            data-cidade="Cidade de exemplo"
+                                            data-funcao="Soldador"
+                                            data-obra="Obra de exemplo"
+                                            data-status="liberado"
+                                            data-foto="">
+                                            <td><input type="checkbox" class="check check-colaborador" value="2" aria-label="Selecionar Colaborador de exemplo 02"></td>
+                                            <td>
+                                                <button class="photo-button" type="button" onclick="abrirFicha(this.closest('tr'))" aria-label="Ver ficha de Colaborador de exemplo 02">
+                                                    
+                                                        <span class="avatar-fallback" aria-hidden="true">C</span>
+                                                    
+                                                </button>
+                                            </td>
+                                            <td><span class="person-name" title="Colaborador de exemplo 02">Colaborador de exemplo 02</span><span class="person-code">ID #2</span></td>
+                                            <td>000.000.000-00</td>
+                                            <td>Cidade de exemplo</td>
+                                            <td>Soldador</td>
+                                            <td>Obra de exemplo</td>
+                                            <td>
+                                                
+                                                    <span class="badge success">Liberado</span>
+                                                
+                                            </td>
+                                            <td>
+                                                <div class="row-actions">
+                                                    <button class="action-button" type="button" onclick="abrirFicha(this.closest('tr'))">Detalhes</button>
+                                                    <button class="action-button" type="button" onclick="imprimirFicha(this.closest('tr'))" title="Imprimir ou salvar a ficha em PDF">PDF</button>
+                                                    
+                                                        <a class="action-button danger" href="/restringir/2" data-confirm-link data-confirm-title="Restringir colaborador?" data-confirm-message="Colaborador de exemplo 02 será marcado como restrito.">Restringir</a>
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    
+                                        <tr
+                                            data-id="3"
+                                            data-nome="Colaborador de exemplo 03"
+                                            data-cpf="000.000.000-00"
+                                            data-cidade="Cidade de exemplo"
+                                            data-funcao="Auxiliar de produção"
+                                            data-obra="Obra de exemplo"
+                                            data-status="liberado"
+                                            data-foto="">
+                                            <td><input type="checkbox" class="check check-colaborador" value="3" aria-label="Selecionar Colaborador de exemplo 03"></td>
+                                            <td>
+                                                <button class="photo-button" type="button" onclick="abrirFicha(this.closest('tr'))" aria-label="Ver ficha de Colaborador de exemplo 03">
+                                                    
+                                                        <span class="avatar-fallback" aria-hidden="true">C</span>
+                                                    
+                                                </button>
+                                            </td>
+                                            <td><span class="person-name" title="Colaborador de exemplo 03">Colaborador de exemplo 03</span><span class="person-code">ID #3</span></td>
+                                            <td>000.000.000-00</td>
+                                            <td>Cidade de exemplo</td>
+                                            <td>Auxiliar de produção</td>
+                                            <td>Obra de exemplo</td>
+                                            <td>
+                                                
+                                                    <span class="badge success">Liberado</span>
+                                                
+                                            </td>
+                                            <td>
+                                                <div class="row-actions">
+                                                    <button class="action-button" type="button" onclick="abrirFicha(this.closest('tr'))">Detalhes</button>
+                                                    <button class="action-button" type="button" onclick="imprimirFicha(this.closest('tr'))" title="Imprimir ou salvar a ficha em PDF">PDF</button>
+                                                    
+                                                        <a class="action-button danger" href="/restringir/3" data-confirm-link data-confirm-title="Restringir colaborador?" data-confirm-message="Colaborador de exemplo 03 será marcado como restrito.">Restringir</a>
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    
+                                        <tr
+                                            data-id="4"
+                                            data-nome="Colaborador de exemplo 04"
+                                            data-cpf="000.000.000-00"
+                                            data-cidade="Cidade de exemplo"
+                                            data-funcao="Eletricista"
+                                            data-obra="Obra de exemplo"
+                                            data-status="restrito"
+                                            data-foto="">
+                                            <td><input type="checkbox" class="check check-colaborador" value="4" aria-label="Selecionar Colaborador de exemplo 04"></td>
+                                            <td>
+                                                <button class="photo-button" type="button" onclick="abrirFicha(this.closest('tr'))" aria-label="Ver ficha de Colaborador de exemplo 04">
+                                                    
+                                                        <span class="avatar-fallback" aria-hidden="true">C</span>
+                                                    
+                                                </button>
+                                            </td>
+                                            <td><span class="person-name" title="Colaborador de exemplo 04">Colaborador de exemplo 04</span><span class="person-code">ID #4</span></td>
+                                            <td>000.000.000-00</td>
+                                            <td>Cidade de exemplo</td>
+                                            <td>Eletricista</td>
+                                            <td>Obra de exemplo</td>
+                                            <td>
+                                                
+                                                    <span class="badge danger">Restrito</span>
+                                                
+                                            </td>
+                                            <td>
+                                                <div class="row-actions">
+                                                    <button class="action-button" type="button" onclick="abrirFicha(this.closest('tr'))">Detalhes</button>
+                                                    <button class="action-button" type="button" onclick="imprimirFicha(this.closest('tr'))" title="Imprimir ou salvar a ficha em PDF">PDF</button>
+                                                    
+                                                        <a class="action-button warn" href="/liberar/4" data-confirm-link data-confirm-title="Liberar colaborador?" data-confirm-message="Colaborador de exemplo 04 será removido do status de restrição.">Liberar</a>
+                                                    
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    
                                 </tbody>
                             </table>
                         </div>
-                    {% else %}
-                        <div class="empty-state">
-                            <span class="empty-icon" aria-hidden="true">⌕</span>
-                            <strong>Nenhum colaborador encontrado</strong>
-                            <p>Ajuste os filtros ou faça um novo cadastro.</p>
-                        </div>
-                    {% endif %}
+                    
 
-                    {% if colaboradores.pages > 1 %}
-                        <nav class="pagination" aria-label="Paginação dos colaboradores">
-                            {% if colaboradores.has_prev %}
-                                <a href="{{ url_for('index', page=colaboradores.prev_num, busca=busca, obra=obra_selecionada, funcao=funcao_selecionada) }}">← Anterior</a>
-                            {% else %}
-                                <span class="disabled">← Anterior</span>
-                            {% endif %}
-
-                            {% for numero in colaboradores.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
-                                {% if numero %}
-                                    {% if numero == colaboradores.page %}
-                                        <span class="active" aria-current="page">{{ numero }}</span>
-                                    {% else %}
-                                        <a href="{{ url_for('index', page=numero, busca=busca, obra=obra_selecionada, funcao=funcao_selecionada) }}">{{ numero }}</a>
-                                    {% endif %}
-                                {% else %}
-                                    <span>…</span>
-                                {% endif %}
-                            {% endfor %}
-
-                            {% if colaboradores.has_next %}
-                                <a href="{{ url_for('index', page=colaboradores.next_num, busca=busca, obra=obra_selecionada, funcao=funcao_selecionada) }}">Próxima →</a>
-                            {% else %}
-                                <span class="disabled">Próxima →</span>
-                            {% endif %}
-                        </nav>
-                    {% endif %}
+                    
                 </div>
             </section>
         </main>
