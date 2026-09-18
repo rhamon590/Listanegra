@@ -1,11 +1,32 @@
+{#
+  ORCA FACE — index para templates/index.html.
+  Layout recuperado da prévia indicada pelo usuário.
+  Requer o aplicativo Flask existente; este arquivo não cria banco ou rotas.
+  Rotas/formulários e nomes de campos seguem Fichario_Colaboradores_Final.html.
+  Abra pelo endereço do sistema, não pelo arquivo no navegador.
+#}
+{% set fonte = colaboradores|default([], true) %}
+{% set paginado = fonte['items'] is defined and fonte['items'] is not callable %}
+{% set registros = fonte['items'] if paginado else fonte %}
+{% set obras_lista = obras|default([], true) %}
+{% set funcoes_lista = funcoes|default([], true) %}
+{% set busca = busca|default('', true) %}
+{% set obra_selecionada = obra_selecionada|default('', true) %}
+{% set funcao_selecionada = funcao_selecionada|default('', true) %}
+{% set total_encontrados = fonte.total|default(registros|length) if paginado else registros|length %}
+{% set token_formulario = (csrf_token() if csrf_token is callable else csrf_token) if csrf_token is defined else '' %}
+{% macro csrf_field() -%}
+  {% if token_formulario %}<input type="hidden" name="csrf_token" value="{{ token_formulario }}">{% endif %}
+{%- endmacro %}
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="dark">
+<html lang="pt-BR" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="dark light">
     <meta name="description" content="Gestão de colaboradores do ORCA Face System">
     <title>Fichário de Colaboradores | ORCA Face</title>
+    {% if token_formulario %}<meta name="csrf-token" content="{{ token_formulario }}">{% endif %}
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +43,7 @@
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        [hidden] { display: none !important; }
 
         :root {
             --bg: #070b14;
@@ -400,6 +422,10 @@
         @keyframes toast-in { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes toast-out { to { opacity: 0; transform: translateX(18px); } }
 
+        @media (min-width: 1021px) and (max-width: 1660px) {
+            .filters { grid-template-columns: minmax(160px, 2fr) repeat(2, minmax(110px, 1fr)); }
+        }
+
         @media (max-width: 1250px) {
             .layout { grid-template-columns: 310px minmax(0, 1fr); }
             .filters { grid-template-columns: 2fr 1fr 1fr; }
@@ -449,12 +475,6 @@
     </style>
 </head>
 <body>
-<div style="position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:9999;padding:10px 18px;border-radius:12px;background:#172033;color:#fff;font:600 13px Arial,sans-serif;box-shadow:0 4px 20px #0003;text-align:center;pointer-events:none">Prévia do index de 29/08 · Dados fictícios · Nenhum cadastro é salvo</div>
-<script>
-document.addEventListener('submit',function(event){event.preventDefault();event.stopImmediatePropagation();},true);
-document.addEventListener('click',function(event){const link=event.target.closest('a');if(link){event.preventDefault();event.stopImmediatePropagation();}},true);
-window.fetch=async function(){throw new Error('Prévia visual: operação indisponível.');};
-</script>
     <div class="app-shell">
         <header class="topbar">
             <a class="brand" href="/" aria-label="Ir para colaboradores">
@@ -479,6 +499,21 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
             
         
 
+        {% if get_flashed_messages is defined %}
+            {% with mensagens = get_flashed_messages(with_categories=true) %}
+                {% if mensagens %}
+                <div class="flash-stack" aria-live="polite">
+                    {% for categoria, mensagem in mensagens %}
+                    <div class="flash {{ categoria }}" role="status">
+                        <span>{{ mensagem }}</span>
+                        <button class="flash-close" type="button" aria-label="Fechar mensagem">×</button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% endwith %}
+        {% endif %}
+
         <main class="layout">
             <aside class="card aside-card">
                 <div class="aside-header">
@@ -494,6 +529,7 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
 
                 <section class="tab-panel active" id="tabCadastro" role="tabpanel">
                     <form class="form-stack" id="formNovo" action="/novo" method="POST">
+                        {{ csrf_field() }}
                         <div class="field">
                             <label for="nome">Nome completo</label>
                             <input id="nome" type="text" name="nome" autocomplete="name" placeholder="Ex.: João da Silva" required>
@@ -506,7 +542,7 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
                             </div>
                             <div class="field">
                                 <label for="dataNascimento">Nascimento <span>(opcional)</span></label>
-                                <input id="dataNascimento" type="date" name="data_nascimento">
+                                <input id="dataNascimento" type="text" name="data_nascimento" inputmode="numeric" maxlength="10" placeholder="DD/MM/AAAA" autocomplete="bday">
                             </div>
                         </div>
 
@@ -543,10 +579,10 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
                         </div>
 
                         <datalist id="listaFuncoes">
-                            <option value="Caldeireiro"><option value="Soldador"><option value="Auxiliar de produção"><option value="Eletricista">
+                            {% for item in funcoes_lista %}<option value="{{ item }}"></option>{% endfor %}
                         </datalist>
                         <datalist id="listaObras">
-                            <option value="Obra de exemplo">
+                            {% for item in obras_lista %}<option value="{{ item }}"></option>{% endfor %}
                         </datalist>
 
                         <button class="button primary full" type="submit"><span aria-hidden="true">＋</span> Cadastrar colaborador</button>
@@ -557,6 +593,7 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
                 <section class="tab-panel" id="tabImportacao" role="tabpanel" hidden>
                     <div class="upload-group">
                         <form class="upload-block" action="/importar" method="POST" enctype="multipart/form-data">
+                        {{ csrf_field() }}
                             <div class="upload-title"><div>Planilha de colaboradores</div><span aria-hidden="true">📊</span></div>
                             <p class="helper-text">Formatos aceitos: Excel ou CSV.</p>
                             <input class="file-input" id="arquivoExcel" type="file" name="arquivo" accept=".xlsx,.xls,.csv" required>
@@ -565,6 +602,7 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
                         </form>
 
                         <form class="upload-block" action="/importar_fotos" method="POST" enctype="multipart/form-data">
+                        {{ csrf_field() }}
                             <div class="upload-title"><div>Fotos dos colaboradores</div><span aria-hidden="true">🖼️</span></div>
                             <p class="helper-text">Selecione várias imagens de uma só vez.</p>
                             <input class="file-input" id="arquivoFotos" type="file" name="fotos" accept="image/*" multiple required>
@@ -579,19 +617,19 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
                 <div class="stats">
                     <article class="stat-card stat-total">
                         <div class="stat-top"><span class="stat-label">Total cadastrado</span><span class="stat-icon" aria-hidden="true">👥</span></div>
-                        <strong class="stat-value">4</strong>
+                        <strong class="stat-value">{{ total_colaboradores|default('—' if paginado else registros|length) }}</strong>
                     </article>
                     <article class="stat-card stat-ok">
                         <div class="stat-top"><span class="stat-label">Liberados</span><span class="stat-icon" aria-hidden="true">✓</span></div>
-                        <strong class="stat-value">3</strong>
+                        <strong class="stat-value">{{ total_liberados|default('—' if paginado else registros|rejectattr('restrito')|list|length) }}</strong>
                     </article>
                     <article class="stat-card stat-danger">
                         <div class="stat-top"><span class="stat-label">Restritos</span><span class="stat-icon" aria-hidden="true">!</span></div>
-                        <strong class="stat-value">1</strong>
+                        <strong class="stat-value">{{ total_restritos|default('—' if paginado else registros|selectattr('restrito')|list|length) }}</strong>
                     </article>
                     <article class="stat-card stat-work">
                         <div class="stat-top"><span class="stat-label">Obras registradas</span><span class="stat-icon" aria-hidden="true">▦</span></div>
-                        <strong class="stat-value">1</strong>
+                        <strong class="stat-value">{{ obras_lista|length }}</strong>
                     </article>
                 </div>
 
@@ -607,28 +645,22 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
 
                     <form class="filters" method="GET" action="/" id="formFiltros">
                         <div class="search-field">
-                            <input type="search" id="pesquisa" name="busca" value="" autocomplete="off" placeholder="Nome ou CPF..." aria-label="Pesquisar por nome ou CPF">
+                            <input type="search" id="pesquisa" name="busca" value="{{ busca }}" autocomplete="off" placeholder="Nome ou CPF..." aria-label="Pesquisar por nome ou CPF">
                             <span class="search-shortcut" aria-hidden="true">/</span>
                         </div>
 
                         <select name="obra" aria-label="Filtrar por obra">
                             <option value="">Todas as obras</option>
-                            
-                                <option value="Obra de exemplo" >Obra de exemplo</option>
-                            
+                            {% for item in obras_lista %}
+                                <option value="{{ item }}" {% if obra_selecionada == item %}selected{% endif %}>{{ item }}</option>
+                            {% endfor %}
                         </select>
 
                         <select name="funcao" aria-label="Filtrar por função">
                             <option value="">Todas as funções</option>
-                            
-                                <option value="Caldeireiro" >Caldeireiro</option>
-                            
-                                <option value="Soldador" >Soldador</option>
-                            
-                                <option value="Auxiliar de produção" >Auxiliar de produção</option>
-                            
-                                <option value="Eletricista" >Eletricista</option>
-                            
+                            {% for item in funcoes_lista %}
+                                <option value="{{ item }}" {% if funcao_selecionada == item %}selected{% endif %}>{{ item }}</option>
+                            {% endfor %}
                         </select>
 
                         <select id="filtroStatusPagina" aria-label="Filtrar o status nesta página">
@@ -645,7 +677,7 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
 
                     <div class="table-toolbar">
                         <p class="result-info">
-                            <strong id="contadorVisiveis">4</strong> nesta página · 4 resultado(s) encontrado(s)
+                            <strong id="contadorVisiveis">{{ registros|length }}</strong> nesta página · {{ total_encontrados }} resultado(s) encontrado(s)
                         </p>
                         <div class="selection-tools">
                             <span class="selected-count" id="contadorSelecionados">0 selecionados</span>
@@ -658,7 +690,7 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
                             <table id="tabelaColaboradores">
                                 <thead>
                                     <tr>
-                                        <th scope="col"><input type="checkbox" id="selecionarTodos" class="check" aria-label="Selecionar todos os colaboradores visíveis"></th>
+                                        <th scope="col"><input type="checkbox" id="selecionarTodos" class="check" aria-label="Selecionar todos os colaboradores visíveis" {% if not registros %}disabled{% endif %}></th>
                                         <th scope="col">Foto</th>
                                         <th scope="col" data-column="nome"><button class="sort-button" type="button">Nome</button></th>
                                         <th scope="col" data-column="cpf"><button class="sort-button" type="button">CPF</button></th>
@@ -670,162 +702,72 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+                                    {% for c in registros %}
                                         <tr
-                                            data-id="1"
-                                            data-nome="Colaborador de exemplo 01"
-                                            data-cpf="000.000.000-00"
-                                            data-cidade="Cidade de exemplo"
-                                            data-funcao="Caldeireiro"
-                                            data-obra="Obra de exemplo"
-                                            data-status="liberado"
-                                            data-foto="">
-                                            <td><input type="checkbox" class="check check-colaborador" value="1" aria-label="Selecionar Colaborador de exemplo 01"></td>
+                                            data-id="{{ c.id }}"
+                                            data-nome="{{ c.nome }}"
+                                            data-cpf="{{ c.cpf|default('', true) }}"
+                                            data-cidade="{{ c.cidade|default('', true) }}"
+                                            data-funcao="{{ c.funcao|default('', true) }}"
+                                            data-obra="{{ c.obra|default('', true) }}"
+                                            data-status="{{ 'restrito' if c.restrito else 'liberado' }}"
+                                            data-foto="{{ c.foto|default('', true) }}">
+                                            <td><input type="checkbox" class="check check-colaborador" value="{{ c.id }}" aria-label="Selecionar {{ c.nome }}"></td>
                                             <td>
-                                                <button class="photo-button" type="button" onclick="abrirFicha(this.closest('tr'))" aria-label="Ver ficha de Colaborador de exemplo 01">
-                                                    
-                                                        <span class="avatar-fallback" aria-hidden="true">C</span>
-                                                    
+                                                <button class="photo-button" type="button" onclick="abrirFicha(this.closest('tr'))" aria-label="Ver ficha de {{ c.nome }}">
+                                                    {% if c.foto %}
+                                                    <img class="photo" src="{{ c.foto }}" alt="Foto de {{ c.nome }}" loading="lazy" decoding="async" data-avatar-image>
+                                                    {% endif %}
+                                                    <span class="avatar-fallback" aria-hidden="true" {% if c.foto %}hidden{% endif %}>{{ (c.nome|default('?', true))[:1]|upper }}</span>
                                                 </button>
                                             </td>
-                                            <td><span class="person-name" title="Colaborador de exemplo 01">Colaborador de exemplo 01</span><span class="person-code">ID #1</span></td>
-                                            <td>000.000.000-00</td>
-                                            <td>Cidade de exemplo</td>
-                                            <td>Caldeireiro</td>
-                                            <td>Obra de exemplo</td>
+                                            <td><a class="person-name" href="/colaborador/{{ c.id }}" title="{{ c.nome }}" style="text-decoration:none">{{ c.nome }}</a><span class="person-code">ID #{{ c.id }}</span></td>
+                                            <td data-cpf-display>{{ c.cpf|default('—', true) }}</td>
+                                            <td>{{ c.cidade|default('—', true) }}</td>
+                                            <td>{{ c.funcao|default('—', true) }}</td>
+                                            <td>{{ c.obra|default('—', true) }}</td>
                                             <td>
-                                                
-                                                    <span class="badge success">Liberado</span>
-                                                
-                                            </td>
-                                            <td>
-                                                <div class="row-actions">
-                                                    <button class="action-button" type="button" onclick="abrirFicha(this.closest('tr'))">Detalhes</button>
-                                                    <button class="action-button" type="button" onclick="imprimirFicha(this.closest('tr'))" title="Imprimir ou salvar a ficha em PDF">PDF</button>
-                                                    
-                                                        <a class="action-button danger" href="/restringir/1" data-confirm-link data-confirm-title="Restringir colaborador?" data-confirm-message="Colaborador de exemplo 01 será marcado como restrito.">Restringir</a>
-                                                    
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    
-                                        <tr
-                                            data-id="2"
-                                            data-nome="Colaborador de exemplo 02"
-                                            data-cpf="000.000.000-00"
-                                            data-cidade="Cidade de exemplo"
-                                            data-funcao="Soldador"
-                                            data-obra="Obra de exemplo"
-                                            data-status="liberado"
-                                            data-foto="">
-                                            <td><input type="checkbox" class="check check-colaborador" value="2" aria-label="Selecionar Colaborador de exemplo 02"></td>
-                                            <td>
-                                                <button class="photo-button" type="button" onclick="abrirFicha(this.closest('tr'))" aria-label="Ver ficha de Colaborador de exemplo 02">
-                                                    
-                                                        <span class="avatar-fallback" aria-hidden="true">C</span>
-                                                    
-                                                </button>
-                                            </td>
-                                            <td><span class="person-name" title="Colaborador de exemplo 02">Colaborador de exemplo 02</span><span class="person-code">ID #2</span></td>
-                                            <td>000.000.000-00</td>
-                                            <td>Cidade de exemplo</td>
-                                            <td>Soldador</td>
-                                            <td>Obra de exemplo</td>
-                                            <td>
-                                                
-                                                    <span class="badge success">Liberado</span>
-                                                
-                                            </td>
-                                            <td>
-                                                <div class="row-actions">
-                                                    <button class="action-button" type="button" onclick="abrirFicha(this.closest('tr'))">Detalhes</button>
-                                                    <button class="action-button" type="button" onclick="imprimirFicha(this.closest('tr'))" title="Imprimir ou salvar a ficha em PDF">PDF</button>
-                                                    
-                                                        <a class="action-button danger" href="/restringir/2" data-confirm-link data-confirm-title="Restringir colaborador?" data-confirm-message="Colaborador de exemplo 02 será marcado como restrito.">Restringir</a>
-                                                    
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    
-                                        <tr
-                                            data-id="3"
-                                            data-nome="Colaborador de exemplo 03"
-                                            data-cpf="000.000.000-00"
-                                            data-cidade="Cidade de exemplo"
-                                            data-funcao="Auxiliar de produção"
-                                            data-obra="Obra de exemplo"
-                                            data-status="liberado"
-                                            data-foto="">
-                                            <td><input type="checkbox" class="check check-colaborador" value="3" aria-label="Selecionar Colaborador de exemplo 03"></td>
-                                            <td>
-                                                <button class="photo-button" type="button" onclick="abrirFicha(this.closest('tr'))" aria-label="Ver ficha de Colaborador de exemplo 03">
-                                                    
-                                                        <span class="avatar-fallback" aria-hidden="true">C</span>
-                                                    
-                                                </button>
-                                            </td>
-                                            <td><span class="person-name" title="Colaborador de exemplo 03">Colaborador de exemplo 03</span><span class="person-code">ID #3</span></td>
-                                            <td>000.000.000-00</td>
-                                            <td>Cidade de exemplo</td>
-                                            <td>Auxiliar de produção</td>
-                                            <td>Obra de exemplo</td>
-                                            <td>
-                                                
-                                                    <span class="badge success">Liberado</span>
-                                                
-                                            </td>
-                                            <td>
-                                                <div class="row-actions">
-                                                    <button class="action-button" type="button" onclick="abrirFicha(this.closest('tr'))">Detalhes</button>
-                                                    <button class="action-button" type="button" onclick="imprimirFicha(this.closest('tr'))" title="Imprimir ou salvar a ficha em PDF">PDF</button>
-                                                    
-                                                        <a class="action-button danger" href="/restringir/3" data-confirm-link data-confirm-title="Restringir colaborador?" data-confirm-message="Colaborador de exemplo 03 será marcado como restrito.">Restringir</a>
-                                                    
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    
-                                        <tr
-                                            data-id="4"
-                                            data-nome="Colaborador de exemplo 04"
-                                            data-cpf="000.000.000-00"
-                                            data-cidade="Cidade de exemplo"
-                                            data-funcao="Eletricista"
-                                            data-obra="Obra de exemplo"
-                                            data-status="restrito"
-                                            data-foto="">
-                                            <td><input type="checkbox" class="check check-colaborador" value="4" aria-label="Selecionar Colaborador de exemplo 04"></td>
-                                            <td>
-                                                <button class="photo-button" type="button" onclick="abrirFicha(this.closest('tr'))" aria-label="Ver ficha de Colaborador de exemplo 04">
-                                                    
-                                                        <span class="avatar-fallback" aria-hidden="true">C</span>
-                                                    
-                                                </button>
-                                            </td>
-                                            <td><span class="person-name" title="Colaborador de exemplo 04">Colaborador de exemplo 04</span><span class="person-code">ID #4</span></td>
-                                            <td>000.000.000-00</td>
-                                            <td>Cidade de exemplo</td>
-                                            <td>Eletricista</td>
-                                            <td>Obra de exemplo</td>
-                                            <td>
-                                                
+                                                {% if c.restrito %}
                                                     <span class="badge danger">Restrito</span>
-                                                
+                                                {% else %}
+                                                    <span class="badge success">Liberado</span>
+                                                {% endif %}
                                             </td>
                                             <td>
                                                 <div class="row-actions">
                                                     <button class="action-button" type="button" onclick="abrirFicha(this.closest('tr'))">Detalhes</button>
-                                                    <button class="action-button" type="button" onclick="imprimirFicha(this.closest('tr'))" title="Imprimir ou salvar a ficha em PDF">PDF</button>
-                                                    
-                                                        <a class="action-button warn" href="/liberar/4" data-confirm-link data-confirm-title="Liberar colaborador?" data-confirm-message="Colaborador de exemplo 04 será removido do status de restrição.">Liberar</a>
-                                                    
+                                                    <button class="action-button" type="button" onclick="imprimirFicha(this.closest('tr'))" title="Imprimir ou salvar o resumo em PDF">PDF</button>
+                                                    {% if c.restrito %}
+                                                        <a class="action-button warn" href="/liberar/{{ c.id }}" data-confirm-link data-confirm-title="Liberar colaborador?" data-confirm-message="{{ c.nome }} será removido do status de restrição.">Liberar</a>
+                                                    {% else %}
+                                                        <a class="action-button danger" href="/restringir/{{ c.id }}" data-confirm-link data-confirm-title="Restringir colaborador?" data-confirm-message="{{ c.nome }} será marcado como restrito.">Restringir</a>
+                                                    {% endif %}
                                                 </div>
                                             </td>
                                         </tr>
-                                    
+                                    {% else %}
+                                        <tr><td colspan="9" class="empty-state"><span class="empty-icon" aria-hidden="true">⌕</span><strong>Nenhum colaborador encontrado</strong><p>Revise os filtros ou cadastre um colaborador.</p></td></tr>
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div>
+                    {% if paginado and fonte.pages|default(0) > 1 %}
+                    <nav class="pagination" aria-label="Paginação dos colaboradores">
+                        {% if fonte.has_prev %}
+                        <a href="{{ url_for('index', page=fonte.prev_num, busca=busca, obra=obra_selecionada, funcao=funcao_selecionada) }}" aria-label="Página anterior">← Anterior</a>
+                        {% else %}<span class="disabled" aria-disabled="true">← Anterior</span>{% endif %}
+                        {% for numero in fonte.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                            {% if numero %}
+                                {% if numero == fonte.page %}<span class="active" aria-current="page">{{ numero }}</span>
+                                {% else %}<a href="{{ url_for('index', page=numero, busca=busca, obra=obra_selecionada, funcao=funcao_selecionada) }}" aria-label="Ir para a página {{ numero }}">{{ numero }}</a>{% endif %}
+                            {% else %}<span aria-hidden="true">…</span>{% endif %}
+                        {% endfor %}
+                        {% if fonte.has_next %}
+                        <a href="{{ url_for('index', page=fonte.next_num, busca=busca, obra=obra_selecionada, funcao=funcao_selecionada) }}" aria-label="Próxima página">Próxima →</a>
+                        {% else %}<span class="disabled" aria-disabled="true">Próxima →</span>{% endif %}
+                    </nav>
+                    {% endif %}
+
                     
 
                     
@@ -984,6 +926,21 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
             });
         });
 
+        function formatarCpf(valor) {
+            const original = String(valor || '');
+            const numeros = original.replace(/\D/g, '');
+            return numeros.length === 11 ? numeros.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4') : original;
+        }
+        $$('[data-cpf-display]').forEach(celula => { celula.textContent = formatarCpf(celula.textContent); });
+        $('#dataNascimento')?.addEventListener('input', evento => {
+            evento.target.value = evento.target.value.replace(/\D/g, '').slice(0, 8).replace(/^(\d{2})(\d)/, '$1/$2').replace(/^(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
+        });
+        $$('[data-avatar-image]').forEach(imagem => {
+            const alternativa = () => { imagem.hidden = true; imagem.nextElementSibling.hidden = false; };
+            imagem.addEventListener('error', alternativa);
+            if (imagem.complete && !imagem.naturalWidth) alternativa();
+        });
+
         const cpfCadastro = $('#cpf');
         cpfCadastro?.addEventListener('input', () => {
             const numeros = cpfCadastro.value.replace(/\D/g, '').slice(0, 11);
@@ -1068,6 +1025,7 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
                 const resposta = await fetch(`/buscar_status_colaborador?termo=${encodeURIComponent(termo)}`, { signal: requisicaoStatus.signal });
                 if (!resposta.ok) throw new Error('Falha na consulta');
                 const dados = await resposta.json();
+                if (pesquisa.value.trim() !== termo) return;
                 if (!dados.encontrado) {
                     exibirAlertaStatus('neutral', 'Não localizado nas bases.', 'Nenhum registro correspondente foi encontrado.');
                 } else if (dados.na_lista_negra || dados.restrito) {
@@ -1082,10 +1040,12 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
 
         pesquisa?.addEventListener('input', () => {
             window.clearTimeout(timerBusca);
+            requisicaoStatus?.abort();
+            limparAlertaStatus();
             timerBusca = window.setTimeout(() => consultarStatusColaborador(pesquisa.value.trim()), 450);
         });
 
-        function linhasDaTabela() { return tabela ? $$('tbody tr', tabela) : []; }
+        function linhasDaTabela() { return tabela ? $$('tbody tr[data-id]', tabela) : []; }
         function linhasVisiveis() { return linhasDaTabela().filter(linha => !linha.hidden); }
 
         function atualizarSelecao() {
@@ -1116,7 +1076,10 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
 
         filtroStatusPagina?.addEventListener('change', () => {
             const status = filtroStatusPagina.value;
-            linhasDaTabela().forEach(linha => { linha.hidden = status !== 'todos' && linha.dataset.status !== status; });
+            linhasDaTabela().forEach(linha => {
+                linha.hidden = status !== 'todos' && linha.dataset.status !== status;
+                if (linha.hidden) { const check = $('.check-colaborador', linha); if (check) check.checked = false; }
+            });
             if ($('#contadorVisiveis')) $('#contadorVisiveis').textContent = String(linhasVisiveis().length);
             atualizarSelecao();
         });
@@ -1148,7 +1111,7 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
             const dados = dadosDaLinha(linha);
             $('#modalNome').textContent = dados.nome;
             $('#modalFuncao').textContent = dados.funcao;
-            $('#modalCpf').textContent = dados.cpf;
+            $('#modalCpf').textContent = formatarCpf(dados.cpf);
             $('#modalObra').textContent = dados.obra;
             $('#modalCidade').textContent = dados.cidade;
             $('#modalStatus').textContent = dados.status;
@@ -1157,6 +1120,7 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
             foto.replaceChildren();
             if (dados.foto) {
                 const imagem = document.createElement('img');
+                imagem.addEventListener('error', () => { foto.textContent = dados.nome.charAt(0).toUpperCase() || '?'; });
                 imagem.src = dados.foto;
                 imagem.alt = `Foto de ${dados.nome}`;
                 foto.appendChild(imagem);
@@ -1240,12 +1204,19 @@ window.fetch=async function(){throw new Error('Prévia visual: operação indisp
                     try {
                         const resposta = await fetch('/excluir_varios', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'same-origin',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                ...(document.querySelector('meta[name="csrf-token"]')?.content ? {'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content} : {})
+                            },
                             body: JSON.stringify({ ids })
                         });
-                        let dados = {};
-                        try { dados = await resposta.json(); } catch (erro) {}
-                        if (!resposta.ok) throw new Error(dados.mensagem || 'Não foi possível excluir os cadastros.');
+                        if (resposta.redirected || !resposta.headers.get('content-type')?.includes('application/json')) {
+                            throw new Error('O sistema não confirmou a exclusão. Atualize a página e confira os registros antes de tentar novamente.');
+                        }
+                        const dados = await resposta.json();
+                        if (!resposta.ok || !dados || dados.success === false || dados.sucesso === false || dados.ok === false || dados.erro || dados.error || ['erro', 'error', 'failed'].includes(dados.status)) throw new Error(dados?.mensagem || dados?.message || dados?.erro || dados?.error || 'Não foi possível excluir os cadastros.');
                         mostrarToast(dados.mensagem || 'Cadastros excluídos com sucesso.', 'success');
                         window.setTimeout(() => window.location.reload(), 750);
                     } catch (erro) {
