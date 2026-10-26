@@ -1,0 +1,24 @@
+{% extends "legal_base.html" %}
+{% from "_ui_macros.html" import ui_csrf with context %}
+{% set ui_page = "nova_restricao" %}
+{% block title %}Nova Restrição{% endblock %}
+{% block content %}
+<header class="ui-page-lead"><h1>Registrar restrição</h1>
+<p class="lead">Somente RH e administradores. Confira a identidade e a motivação antes de registrar uma restrição. Evite decisões automáticas por semelhança de nomes.</p></header>
+<section class="card">
+<form method="post" action="{{ url_for('nova_restricao') }}">{{ ui_csrf() }}
+<div class="fields">
+ <div><label>Nome do colaborador</label><input name="nome" required maxlength="200"></div>
+ <div><label>CPF (se disponível)</label><input inputmode="numeric" name="cpf" maxlength="20"></div>
+ <div><label>Obra</label><input name="obra" maxlength="200"></div>
+</div>
+<div class="fields" style="margin-top:16px">
+ <div><label>Telefone (opcional)</label><input type="tel" autocomplete="tel" name="telefone" maxlength="20"></div>
+ <div><label>Campo (opcional)</label><input name="campo" maxlength="200"></div>
+</div>
+<div style="margin-top:16px"><label>Motivo profissional da restrição</label><textarea name="motivo" required maxlength="500" placeholder="Descreva objetivamente e evite informações excessivas"></textarea></div>
+<div class="actions"><button type="submit">Salvar restrição</button><a class="btn soft" href="{{ url_for('lista_negra') }}">Cancelar</a></div>
+</form>
+</section>
+<div class="alert">Recomendação: a inclusão e a manutenção de uma lista de restrições devem ser justificadas, revisadas periodicamente e sujeitas à correção de erros. A presença de nomes semelhantes não comprova identidade.</div>
+{% endblock %}

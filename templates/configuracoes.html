@@ -1,0 +1,50 @@
+{% extends "legal_base.html" %}
+{% from "_ui_macros.html" import ui_csrf with context %}
+{% set ui_page = "configuracoes" %}
+{% block title %}Configurações e LGPD{% endblock %}
+{% block content %}
+<header class="ui-page-lead"><h1>Central de configurações</h1>
+<p class="lead">Privacidade, permissões e registros de acesso em um só lugar. Alterações administrativas ficam registradas na auditoria.</p></header>
+<div class="grid">
+ <div class="card"><h2><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="m8 12 3 3 5-6"/></svg> Segurança de acesso</h2><p>Revise as contas e atribua um perfil adequado às responsabilidades de cada usuário.</p><small>As regras de autenticação e de sessão são aplicadas pelo servidor.</small></div>
+ <div class="card"><h2><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H4v20h16V8l-6-6Zm0 0v6h6M8 12h8m-8 4h8"/></svg> Documentos legais</h2><p><a href="{{ url_for('privacidade') }}">Aviso de privacidade</a> · <a href="{{ url_for('termos_uso') }}">Termos de uso</a></p><small>Termo interno: {{ terms_version }}. A ciência é registrada por usuário e versão.</small></div>
+ <div class="card"><h2><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.5 7M3 3v8h8M12 7v6l4 2"/></svg> Rastreabilidade</h2><p>Consultas sensíveis, alterações e exportações ficam registradas sem copiar dados pessoais para o log.</p><a class="btn soft" href="{{ url_for('auditoria') }}">Consultar auditoria</a></div>
+</div>
+<nav class="ui-inline-nav" aria-label="Configurações"><a href="#empresaConfig">Empresa</a><a href="#usuariosConfig">Usuários</a><a href="#novoUsuarioConfig">Novo usuário</a></nav><section class="card" id="empresaConfig">
+<h2>Dados da empresa para o aviso de privacidade</h2>
+<p class="muted">Preencha estes campos antes de disponibilizar a política oficialmente. Use uma caixa de e-mail monitorada.</p>
+<form method="post" action="{{ url_for('salvar_configuracoes') }}">{{ ui_csrf() }}
+ <div class="fields">
+  <div><label>Razão social do controlador</label><input name="empresa" maxlength="180" value="{{ dados.empresa }}" placeholder="Razão social"></div>
+  <div><label>Contato de privacidade / LGPD</label><input type="email" name="contato_privacidade" maxlength="180" value="{{ dados.contato_privacidade }}" placeholder="privacidade@empresa.com.br"></div>
+  <div><label>Responsável interno</label><input name="responsavel" maxlength="180" value="{{ dados.responsavel }}" placeholder="Nome ou área responsável"></div>
+ </div><div class="actions"><button>Salvar informações</button></div>
+</form>
+</section>
+<section class="card" id="usuariosConfig">
+<h2>Controle de usuários e permissões</h2>
+<p class="muted">ADMIN: configurações e exclusão · RH: admissões, restrições e exportação · CADASTRO: registro e importação · VISUALIZADOR: consulta limitada.</p>
+<p class="alert">Contas antigas precisam de um perfil liberado e de troca de senha antes de voltar a ser usadas. A senha padrão da versão anterior não é segura.</p>
+<div class="ui-filter-bar" data-ui-filter-table="#usersTable" data-ui-kind="usuarios" data-ui-rows="tbody tr[data-user-row]" data-ui-counter="#userCount"><label class="ui-filter-field"><span>Buscar usuário</span><input type="search" data-ui-key="usuario" data-ui-mode="contains" aria-label="Buscar usuário"></label><label class="ui-filter-field"><span>Perfil</span><select data-ui-key="papel" data-ui-mode="exact" aria-label="Perfil" data-ui-populate><option value="">Todos</option></select></label><label class="ui-filter-field"><span>Estado</span><select data-ui-key="estado" data-ui-mode="exact" aria-label="Estado"><option value="">Todos</option><option value="ativo">Ativo</option><option value="inativo">Desativado</option></select></label><button class="button secondary compact" type="button" data-ui-clear>Limpar adicionais</button><span class="ui-filter-note">Os filtros adicionais consideram os registros carregados nesta página.</span></div><p class="muted"><span id="userCount"></span> conta(s) nesta página</p><div class="overflow"><table id="usersTable"><thead><tr><th>Usuário</th><th>Perfil</th><th>Estado</th><th>Alterar perfil</th><th>Ativar/desativar</th><th>Trocar senha</th></tr></thead><tbody>
+{% for usuario, registro in usuarios %}
+<tr data-user-row data-usuario="{{ usuario.usuario }}" data-papel="{{ registro.papel if registro else 'Pendente' }}" data-estado="{{ 'ativo' if not registro or registro.ativo else 'inativo' }}"><td><strong>{{ usuario.usuario }}</strong></td><td>{{ (registro.papel if registro else "Pendente")|upper }}</td><td>{{ "Ativo" if not registro or registro.ativo else "Desativado" }}</td>
+<td><form method="post" action="{{ url_for('usuarios_configuracao') }}">{{ ui_csrf() }}<input type="hidden" name="acao" value="papel"><input type="hidden" name="id" value="{{ usuario.id }}"><select name="papel" aria-label="Perfil de {{ usuario.usuario }}">{% for p in papeis %}<option value="{{ p }}" {% if registro and registro.papel == p %}selected{% endif %}>{{ p | upper }}</option>{% endfor %}</select><button style="margin-top:5px" class="soft">Salvar</button></form></td>
+<td><form method="post" action="{{ url_for('usuarios_configuracao') }}">{{ ui_csrf() }}<input type="hidden" name="acao" value="ativacao"><input type="hidden" name="id" value="{{ usuario.id }}"><input type="hidden" name="papel" value="{{ registro.papel if registro else 'rh' }}"><button class="soft" {% if usuario.id == current_user.id %}disabled{% endif %}>{{ "Desativar" if not registro or registro.ativo else "Ativar" }}</button></form></td>
+<td><form method="post" action="{{ url_for('usuarios_configuracao') }}">{{ ui_csrf() }}<input type="hidden" name="acao" value="senha"><input type="hidden" name="id" value="{{ usuario.id }}"><input type="hidden" name="papel" value="{{ registro.papel if registro else 'rh' }}"><input type="password" name="senha" data-ui-password placeholder="Nova senha (12+)" minlength="12" required autocomplete="new-password"><button style="margin-top:5px" class="soft">Atualizar</button></form></td></tr>
+{% endfor %}
+</tbody></table></div>
+</section>
+<section class="card" id="novoUsuarioConfig">
+<h2>Cadastrar usuário</h2>
+<form action="{{ url_for('usuarios_configuracao') }}" method="post">{{ ui_csrf() }}
+<input type="hidden" name="acao" value="criar">
+<div class="fields">
+<div><label>Nome de usuário</label><input name="usuario" required maxlength="100" autocomplete="off"></div>
+<div><label>Senha inicial segura (12+ caracteres)</label><input type="password" name="senha" data-ui-password id="novaSenhaUsuario" minlength="12" required autocomplete="new-password"></div>
+<div><label for="confirmarSenhaUsuario">Confirmar senha</label><input id="confirmarSenhaUsuario" type="password" data-ui-password data-ui-match="novaSenhaUsuario" required autocomplete="new-password" placeholder="Repita a senha"></div><div><label>Perfil</label><select name="papel">{% for p in papeis %}<option value="{{ p }}" {% if p == 'cadastro' %}selected{% endif %}>{{ p|upper }}</option>{% endfor %}</select></div>
+</div>
+<div class="actions"><button>Criar usuário</button></div>
+</form>
+</section>
+<div class="alert"><strong>Pendências para publicação:</strong> validar os documentos com o jurídico/RH, criar política de retenção e backups, aplicar HTTPS no servidor e revisar acessos de contas antigas.</div>
+{% endblock %}

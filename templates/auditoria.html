@@ -1,0 +1,18 @@
+{% extends "legal_base.html" %}
+{% from "_ui_macros.html" import ui_csrf with context %}
+{% set ui_page = "auditoria" %}
+{% block title %}Auditoria de Acessos{% endblock %}
+{% block content %}
+<header class="ui-page-lead"><h1>Histórico de atividades</h1>
+<p class="lead">Registro de quem acessou dados sensíveis, exportou ou alterou informações do sistema. Os valores dos documentos não são copiados para este histórico.</p></header>
+<section class="card"><h2>Atividades registradas <small id="auditCount"></small></h2><div class="ui-filter-bar" data-ui-filter-table="#auditTable" data-ui-kind="auditoria" data-ui-rows="tbody tr[data-audit-row]" data-ui-counter="#auditCount"><label class="ui-filter-field"><span>Usuário</span><input type="search" data-ui-key="usuario" data-ui-mode="contains" aria-label="Usuário"></label><label class="ui-filter-field"><span>Ação</span><select data-ui-key="acao" data-ui-mode="exact" aria-label="Ação" data-ui-populate><option value="">Todos</option></select></label><label class="ui-filter-field"><span>Módulo</span><select data-ui-key="recurso" data-ui-mode="exact" aria-label="Módulo" data-ui-populate><option value="">Todos</option></select></label><label class="ui-filter-field"><span>Data inicial (UTC)</span><input type="date" data-ui-key="data" data-ui-mode="from" aria-label="Data inicial (UTC)"></label><label class="ui-filter-field"><span>Data final (UTC)</span><input type="date" data-ui-key="data" data-ui-mode="to" aria-label="Data final (UTC)"></label><button class="button secondary compact" type="button" data-ui-clear>Limpar adicionais</button><span class="ui-filter-note">Os filtros adicionais consideram os registros carregados nesta página.</span></div><div class="overflow">
+<table id="auditTable"><thead><tr><th>Data (UTC)</th><th>Usuário</th><th>Ação</th><th>Módulo</th><th>ID do registro</th></tr></thead><tbody>
+{% for log in registros.items %}<tr data-audit-row data-usuario="{{ log.usuario }}" data-acao="{{ log.acao }}" data-recurso="{{ log.recurso }}" data-data="{{ log.data_utc.strftime('%Y-%m-%d') if log.data_utc else '' }}"><td>{{ log.data_utc.strftime("%d/%m/%Y %H:%M") if log.data_utc else "—" }}</td><td>{{ log.usuario }}</td><td>{{ log.acao }}</td><td>{{ log.recurso }}</td><td>{{ log.registro_id or "—" }}</td></tr>{% else %}<tr><td colspan="5">Nenhuma atividade registrada.</td></tr>{% endfor %}
+</tbody></table>
+</div></section>
+<div class="ui-inline-nav">
+ {% if registros.has_prev %}<a href="{{ url_for('auditoria', pagina=registros.prev_num) }}">← Mais recentes</a>{% endif %}
+ <span>Página {{ registros.page }} de {{ registros.pages or 1 }}</span>
+ {% if registros.has_next %}<a href="{{ url_for('auditoria', pagina=registros.next_num) }}">Mais antigos →</a>{% endif %}
+</div>
+{% endblock %}

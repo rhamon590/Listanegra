@@ -1,387 +1,93 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 db = SQLAlchemy()
 
-# =========================================================
-# LOGIN
-# =========================================================
 
 class Usuario(db.Model):
+    __tablename__ = "usuarios"
 
-    __tablename__ = 'usuarios'
-
-    # =====================================
-    # ID
-    # =====================================
-
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    # =====================================
-    # USUÁRIO
-    # =====================================
-
-    usuario = db.Column(
-        db.String(100),
-        unique=True,
-        nullable=False
-    )
-
-    # =====================================
-    # SENHA
-    # =====================================
-
-    senha = db.Column(
-        db.String(255),
-        nullable=False
-    )
-
-    # =====================================
-    # GERAR SENHA
-    # =====================================
+    id = db.Column(db.Integer, primary_key=True)
+    usuario = db.Column(db.String(100), unique=True, nullable=False, index=True)
+    senha = db.Column(db.String(255), nullable=False)
 
     def set_senha(self, senha):
-
-        self.senha = generate_password_hash(
-            senha
-        )
-
-    # =====================================
-    # VERIFICAR SENHA
-    # =====================================
+        self.senha = generate_password_hash(senha)
 
     def check_senha(self, senha):
-
-        return check_password_hash(
-            self.senha,
-            senha
-        )
-
-    # =====================================
-    # REPRESENTAÇÃO
-    # =====================================
+        return check_password_hash(self.senha, senha)
 
     def __repr__(self):
+        return f"<Usuario {self.usuario}>"
 
-        return f'<Usuario {self.usuario}>'
-
-# =========================================================
-# COLABORADORES
-# =========================================================
 
 class Colaborador(db.Model):
+    __tablename__ = "colaborador"
 
-    __tablename__ = 'colaborador'
+    id = db.Column(db.Integer, primary_key=True)
 
-    # =====================================
-    # ID
-    # =====================================
+    nome = db.Column(db.String(200), nullable=False, index=True)
+    cpf = db.Column(db.String(20), unique=True, nullable=False, index=True)
+    telefone = db.Column(db.String(20))
+    data_nascimento = db.Column(db.String(50))
+    naturalidade = db.Column(db.String(100))
+    cep = db.Column(db.String(20))
+    endereco = db.Column(db.String(300))
+    cidade = db.Column(db.String(100), index=True)
+    estado = db.Column(db.String(100))
+    funcao = db.Column(db.String(100), index=True)
 
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
+    campo = db.Column(db.String(200), index=True)
+    campo_isolado = db.Column(db.Boolean, default=False, index=True)
+    obra = db.Column(db.String(200), index=True)
+    foto = db.Column(db.String(300))
 
-    # =====================================
-    # DADOS PESSOAIS
-    # =====================================
+    status = db.Column(db.String(50), default="Liberado", index=True)
+    pre_admissao = db.Column(db.String(100), default="Em análise")
+    data_admissao = db.Column(db.String(50))
 
-    nome = db.Column(
-        db.String(200),
-        nullable=False
-    )
-
-    cpf = db.Column(
-        db.String(20),
-        unique=True,
-        nullable=False
-    )
-
-    telefone = db.Column(
-        db.String(20)
-    )
-
-    data_nascimento = db.Column(
-        db.String(50)
-    )
-
-    naturalidade = db.Column(
-        db.String(100)
-    )
-
-    cep = db.Column(
-        db.String(20)
-    )
-
-    endereco = db.Column(
-        db.String(300)
-    )
-
-    cidade = db.Column(
-        db.String(100)
-    )
-
-    estado = db.Column(
-        db.String(100)
-    )
-
-    funcao = db.Column(
-        db.String(100)
-    )
-
-    # =====================================
-    # CAMPO / EMPRESA
-    # =====================================
-
-    campo = db.Column(
-        db.String(200)
-    )
-
-    # =====================================
-    # CAMPO ISOLADO
-    # =====================================
-
-    campo_isolado = db.Column(
-        db.Boolean,
-        default=False
-    )
-
-    # =====================================
-    # OBRA
-    # =====================================
-
-    obra = db.Column(
-        db.String(200)
-    )
-
-    # =====================================
-    # FOTO
-    # =====================================
-
-    foto = db.Column(
-        db.String(300)
-    )
-
-    # =====================================
-    # STATUS
-    # =====================================
-
-    status = db.Column(
-        db.String(50),
-        default='Liberado'
-    )
-
-    # =====================================
-    # PRÉ-ADMISSÃO
-    # =====================================
-
-    pre_admissao = db.Column(
-        db.String(100),
-        default='Em análise'
-    )
-
-    data_admissao = db.Column(
-        db.String(50)
-    )
-
-    # =====================================
-    # RESTRIÇÃO
-    # =====================================
-
-    restrito = db.Column(
-        db.Boolean,
-        default=False
-    )
-
-    motivo = db.Column(
-        db.String(500)
-    )
-
-    # =====================================
-    # DATA CADASTRO
-    # =====================================
-
-    data_cadastro = db.Column(
-        db.DateTime,
-        server_default=db.func.now()
-    )
-
-    # =====================================
-    # REPRESENTAÇÃO
-    # =====================================
+    restrito = db.Column(db.Boolean, default=False, index=True)
+    motivo = db.Column(db.String(500))
+    data_cadastro = db.Column(db.DateTime, server_default=db.func.now(), index=True)
 
     def __repr__(self):
+        return f"<Colaborador {self.nome}>"
 
-        return f'<Colaborador {self.nome}>'
-
-
-# =========================================================
-# PRÉ-ADMISSÃO
-# =========================================================
 
 class PreAdmissao(db.Model):
+    __tablename__ = "pre_admissao"
 
-    __tablename__ = 'pre_admissao'
-
-    # =====================================
-    # ID
-    # =====================================
-
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    # =====================================
-    # DADOS
-    # =====================================
-
-    nome = db.Column(
-        db.String(200),
-        nullable=False
-    )
-
-    cpf = db.Column(
-        db.String(20)
-    )
-
-    telefone = db.Column(
-        db.String(20)
-    )
-
-    funcao = db.Column(
-        db.String(150)
-    )
-
-    campo = db.Column(
-        db.String(150)
-    )
-
-    obra = db.Column(
-        db.String(150)
-    )
-
-    data_admissao = db.Column(
-        db.String(50)
-    )
-
-    # =====================================
-    # CAMPO ISOLADO
-    # =====================================
-
-    isolado = db.Column(
-        db.Boolean,
-        default=False
-    )
-
-    # =====================================
-    # STATUS
-    # =====================================
-
-    status = db.Column(
-        db.String(50),
-        default='Em análise'
-    )
-
-    # =====================================
-    # ALERTA LISTA NEGRA
-    # =====================================
-
-    lista_negra = db.Column(
-        db.Boolean,
-        default=False
-    )
-
-    motivo_lista = db.Column(
-        db.String(500)
-    )
-
-    # =====================================
-    # DATA
-    # =====================================
-
-    data_cadastro = db.Column(
-        db.DateTime,
-        server_default=db.func.now()
-    )
-
-    # =====================================
-    # REPRESENTAÇÃO
-    # =====================================
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(200), nullable=False, index=True)
+    cpf = db.Column(db.String(20), index=True)
+    telefone = db.Column(db.String(20))
+    funcao = db.Column(db.String(150), index=True)
+    campo = db.Column(db.String(150), index=True)
+    obra = db.Column(db.String(150), index=True)
+    data_admissao = db.Column(db.String(50))
+    isolado = db.Column(db.Boolean, default=False, index=True)
+    status = db.Column(db.String(50), default="Em análise", index=True)
+    lista_negra = db.Column(db.Boolean, default=False)
+    motivo_lista = db.Column(db.String(500))
+    data_cadastro = db.Column(db.DateTime, server_default=db.func.now(), index=True)
 
     def __repr__(self):
+        return f"<PreAdmissao {self.nome}>"
 
-        return f'<PreAdmissao {self.nome}>'
-
-
-# =========================================================
-# LISTA NEGRA
-# =========================================================
 
 class ListaNegra(db.Model):
+    __tablename__ = "lista_negra"
 
-    __tablename__ = 'lista_negra'
-
-    # =====================================
-    # ID
-    # =====================================
-
-    id = db.Column(
-        db.Integer,
-        primary_key=True
-    )
-
-    # =====================================
-    # DADOS
-    # =====================================
-
-    nome = db.Column(
-        db.String(200),
-        nullable=False
-    )
-
-    obra = db.Column(
-        db.String(200)
-    )
-
-    campo = db.Column(
-        db.String(200)
-    )
-
-    cpf = db.Column(
-        db.String(20)
-    )
-
-    telefone = db.Column(
-        db.String(20)
-    )
-
-    motivo = db.Column(
-        db.String(500),
-        nullable=False
-    )
-
-    status = db.Column(
-        db.String(50),
-        default='Restrito'
-    )
-
-    # =====================================
-    # DATA RESTRIÇÃO
-    # =====================================
-
-    data_restricao = db.Column(
-        db.DateTime,
-        server_default=db.func.now()
-    )
-
-    # =====================================
-    # REPRESENTAÇÃO
-    # =====================================
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(200), nullable=False, index=True)
+    obra = db.Column(db.String(200), index=True)
+    campo = db.Column(db.String(200), index=True)
+    cpf = db.Column(db.String(20), index=True)
+    telefone = db.Column(db.String(20))
+    motivo = db.Column(db.String(500), nullable=False)
+    status = db.Column(db.String(50), default="Restrito", index=True)
+    data_restricao = db.Column(db.DateTime, server_default=db.func.now(), index=True)
 
     def __repr__(self):
-
-        return f'<ListaNegra {self.nome}>'
+        return f"<ListaNegra {self.nome}>"

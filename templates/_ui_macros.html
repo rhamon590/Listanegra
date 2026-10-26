@@ -1,0 +1,1 @@
+{% macro ui_csrf() -%}{% if csrf_token is defined %}{% set token=csrf_token() if csrf_token is callable else csrf_token %}{% if token %}<input type="hidden" name="csrf_token" value="{{ token }}">{% endif %}{% endif %}{%- endmacro %}

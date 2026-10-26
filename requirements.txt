@@ -1,7 +1,6 @@
-
-flask
-flask_sqlalchemy
-pandas
-openpyxl
+flask>=3.0,<4
+flask_sqlalchemy>=3.1,<4
+pandas>=2.0
+openpyxl>=3.1
 reportlab
-gunicorn
+gunicorn; platform_system != "Windows"

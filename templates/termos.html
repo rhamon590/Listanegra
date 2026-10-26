@@ -1,0 +1,22 @@
+{% extends "legal_base.html" %}
+{% from "_ui_macros.html" import ui_csrf with context %}
+{% set ui_page = "termos" %}
+{% block title %}Termos de Uso{% endblock %}
+{% block content %}
+<header class="ui-page-lead"><h1>Termos de uso do Fichário</h1>
+<p class="lead">Regras para usuários internos autorizados de {{ empresa or "[razão social pendente]" }}. Este documento não é uma autorização geral para usar dados pessoais fora das finalidades do trabalho.</p></header><div data-ui-doc-index><div class="ui-doc-tools"><input type="search" data-ui-doc-search aria-label="Buscar tópico do documento" placeholder="Encontrar um assunto neste documento"><button type="button" class="btn soft" data-ui-print><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H4v20h16V8l-6-6Zm0 0v6h6M8 12h8m-8 4h8"/></svg>Imprimir documento</button></div><nav class="ui-doc-index" data-ui-doc-links aria-label="Tópicos do documento"></nav></div>
+<div class="card">
+<h2>1. Uso profissional e individual</h2>
+<p>O acesso é pessoal e intransferível. Cada usuário deve usar somente os dados necessários às tarefas atribuídas, sem compartilhar senha, sessão ou informações com terceiros não autorizados.</p>
+<h2>2. Documentos e exportações</h2>
+<p>Planilhas, fotos, relatórios, cópias e capturas de tela que contenham informações de colaboradores só podem ser produzidos, armazenados e transmitidos com justificativa profissional e por canais aprovados pela empresa.</p>
+<h2>3. Sigilo e incidentes</h2>
+<p>É proibida a divulgação ou reutilização não autorizada de dados. Erros de envio, perda de arquivos, acessos indevidos e suspeitas de exposição devem ser reportados ao responsável pela proteção de dados.</p>
+<h2>4. Monitoramento proporcional</h2>
+<p>Operações relevantes ficam registradas em logs de auditoria para proteção da informação, apuração de incidentes e prestação de contas, conforme finalidade legítima e política de retenção.</p>
+<h2>5. Encerramento de acesso</h2>
+<p>A empresa poderá restringir permissões ou revogar credenciais conforme mudança de função, desligamento ou incidente, resguardadas as obrigações legais aplicáveis.</p>
+<h2>6. Responsabilidade da empresa</h2>
+<p>A empresa deve manter instruções claras, controles de acesso, procedimentos de guarda, correção e eliminação de informações e um canal de contato. O aceite destes termos não substitui os fundamentos legais de tratamento previstos na LGPD.</p>
+</div><p class="muted">Contato sobre privacidade: {{ contato or "[a definir pelo administrador]" }}.</p>
+{% endblock %}

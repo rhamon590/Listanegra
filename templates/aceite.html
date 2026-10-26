@@ -1,0 +1,22 @@
+{% extends "legal_base.html" %}
+{% from "_ui_macros.html" import ui_csrf with context %}
+{% set ui_page = "aceite" %}
+{% block title %}Termo de Confidencialidade{% endblock %}
+{% block content %}
+<header class="ui-page-lead"><h1>Termo de ciência e confidencialidade</h1>
+<p class="lead">Para continuar no Fichário, confirme que conhece suas responsabilidades ao acessar informações de colaboradores.</p></header>
+<div class="card">
+<p>Como usuário interno de <strong>{{ empresa or "empresa responsável pelo fichário" }}</strong>, declaro ciência de que:</p>
+<ul><li>Usarei dados pessoais apenas para atribuições profissionais autorizadas.</li>
+<li>Não compartilharei meu login nem encaminharei arquivos, fotos ou planilhas para contatos não autorizados.</li>
+<li>Respeitarei a confidencialidade de dados cadastrais, documentais e das informações de restrição.</li>
+<li>Comunicarei imediatamente acessos indevidos, perdas de dados e suspeitas de incidentes.</li>
+<li>Poderei ter operações relevantes registradas para auditoria, conforme política interna.</li></ul>
+<p>Este registro confirma ciência das regras de acesso, <strong>não é consentimento do colaborador</strong> para todos os tratamentos de dados.</p>
+<form method="post" data-ui-aceite>{{ ui_csrf() }}
+ <label class="ui-check-label"><input type="checkbox" name="aceito" value="sim" required> Li e estou ciente das responsabilidades acima e dos <a href="{{ url_for('termos_uso') }}" target="_blank" rel="noopener">termos de uso</a>.</label>
+ <div class="actions"><button type="submit">Registrar ciência e continuar</button><a class="btn soft" href="{{ url_for('logout') }}">Sair</a></div>
+</form>
+<p class="muted">Versão {{ terms_version }}. A data, o usuário e a versão serão registrados.</p>
+</div>
+{% endblock %}

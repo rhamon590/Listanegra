@@ -13,4 +13,4 @@ df['CPF'] = (
     .str.lstrip('0')
 )
 
-print(df.head())
+print(f"Planilha carregada: {len(df)} linha(s). Os dados pessoais não serão exibidos no console.")
