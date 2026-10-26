@@ -77,12 +77,12 @@ def is_blocked(key):
 def mark_failed(key):
     record=db.session.get(FailedLogin,key)
     if record is None:
-        record=FailedLogin(key=key)
+        record=FailedLogin(key=key, failures=0)
         db.session.add(record)
     if record.blocked_until and record.blocked_until < datetime.utcnow():
         record.failures=0
         record.blocked_until=None
-    record.failures += 1
+    record.failures = (record.failures or 0) + 1
     if record.failures >= 5:
         record.blocked_until=datetime.utcnow()+timedelta(minutes=15)
     db.session.commit()
@@ -92,3 +92,4 @@ def reset_failed(key):
     if record:
         db.session.delete(record)
         db.session.commit()
+
