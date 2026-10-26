@@ -282,7 +282,7 @@ def mask_cpf(value):
 
 PUBLIC_ENDPOINTS = {"login", "privacidade", "termos_uso", "static"}
 NO_ACK = PUBLIC_ENDPOINTS | {"aceitar_termo", "logout"}
-ADMIN_ONLY = {"configuracoes","salvar_configuracoes","gerenciar_usuario","auditoria",
+ADMIN_ONLY = {"configuracoes","salvar_configuracoes","usuarios_configuracao","auditoria",
               "excluir_varios","excluir_lista_negra_tudo", "zerar_pre_admissao","limpar_pre_admissoes"}
 RH_ONLY = {"restringir","liberar","nova_restricao","lista_negra","liberar_lista",
            "importar_lista_negra","exportar_lista_negra_excel", "exportar_colaboradores_excel",
