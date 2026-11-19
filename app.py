@@ -24,6 +24,7 @@ import re
 
 import pandas as pd
 from sqlalchemy import func, or_, text
+from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 
 from models import db, Colaborador, ListaNegra, PreAdmissao, Usuario
@@ -301,6 +302,8 @@ def security_middleware():
     # Nunca expor fotos diretamente pela pasta de arquivos estáticos do Flask.
     if ep == "static" and request.path.startswith("/static/fotos/"):
         abort(403)
+    if ep not in {"static", "mapa_colaboradores"}:
+        session.pop("acesso_mapa", None)
     if ep in PUBLIC_ENDPOINTS and ep != "static":
         uid=session.get("user_id")
         if isinstance(uid,int):
@@ -478,7 +481,18 @@ def index():
     )
 
 
-@app.get("/mapa-colaboradores")
+@app.cli.command("gerar-pin-mapa")
+def gerar_pin_mapa():
+    """Gera o hash do PIN para a variável MAPA_PIN_HASH."""
+    import click
+
+    pin = click.prompt("Digite um PIN de 8 a 12 dígitos", hide_input=True, confirmation_prompt=True)
+    if not re.fullmatch(r"[0-9]{8,12}", pin):
+        raise click.ClickException("Use de 8 a 12 dígitos.")
+    click.echo(generate_password_hash(pin))
+
+
+@app.route("/mapa-colaboradores", methods=["GET", "POST"])
 @login_required
 def mapa_colaboradores():
     regiao = request.args.get("regiao", "")
@@ -487,6 +501,45 @@ def mapa_colaboradores():
     uf = uf if uf in UFS else ""
     if regiao and uf and UFS[uf]["region"] != regiao:
         uf = ""
+
+    pin_hash = os.environ.get("MAPA_PIN_HASH", "").strip()
+    destino = url_for("mapa_colaboradores", **{
+        chave: valor for chave, valor in {"regiao": regiao, "uf": uf}.items() if valor
+    })
+    if not pin_hash:
+        return render_template("mapa_pin.html", configurado=False), 503
+
+    chave = login_key("pin-mapa", "global")
+    assinatura = hmac.new(app.secret_key.encode(), pin_hash.encode(), "sha256").hexdigest()
+    if request.method == "POST":
+        session.pop("acesso_mapa", None)
+        if request.form.get("acao") == "bloquear":
+            return redirect(url_for("mapa_colaboradores"), code=303)
+        if is_blocked(chave):
+            return render_template("mapa_pin.html", configurado=True, bloqueado=True, destino=destino), 429
+
+        pin = request.form.get("pin", "")
+        if not re.fullmatch(r"[0-9]{8,12}", pin) or not check_password_hash(pin_hash, pin):
+            mark_failed(chave)
+            bloqueado = is_blocked(chave)
+            return render_template(
+                "mapa_pin.html", configurado=True, bloqueado=bloqueado, erro=True, destino=destino
+            ), 429 if bloqueado else 403
+
+        reset_failed(chave)
+        session["acesso_mapa"] = {
+            "assinatura": assinatura,
+            "expira": (datetime.now().timestamp() + 600),
+        }
+        return redirect(destino, code=303)
+
+    acesso = session.get("acesso_mapa", {})
+    if acesso.get("assinatura") != assinatura or acesso.get("expira", 0) <= datetime.now().timestamp():
+        session.pop("acesso_mapa", None)
+        bloqueado = is_blocked(chave)
+        return render_template(
+            "mapa_pin.html", configurado=True, bloqueado=bloqueado, destino=destino
+        ), 429 if bloqueado else 200
 
     grupos = db.session.query(Colaborador.estado, func.count(Colaborador.id)).group_by(
         Colaborador.estado
