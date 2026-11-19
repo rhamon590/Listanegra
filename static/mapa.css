@@ -223,3 +223,20 @@ footer { font-size: .8rem; color: var(--muted); }
     .map-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .map-summary article:first-child { grid-column: 1 / -1; }
 }
+
+.map-pin { max-width: 580px; }
+.map-pin > .map-panel { margin-top: 18px; }
+.map-pin-form { display: grid; gap: 10px; }
+.map-pin-form label { font-weight: 700; }
+.map-pin-form input, .map-pin-form button, .map-lock button {
+    min-height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 8px 12px;
+    font: inherit;
+}
+.map-pin-form input { background: var(--bg); color: var(--ink); }
+.map-pin-form button { background: var(--accent); color: var(--button-ink); }
+.map-lock { margin-top: 10px; }
+.map-lock button { background: transparent; color: var(--header-ink); }
+.map-lock button, .map-pin-form button { cursor: pointer; font-weight: 700; }
