@@ -55,3 +55,13 @@ Os textos legais são **modelos operacionais**, não parecer jurídico nem certi
 ### Testes feitos
 
 Realizados: compilação dos arquivos Python; renderização de todos os templates Jinja com dados fictícios; análise sintática de JavaScript; verificação de referências e exclusão de dados pessoais do novo pacote. **Ainda não foi possível testar o aplicativo rodando com Flask nem o instalador no Windows**, pois o ambiente de preparação não disponibilizou o pacote Flask. O primeiro uso deve ocorrer numa cópia de teste da instalação.
+
+### Mapa de colaboradores
+
+No menu **Colaboradores**, clique em **Mapa**. A página conta as fichas pelo campo **Estado**, independentemente do status do colaborador. Ela aceita siglas e nomes completos. Valores vazios ou não reconhecidos aparecem no indicador **Sem UF identificada na base**.
+
+Use os filtros para combinar região e estado. Clique nos atalhos das cinco regiões, nos estados do mapa ou nas linhas do ranking para navegar. A escala de cores usa o maior total estadual da base e permanece fixa ao filtrar, para facilitar a comparação.
+
+Para atualizar uma instalação existente, extraia esta versão sobre a pasta do código com o sistema parado e inicie novamente com Python. O ZIP contém o código-fonte e os recursos da aplicação. Mantenha o banco e as fotos na instalação existente.
+
+Limites estaduais simplificados a partir do [mapa de estados do Brasil de Click That ’Hood](https://github.com/codeforamerica/click_that_hood/blob/master/public/data/brazil-states.geojson).

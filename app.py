@@ -23,10 +23,11 @@ import os
 import re
 
 import pandas as pd
-from sqlalchemy import or_, text
+from sqlalchemy import func, or_, text
 from werkzeug.utils import secure_filename
 
 from models import db, Colaborador, ListaNegra, PreAdmissao, Usuario
+from mapa import REGIOES, UFS, resumir_estados
 from security import (UserRole, UserAcknowledgement, AuditEntry, AppSetting, FailedLogin,
                       ROLES, TERMS_VERSION, get_role, get_setting, set_setting, audit,
                       login_key, is_blocked, mark_failed, reset_failed)
@@ -474,6 +475,46 @@ def index():
         funcao_selecionada=funcao,
         obras=obras,
         funcoes=funcoes,
+    )
+
+
+@app.get("/mapa-colaboradores")
+@login_required
+def mapa_colaboradores():
+    regiao = request.args.get("regiao", "")
+    regiao = regiao if regiao in REGIOES else ""
+    uf = request.args.get("uf", "").strip().upper()
+    uf = uf if uf in UFS else ""
+    if regiao and uf and UFS[uf]["region"] != regiao:
+        uf = ""
+
+    grupos = db.session.query(Colaborador.estado, func.count(Colaborador.id)).group_by(
+        Colaborador.estado
+    )
+    contagens, sem_uf = resumir_estados(grupos)
+    totais_regiao = {
+        codigo: sum(contagens[sigla] for sigla, dados in UFS.items() if dados["region"] == codigo)
+        for codigo in REGIOES
+    }
+    estados = sorted(UFS, key=lambda sigla: UFS[sigla]["name"])
+    disponiveis = [sigla for sigla in estados if not regiao or UFS[sigla]["region"] == regiao]
+    recorte = [uf] if uf else disponiveis
+    ranking = sorted(recorte, key=lambda sigla: -contagens[sigla])
+    return render_template(
+        "mapa_colaboradores.html",
+        ufs=UFS,
+        regioes=REGIOES,
+        totais_regiao=totais_regiao,
+        contagens=contagens,
+        regiao=regiao,
+        uf=uf,
+        estados=estados,
+        disponiveis=disponiveis,
+        ranking=ranking,
+        total_recorte=sum(contagens[sigla] for sigla in recorte),
+        total_mapeado=sum(contagens.values()),
+        sem_uf=sem_uf,
+        maximo=max(contagens.values(), default=0),
     )
 
 

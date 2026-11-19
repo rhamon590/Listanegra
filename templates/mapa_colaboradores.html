@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mapa de colaboradores</title>
+    <script>try { document.documentElement.dataset.theme = localStorage.getItem('ui-tema') || 'light'; } catch (_) {}</script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='mapa.css') }}">
+</head>
+<body>
+<main class="map-shell">
+    <header class="map-header">
+        <a href="{{ url_for('index') }}">← Voltar para Colaboradores</a>
+        <h1>Mapa de colaboradores</h1>
+        <p>Distribuição dos cadastros pelo estado informado na ficha.</p>
+    </header>
+
+    <section class="map-summary" aria-label="Resumo dos cadastros">
+        <article><span>No recorte</span><strong>{{ total_recorte }}</strong></article>
+        <article><span>Com UF identificada na base</span><strong>{{ total_mapeado }}</strong></article>
+        <article><span>Sem UF identificada na base</span><strong>{{ sem_uf }}</strong></article>
+    </section>
+
+    <form class="map-filters" method="get" action="{{ url_for('mapa_colaboradores') }}">
+        <label>Região
+            <select name="regiao">
+                <option value="">Todas as regiões</option>
+                {% for codigo, nome in regioes.items() %}
+                <option value="{{ codigo }}" {% if regiao == codigo %}selected{% endif %}>{{ nome }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>Estado
+            <select name="uf">
+                <option value="">Todos os estados</option>
+                {% for sigla in estados %}
+                <option value="{{ sigla }}" data-regiao="{{ ufs[sigla].region }}" {% if uf == sigla %}selected{% endif %}>{{ ufs[sigla].name }} ({{ sigla }})</option>
+                {% endfor %}
+            </select>
+        </label>
+        <button type="submit">Aplicar filtros</button>
+        <a href="{{ url_for('mapa_colaboradores') }}">Limpar</a>
+    </form>
+    <nav class="map-regions" aria-label="Filtrar por região">
+        {% for codigo, nome in regioes.items() %}
+        <a href="{{ url_for('mapa_colaboradores', regiao=codigo) }}" {% if regiao == codigo %}aria-current="true"{% endif %}>
+            {{ nome }} <strong>{{ totais_regiao[codigo] }}</strong>
+        </a>
+        {% endfor %}
+    </nav>
+
+    <div class="map-layout">
+        <section class="map-panel" aria-labelledby="map-title">
+            <h2 id="map-title">{{ ufs[uf].name if uf else regioes.get(regiao, 'Brasil') }}</h2>
+            <p>Selecione um estado no mapa para ver o total.</p>
+            <svg class="map-brasil" viewBox="0 0 560 550" aria-label="Estados do Brasil">
+                {% for sigla, dados in ufs.items() %}
+                {% set quantidade = contagens[sigla] %}
+                {% set nivel = ((4 * quantidade + maximo - 1) // maximo) if quantidade else 0 %}
+                <a href="{{ url_for('mapa_colaboradores', uf=sigla, regiao=regiao if sigla in disponiveis else '') }}"
+                   class="map-uf nivel-{{ nivel }}{{ ' fora' if sigla not in ranking }}{{ ' selecionada' if sigla == uf }}"
+                   aria-label="{{ dados.name }} ({{ sigla }}), {{ quantidade }} cadastro(s)" {% if sigla == uf %}aria-current="true"{% endif %}>
+                    <title>{{ dados.name }} ({{ sigla }}) · {{ quantidade }} cadastro(s)</title>
+                    <path d="{{ dados.path }}" fill-rule="evenodd"/>
+                </a>
+                {% endfor %}
+            </svg>
+            <div class="map-legend" aria-label="Escala de quantidade na base">
+                <span>0</span><i class="nivel-0"></i><i class="nivel-1"></i><i class="nivel-2"></i><i class="nivel-3"></i><i class="nivel-4"></i><span>{{ maximo }}{% if maximo == 1 %} cadastro{% else %} cadastros{% endif %}</span>
+            </div>
+        </section>
+
+        <section class="map-panel" aria-labelledby="ranking-title">
+            <h2 id="ranking-title">Ranking por estado</h2>
+            <p>Quantidade de cadastros no recorte.</p>
+            {% if not total_recorte %}<p class="map-empty">Nenhum cadastro com UF identificada neste recorte.</p>{% endif %}
+            <ol class="map-ranking">
+                {% for sigla in ranking %}
+                <li>
+                    <a href="{{ url_for('mapa_colaboradores', regiao=regiao, uf=sigla) }}" {% if sigla == uf %}aria-current="true"{% endif %}>
+                        <span class="map-code">{{ sigla }}</span>
+                        <span>{{ ufs[sigla].name }}<small>{{ regioes[ufs[sigla].region] }}</small></span>
+                        <strong>{{ contagens[sigla] }}</strong>
+                    </a>
+                </li>
+                {% endfor %}
+            </ol>
+        </section>
+    </div>
+    <footer>Limites estaduais simplificados de <a href="https://github.com/codeforamerica/click_that_hood/blob/master/public/data/brazil-states.geojson">Click That ’Hood</a>.</footer>
+</main>
+<script>
+    const regiao = document.querySelector('select[name="regiao"]');
+    const estado = document.querySelector('select[name="uf"]');
+    function atualizarEstados() {
+        for (const opcao of estado.options) {
+            const foraDaRegiao = Boolean(
+                regiao.value && opcao.value && opcao.dataset.regiao !== regiao.value
+            );
+            if (opcao.selected && foraDaRegiao) estado.value = '';
+            opcao.hidden = foraDaRegiao;
+            opcao.disabled = foraDaRegiao;
+        }
+    }
+    regiao.addEventListener('change', atualizarEstados);
+    atualizarEstados();
+</script>
+</body>
+</html>
