@@ -14,6 +14,10 @@
 <main class="map-shell">
     <header class="map-header">
         <a href="{{ url_for('index') }}">← Voltar para Colaboradores</a>
+        <form method="post" action="{{ url_for('mapa_colaboradores') }}" class="map-lock">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" name="acao" value="bloquear">Bloquear mapa agora</button>
+        </form>
         <h1>Mapa de colaboradores</h1>
         <p>Distribuição dos cadastros pelo estado informado na ficha.</p>
     </header>
@@ -119,6 +123,7 @@
     <footer>Limites estaduais simplificados de <a href="https://github.com/codeforamerica/click_that_hood/blob/master/public/data/brazil-states.geojson">Click That ’Hood</a>.</footer>
 </main>
 <script>
+    window.addEventListener('pageshow', event => { if (event.persisted) location.reload(); });
     const regiao = document.querySelector('select[name="regiao"]');
     const estado = document.querySelector('select[name="uf"]');
     function atualizarEstados() {
