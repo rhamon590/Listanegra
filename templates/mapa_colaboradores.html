@@ -16,7 +16,7 @@
     </header>
 
     <section class="map-summary" aria-label="Resumo dos cadastros">
-        <article><span>No recorte</span><strong>{{ total_recorte }}</strong></article>
+        <article><span>Colaboradores no recorte</span><strong>{{ total_recorte }}</strong><small>{{ ufs[uf].name if uf else regioes.get(regiao, "Brasil") }}</small></article>
         <article><span>Com UF identificada na base</span><strong>{{ total_mapeado }}</strong></article>
         <article><span>Sem UF identificada na base</span><strong>{{ sem_uf }}</strong></article>
     </section>
@@ -53,18 +53,24 @@
         <section class="map-panel" aria-labelledby="map-title">
             <h2 id="map-title">{{ ufs[uf].name if uf else regioes.get(regiao, 'Brasil') }}</h2>
             <p>Selecione um estado no mapa para ver o total.</p>
+            <div class="map-stage">
             <svg class="map-brasil" viewBox="0 0 560 550" aria-label="Estados do Brasil">
                 {% for sigla, dados in ufs.items() %}
                 {% set quantidade = contagens[sigla] %}
                 {% set nivel = ((4 * quantidade + maximo - 1) // maximo) if quantidade else 0 %}
                 <a href="{{ url_for('mapa_colaboradores', uf=sigla, regiao=regiao if sigla in disponiveis else '') }}"
                    class="map-uf nivel-{{ nivel }}{{ ' fora' if sigla not in ranking }}{{ ' selecionada' if sigla == uf }}"
+                   data-estado="{{ dados.name }} ({{ sigla }})" data-quantidade="{{ quantidade }}"
                    aria-label="{{ dados.name }} ({{ sigla }}), {{ quantidade }} cadastro(s)" {% if sigla == uf %}aria-current="true"{% endif %}>
                     <title>{{ dados.name }} ({{ sigla }}) · {{ quantidade }} cadastro(s)</title>
                     <path d="{{ dados.path }}" fill-rule="evenodd"/>
                 </a>
                 {% endfor %}
             </svg>
+                <div class="map-inspect" hidden aria-hidden="true">
+                    <strong></strong><span></span>
+                </div>
+            </div>
             <div class="map-legend" aria-label="Escala de quantidade na base">
                 <span>0</span><i class="nivel-0"></i><i class="nivel-1"></i><i class="nivel-2"></i><i class="nivel-3"></i><i class="nivel-4"></i><span>{{ maximo }}{% if maximo == 1 %} cadastro{% else %} cadastros{% endif %}</span>
             </div>
@@ -72,7 +78,7 @@
 
         <section class="map-panel" aria-labelledby="ranking-title">
             <h2 id="ranking-title">Ranking por estado</h2>
-            <p>Quantidade de cadastros no recorte.</p>
+            <p>As barras representam a participação de cada estado no total do recorte.</p>
             {% if not total_recorte %}<p class="map-empty">Nenhum cadastro com UF identificada neste recorte.</p>{% endif %}
             <ol class="map-ranking">
                 {% for sigla in ranking %}
@@ -81,6 +87,7 @@
                         <span class="map-code">{{ sigla }}</span>
                         <span>{{ ufs[sigla].name }}<small>{{ regioes[ufs[sigla].region] }}</small></span>
                         <strong>{{ contagens[sigla] }}</strong>
+                        <span class="map-bar" aria-hidden="true"><i style="width: {{ (100 * contagens[sigla] / total_recorte) if total_recorte else 0 }}%"></i></span>
                     </a>
                 </li>
                 {% endfor %}
@@ -104,6 +111,24 @@
     }
     regiao.addEventListener('change', atualizarEstados);
     atualizarEstados();
+
+    const painelEstado = document.querySelector('.map-inspect');
+    const nomeEstado = painelEstado.querySelector('strong');
+    const quantidadeEstado = painelEstado.querySelector('span');
+    const formatar = new Intl.NumberFormat('pt-BR');
+    for (const link of document.querySelectorAll('.map-uf')) {
+        const exibir = () => {
+            const total = Number(link.dataset.quantidade);
+            nomeEstado.textContent = link.dataset.estado;
+            quantidadeEstado.textContent = `${formatar.format(total)} ${total === 1 ? 'cadastro' : 'cadastros'}`;
+            painelEstado.hidden = false;
+        };
+        const ocultar = () => { painelEstado.hidden = true; };
+        link.addEventListener('pointerenter', exibir);
+        link.addEventListener('pointerleave', ocultar);
+        link.addEventListener('focus', exibir);
+        link.addEventListener('blur', ocultar);
+    }
 </script>
 </body>
 </html>
