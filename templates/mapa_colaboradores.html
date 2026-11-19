@@ -1,3 +1,6 @@
+{% macro percentual(quantidade, base) -%}
+{{ ('%.1f'|format(100 * quantidade / base))|replace('.', ',') ~ '%' if base else '—' }}
+{%- endmacro %}
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -16,7 +19,7 @@
     </header>
 
     <section class="map-summary" aria-label="Resumo dos cadastros">
-        <article><span>Colaboradores no recorte</span><strong>{{ total_recorte }}</strong><small>{{ ufs[uf].name if uf else regioes.get(regiao, "Brasil") }}</small></article>
+        <article><span>Colaboradores no recorte</span><strong>{{ total_recorte }}</strong><small>{{ ufs[uf].name if uf else regioes.get(regiao, "Brasil") }} · {{ percentual(total_recorte, total_mapeado) }} da base com UF</small></article>
         <article><span>Com UF identificada na base</span><strong>{{ total_mapeado }}</strong></article>
         <article><span>Sem UF identificada na base</span><strong>{{ sem_uf }}</strong></article>
     </section>
@@ -41,18 +44,10 @@
         <button type="submit">Aplicar filtros</button>
         <a href="{{ url_for('mapa_colaboradores') }}">Limpar</a>
     </form>
-    <nav class="map-regions" aria-label="Filtrar por região">
-        {% for codigo, nome in regioes.items() %}
-        <a href="{{ url_for('mapa_colaboradores', regiao=codigo) }}" {% if regiao == codigo %}aria-current="true"{% endif %}>
-            {{ nome }} <strong>{{ totais_regiao[codigo] }}</strong>
-        </a>
-        {% endfor %}
-    </nav>
-
     <div class="map-layout">
         <section class="map-panel" aria-labelledby="map-title">
             <h2 id="map-title">{{ ufs[uf].name if uf else regioes.get(regiao, 'Brasil') }}</h2>
-            <p>Selecione um estado no mapa para ver o total.</p>
+            <p>Selecione um estado para ver seu total e percentual.</p>
             <div class="map-stage">
             <svg class="map-brasil" viewBox="0 0 560 550" aria-label="Estados do Brasil">
                 {% for sigla, dados in ufs.items() %}
@@ -60,7 +55,7 @@
                 {% set nivel = ((4 * quantidade + maximo - 1) // maximo) if quantidade else 0 %}
                 <a href="{{ url_for('mapa_colaboradores', uf=sigla, regiao=regiao if sigla in disponiveis else '') }}"
                    class="map-uf nivel-{{ nivel }}{{ ' fora' if sigla not in ranking }}{{ ' selecionada' if sigla == uf }}"
-                   data-estado="{{ dados.name }} ({{ sigla }})" data-quantidade="{{ quantidade }}"
+                   data-estado="{{ dados.name }} ({{ sigla }})" data-quantidade="{{ quantidade }}" data-percentual="{{ percentual(quantidade, total_mapeado) }}"
                    aria-label="{{ dados.name }} ({{ sigla }}), {{ quantidade }} cadastro(s)" {% if sigla == uf %}aria-current="true"{% endif %}>
                     <title>{{ dados.name }} ({{ sigla }}) · {{ quantidade }} cadastro(s)</title>
                     <path d="{{ dados.path }}" fill-rule="evenodd"/>
@@ -76,23 +71,50 @@
             </div>
         </section>
 
-        <section class="map-panel" aria-labelledby="ranking-title">
-            <h2 id="ranking-title">Ranking por estado</h2>
-            <p>As barras representam a participação de cada estado no total do recorte.</p>
-            {% if not total_recorte %}<p class="map-empty">Nenhum cadastro com UF identificada neste recorte.</p>{% endif %}
-            <ol class="map-ranking">
-                {% for sigla in ranking %}
-                <li>
-                    <a href="{{ url_for('mapa_colaboradores', regiao=regiao, uf=sigla) }}" {% if sigla == uf %}aria-current="true"{% endif %}>
-                        <span class="map-code">{{ sigla }}</span>
-                        <span>{{ ufs[sigla].name }}<small>{{ regioes[ufs[sigla].region] }}</small></span>
-                        <strong>{{ contagens[sigla] }}</strong>
-                        <span class="map-bar" aria-hidden="true"><i style="width: {{ (100 * contagens[sigla] / total_recorte) if total_recorte else 0 }}%"></i></span>
-                    </a>
-                </li>
-                {% endfor %}
-            </ol>
-        </section>
+        <aside class="map-details" aria-label="Distribuição de colaboradores">
+            <section class="map-panel" aria-labelledby="regions-title">
+                <h2 id="regions-title">Distribuição por região</h2>
+                <p>Percentual sobre os {{ total_mapeado }} colaboradores com UF identificada.</p>
+                <ul class="map-regional-ranking">
+                    {% for codigo, quantidade in totais_regiao|dictsort(by='value', reverse=true) %}
+                    <li>
+                        <a href="{{ url_for('mapa_colaboradores', regiao=codigo) }}"
+                           {% if codigo == (ufs[uf].region if uf else regiao) %}aria-current="true"{% endif %}>
+                            <span>{{ regioes[codigo] }}</span>
+                            <span class="map-numbers">
+                                <small>{{ quantidade }}</small>
+                                <strong>{{ percentual(quantidade, total_mapeado) }}</strong>
+                            </span>
+                            <span class="map-bar" aria-hidden="true"><i style="width: {{ 100 * quantidade / total_mapeado if total_mapeado else 0 }}%"></i></span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <section class="map-panel" aria-labelledby="ranking-title">
+                <h2 id="ranking-title">Detalhamento por estado</h2>
+                <p>Veja a participação de cada UF no Brasil e na sua região.</p>
+                {% if not total_recorte %}<p class="map-empty">Nenhum cadastro com UF identificada neste recorte.</p>{% endif %}
+                <ol class="map-ranking">
+                    {% for sigla in ranking %}
+                    {% set quantidade = contagens[sigla] %}
+                    {% set codigo = ufs[sigla].region %}
+                    <li>
+                        <a href="{{ url_for('mapa_colaboradores', regiao=regiao, uf=sigla) }}" {% if sigla == uf %}aria-current="true"{% endif %}>
+                            <span class="map-code">{{ sigla }}</span>
+                            <span>{{ ufs[sigla].name }}<small>{{ percentual(quantidade, totais_regiao[codigo]) }} na região {{ regioes[codigo] }}</small></span>
+                            <span class="map-numbers map-state-numbers">
+                                <strong>{{ percentual(quantidade, total_mapeado) }}</strong>
+                                <small>{{ quantidade }} {{ 'cadastro' if quantidade == 1 else 'cadastros' }}</small>
+                            </span>
+                            <span class="map-bar" aria-hidden="true"><i style="width: {{ 100 * quantidade / total_mapeado if total_mapeado else 0 }}%"></i></span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ol>
+            </section>
+        </aside>
     </div>
     <footer>Limites estaduais simplificados de <a href="https://github.com/codeforamerica/click_that_hood/blob/master/public/data/brazil-states.geojson">Click That ’Hood</a>.</footer>
 </main>
@@ -120,7 +142,7 @@
         const exibir = () => {
             const total = Number(link.dataset.quantidade);
             nomeEstado.textContent = link.dataset.estado;
-            quantidadeEstado.textContent = `${formatar.format(total)} ${total === 1 ? 'cadastro' : 'cadastros'}`;
+            quantidadeEstado.textContent = `${formatar.format(total)} ${total === 1 ? 'cadastro' : 'cadastros'} · ${link.dataset.percentual} da base com UF`;
             painelEstado.hidden = false;
         };
         const ocultar = () => { painelEstado.hidden = true; };
