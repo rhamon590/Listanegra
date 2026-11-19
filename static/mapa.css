@@ -199,3 +199,27 @@ footer { font-size: .8rem; color: var(--muted); }
     .map-filters label { flex-basis: 100%; }
     .map-filters button { flex-grow: 1; }
 }
+
+.map-details { display: grid; gap: 14px; min-width: 0; }
+.map-regional-ranking { list-style: none; margin: 13px 0 0; padding: 0; }
+.map-regional-ranking a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px 10px;
+    padding: 9px 8px;
+    color: var(--ink);
+    text-decoration: none;
+    border-radius: 8px;
+}
+.map-regional-ranking a:hover, .map-regional-ranking a[aria-current] { background: var(--selected); }
+.map-regional-ranking .map-bar { grid-column: 1 / -1; }
+.map-bar { height: 5px; border-radius: 999px; background: var(--border); overflow: hidden; }
+.map-numbers { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+.map-numbers strong { color: var(--accent); font-variant-numeric: tabular-nums; }
+.map-numbers small { color: var(--muted); }
+.map-state-numbers { display: grid; gap: 0; text-align: right; }
+@media (max-width: 480px) {
+    .map-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .map-summary article:first-child { grid-column: 1 / -1; }
+}
